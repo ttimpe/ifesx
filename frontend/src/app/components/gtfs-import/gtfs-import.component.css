@@ -1,0 +1,14 @@
+.file-drop {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-drop p {
+  margin: 0;
+}
+
+.file-drop input {
+  display: none;
+}

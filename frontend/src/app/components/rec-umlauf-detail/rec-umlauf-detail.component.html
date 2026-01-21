@@ -1,0 +1,188 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <a routerLink="/rec-umlauf">
+                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
+            </a>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">{{ isNew ? 'Neuer Umlauf' : 'Umlauf
+                    bearbeiten' }}</h2>
+                <p class="text-xs text-slate-500 font-medium" *ngIf="!isNew">UID: {{item.UM_UID}}</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <button *ngIf="!isNew && item.UM_UID"
+                class="btn btn-outline-secondary me-2 flex gap-2 items-center px-4 py-2 border rounded hover:bg-slate-100"
+                [routerLink]="['/kursblatt', item.UM_UID]" target="_blank">
+                <i class="pi pi-print"></i> Kursblatt
+            </button>
+            <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="save()"></p-button>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+        <div class="max-w-7xl mx-auto flex flex-col gap-6">
+
+            <!-- Meta Card -->
+            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Tagesart -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Tagesart</label>
+                        <p-dropdown [options]="tagesarten" [(ngModel)]="item.TAGESART_NR" optionLabel="TAGESART_TEXT"
+                            optionValue="TAGESART_NR" [disabled]="!isNew" placeholder="Auswählen" styleClass="w-full"
+                            appendTo="body"></p-dropdown>
+                    </div>
+
+                    <!-- UID -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Umlauf UID</label>
+                        <p-inputNumber [(ngModel)]="item.UM_UID" [disabled]="!isNew" [useGrouping]="false"
+                            styleClass="w-full" class="w-full block"></p-inputNumber>
+                    </div>
+
+                    <!-- Vehicle Type -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Fahrzeugtyp</label>
+                        <p-dropdown [options]="vehicleTypes" [(ngModel)]="item.FZG_TYP_NR" optionLabel="FZG_TYP_TEXT"
+                            optionValue="FZG_TYP_NR" placeholder="Auswählen" styleClass="w-full" [showClear]="true"
+                            appendTo="body"></p-dropdown>
+                    </div>
+                </div>
+            </p-card>
+
+            <!-- Trips Section -->
+            <div *ngIf="!isNew">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">Fahrten (REC_FRT)</h3>
+                    <p-button label="Fahrt hinzufügen" icon="pi pi-plus" size="small" severity="success"
+                        (onClick)="toggleTripForm()"></p-button>
+                </div>
+
+                <!-- New Trip Form -->
+                <p-card *ngIf="showTripForm"
+                    styleClass="mb-6 shadow-sm border border-slate-200 rounded-xl bg-slate-50/50">
+                    <h4 class="text-base font-bold text-slate-800 mb-4">Neue Fahrt</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 items-end">
+                        <!-- Start Time -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Startzeit (HH:MM)</label>
+                            <div class="flex gap-1 items-center">
+                                <input pInputText type="number" [(ngModel)]="newTripHours" min="0" max="30"
+                                    placeholder="HH" class="w-16 !text-center">
+                                <span class="text-slate-400">:</span>
+                                <input pInputText type="number" [(ngModel)]="newTripMinutes" min="0" max="59"
+                                    placeholder="MM" class="w-16 !text-center">
+                            </div>
+                        </div>
+
+                        <!-- Line -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Linie</label>
+                            <p-dropdown [options]="uniqueLines" [(ngModel)]="selectedLineNr" optionValue="LI_NR"
+                                optionLabel="LIN_NAME" (onChange)="onLineChange()" placeholder="Linie"
+                                styleClass="w-full" appendTo="body"></p-dropdown>
+                        </div>
+
+                        <!-- Variant -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Verlauf</label>
+                            <p-dropdown [options]="filteredVariants" [(ngModel)]="selectedLineVariant"
+                                optionLabel="displayName" (onChange)="onLineVariantChange()"
+                                [disabled]="!selectedLineNr" placeholder="Verlauf" styleClass="w-full"
+                                appendTo="body"></p-dropdown>
+                        </div>
+
+                        <!-- Direction -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Richt.</label>
+                            <p-inputNumber [(ngModel)]="newTrip.FGR_NR" [min]="1" [max]="2" styleClass="w-full"
+                                class="w-full block"></p-inputNumber>
+                        </div>
+
+                        <!-- Course -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Kurs</label>
+                            <p-inputNumber [(ngModel)]="newTrip.LI_KU_NR" styleClass="w-full"
+                                class="w-full block"></p-inputNumber>
+                        </div>
+
+                        <!-- Fahrtart -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">Fahrtart</label>
+                            <p-dropdown [options]="fahrtarten" [(ngModel)]="newTrip.FAHRTART_NR" optionLabel="label"
+                                optionValue="value" placeholder="Fahrtart" styleClass="w-full"
+                                appendTo="body"></p-dropdown>
+                        </div>
+
+                        <!-- FZ Group -->
+                        <div class="col-span-1">
+                            <label class="block text-xs font-medium text-slate-500 mb-1">FZ-Gruppe</label>
+                            <p-dropdown [options]="bereiche" [(ngModel)]="newTrip.BEREICH_NR" optionLabel="STR_BEREICH"
+                                optionValue="BEREICH_NR" placeholder="Bereich" styleClass="w-full"
+                                appendTo="body"></p-dropdown>
+                        </div>
+
+                        <!-- Add Button -->
+                        <div class="col-span-1 md:col-start-6 mt-2">
+                            <p-button label="Hinzufügen" icon="pi pi-plus" (onClick)="addTrip()"
+                                styleClass="w-full"></p-button>
+                        </div>
+                    </div>
+                </p-card>
+
+                <!-- Trips Table -->
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <p-table [value]="trips" styleClass="p-datatable-sm p-datatable-striped" [rowHover]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>FID</th>
+                                <th>Startzeit</th>
+                                <th>Linie/Verlauf</th>
+                                <th>Richtung</th>
+                                <th>Kurs</th>
+                                <th>Fahrtart</th>
+                                <th>FZ-Gruppe</th>
+                                <th class="text-right">Aktionen</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-trip>
+                            <tr>
+                                <td class="text-slate-500 text-xs">{{ trip.FRT_FID }}</td>
+                                <td class="font-bold font-mono text-indigo-600">{{ formatTime(trip.FRT_START) }}</td>
+                                <td>
+                                    <div class="flex flex-col">
+                                        <span class="font-medium text-sm">Linie {{trip.LI_NR}}</span>
+                                        <span class="text-xs text-slate-500">{{ getVariantDisplayName(trip.LI_NR,
+                                            trip.STR_LI_VAR) }}</span>
+                                    </div>
+                                </td>
+                                <td>{{ trip.FGR_NR }}</td>
+                                <td>{{ trip.LI_KU_NR || '-' }}</td>
+                                <td>{{ getFahrtartName(trip.FAHRTART_NR) }}</td>
+                                <td>{{ getBereichName(trip.BEREICH_NR) }}</td>
+                                <td class="text-right">
+                                    <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                        (onClick)="deleteTrip(trip)"></p-button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="7" class="text-center p-8 text-slate-500">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <i class="pi pi-calendar text-4xl mb-3 text-slate-300"></i>
+                                        <p>Keine Fahrten in diesem Umlauf.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

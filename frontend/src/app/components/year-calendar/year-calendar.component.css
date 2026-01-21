@@ -1,0 +1,118 @@
+/* Base Layout */
+.calendar-container {
+  width: 100%;
+  user-select: none;
+}
+
+.day-cell {
+  color: #334155;
+  /* slate-700 */
+}
+
+/* Base states */
+.day-cell.outside-month {
+  color: #cbd5e1;
+  /* slate-300 */
+}
+
+.day-cell.out-of-range {
+  color: #e2e8f0;
+  /* slate-200 */
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+/* Hover effect */
+.day-cell.selectable:hover {
+  background-color: #f1f5f9;
+  /* slate-100 */
+  z-index: 20;
+}
+
+/* Selected state - Handled in HTML with inset div */
+.day-cell.selected {
+  font-weight: 700;
+  color: #3b82f6;
+  /* blue-500 */
+}
+
+/* Special Day Type Colors (Tagesarten) */
+/* Using subtle background tints or top-border-indicators */
+
+.special-1 {
+  border-top: 3px solid #3b82f6;
+  background-color: #eff6ff !important;
+}
+
+/* Blue */
+.special-2 {
+  border-top: 3px solid #10b981;
+  background-color: #ecfdf5 !important;
+}
+
+/* Green */
+.special-3 {
+  border-top: 3px solid #f59e0b;
+  background-color: #fffbeb !important;
+}
+
+/* Amber */
+.special-4 {
+  border-top: 3px solid #ef4444;
+  background-color: #fef2f2 !important;
+}
+
+/* Red */
+.special-5 {
+  border-top: 3px solid #8b5cf6;
+  background-color: #f5f3ff !important;
+}
+
+/* Violet */
+.special-6 {
+  border-top: 3px solid #ec4899;
+  background-color: #fdf2f8 !important;
+}
+
+/* Pink */
+.special-7 {
+  border-top: 3px solid #06b6d4;
+  background-color: #ecfeff !important;
+}
+
+/* Cyan */
+.special-8 {
+  border-top: 3px solid #f97316;
+  background-color: #fff7ed !important;
+}
+
+/* Orange */
+.special-9 {
+  border-top: 3px solid #6366f1;
+  background-color: #eef2ff !important;
+}
+
+/* Indigo */
+.special-10 {
+  border-top: 3px solid #a855f7;
+  background-color: #faf5ff !important;
+}
+
+/* Purple */
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}

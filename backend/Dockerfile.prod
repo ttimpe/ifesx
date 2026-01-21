@@ -1,0 +1,50 @@
+# Stage 1: Build Frontend (Clone from Git)
+FROM node:20-slim AS frontend-builder
+WORKDIR /app/frontend
+
+# Install git and certificates
+RUN apt-get update && apt-get install -y git ca-certificates
+
+# Clone frontend repository
+# Using public URL since repo is public
+RUN git clone https://github.com/ttimpe/ifesx-frontend.git .
+
+# Install and Build
+RUN npm install --legacy-peer-deps
+RUN npm run build -- --configuration production
+
+# Stage 2: Build Backend
+FROM node:20-slim AS backend-builder
+WORKDIR /app/backend
+# Copy backend package files (from current build context)
+COPY package.json package-lock.json ./
+RUN npm ci
+# Copy backend source
+COPY . .
+# Compile TypeScript
+RUN npx tsc
+
+# Stage 3: Final Production Image
+FROM node:20-slim
+WORKDIR /app
+# Copy backend package files for runtime deps
+COPY package.json package-lock.json ./
+# Install only production dependencies
+RUN npm ci --only=production && npm install sqlite3
+
+# Copy compiled backend code
+COPY --from=backend-builder /app/backend/dist ./dist
+
+# Copy built frontend assets to public folder
+COPY --from=frontend-builder /app/frontend/dist/ifesx-frontend ./public
+
+# Copy other necessary backend files
+COPY routes.json ./routes.json
+RUN mkdir -p uploads
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+EXPOSE 3000
+
+CMD ["node", "dist/app.js"]

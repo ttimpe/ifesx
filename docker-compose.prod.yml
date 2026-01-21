@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: ifesx-production
+    expose:
+      - "3000"
+    volumes:
+      # Persistent Database Volume
+      - ifesx_data:/app/data
+      - ./uploads:/app/uploads
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DB_FILE=/app/data/timetable.sqlite3
+      - VIRTUAL_HOST=${VIRTUAL_HOST:-ifes.stadtbahn-bielefeld.de}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST:-ifes.stadtbahn-bielefeld.de}
+      # Fixed typo: {$LETSENCRYPT_EMAIL:-} -> ${LETSENCRYPT_EMAIL:-}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL:-}
+      - VIRTUAL_PORT=3000
+      # Nginx Proxy Configuration
+      - CLIENT_MAX_BODY_SIZE=50M
+    networks:
+      - proxy-nw
+
+volumes:
+  ifesx_data:
+
+
+networks:
+  proxy-nw:
+    external: true

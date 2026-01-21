@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "src/controllers/AnnouncementController.ts",
+    "src/controllers/NetworkController.ts",
+    "src/controllers/ScheduleController.ts",
+    "src/controllers/importController.ts",
+    "src/scripts/migrate-recsel.ts",
+    "src/scripts/migrate-vdv-hierarchy.ts",
+    "src/models/SpecialCharacter.ts",
+    "src/controllers/SpecialCharacterController.ts"
+  ]
+}

@@ -1,0 +1,2501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="BASIS_VER_GUELTIGKEIT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="VER_GUELTIGKEIT">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BASIS_VERSION" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="BASIS_VER_GUELTIGKEIT_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="VER_GUELTIGKEIT"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="EINZELANSCHLUSS">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="EINAN_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANSCHLUSS_NAME" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANSCHLUSS_GRUPPE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LEITSTELLENKENNUNG" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUB_LI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUB_LI_RI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUB_ORT_REF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUB_ONR_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUB_ORT_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="VON_ORT_REF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LinienID" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="RichtungsID" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ASBID" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="10"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABB_LI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABB_LI_RI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABB_ORT_REF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABB_ONR_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABB_ORT_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="NACH_ORT_REF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_UMS" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="EINZELANSCHLUSS_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="EINAN_NR"/>
+		</xs:key>
+		<xs:keyref name="EINZELANSCHLUSS_To_REC_UMS_EINZELANSCHLUSSREC_UMS" refer="EINZELANSCHLUSS_PrimaryKey_0">
+			<xs:selector xpath="REC_UMS"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="EINAN_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="FAHRZEUG">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="POLKENN" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="20"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UNTERNEHMEN" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="FAHRZEUG_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FZG_NR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="FIRMENKALENDER">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BETRIEBSTAG">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BETRIEBSTAG_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="FIRMENKALENDER_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BETRIEBSTAG"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="FL_ZONE_ORT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="FL_ZONE_ORT_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FL_ZONE_TYP_NR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="FLAECHEN_ZONE">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_KUERZEL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_NAME" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_AMTLICHE_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="20"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="FL_ZONE_ORT" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE__x0020_FLAECHEN_ZONE_TYP" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="FLAECHEN_ZONE_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FL_ZONE_TYP_NR"/>
+			<xs:field xpath="FL_ZONE_NR"/>
+		</xs:key>
+		<xs:keyref name="FLAECHEN_ZONE_To_FL_ZONE_ORT_FLAECHEN_ZONEFL_ZONE_ORT" refer="FLAECHEN_ZONE_PrimaryKey_0">
+			<xs:selector xpath="FL_ZONE_ORT"/>
+			<xs:field xpath="FL_ZONE_TYP_NR"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FL_ZONE_NR"/>
+		</xs:keyref>
+		<xs:keyref name="FLAECHEN_ZONE_To_MENGE__x0020_FLAECHEN_ZONE_TYP_FLAECHEN_ZONEMENGE__x0020_FLAECHEN_ZONE_TYP" refer="FLAECHEN_ZONE_PrimaryKey_0">
+			<xs:selector xpath="MENGE__x0020_FLAECHEN_ZONE_TYP"/>
+			<xs:field xpath="FL_ZONE_TYP_NR"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="LID_VERLAUF">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_LFD_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_LI_VAR">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZNR_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANR_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="EINFANGBEREICH" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_KNOTEN">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="PRODUKTIV">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="EINSTEIGEVERBOT">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="AUSSTEIGEVERBOT">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="INNERORTSVERBOT">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEDARFSHALT">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="LID_VERLAUF_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="LI_LFD_NR"/>
+			<xs:field xpath="LI_NR"/>
+			<xs:field xpath="STR_LI_VAR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="MENGE__x0020_FLAECHEN_ZONE_TYP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FL_ZONE_TYP_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE__x0020_FLAECHEN_ZONE_TYP_PrimaryKey_2">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FL_ZONE_TYP_NR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="MENGE_BASIS_VERSIONEN">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BASIS_VERSION_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="BASIS_VER_GUELTIGKEIT" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE__x0020_FLAECHEN_ZONE_TYP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE_BEREICH" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE_FZG_TYP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE_ONR_TYP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE_ORT_TYP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="MENGE_TAGESART" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_LID" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD_ZP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ZUL_VERKEHRSBETRIEB" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:key>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_BASIS_VER_GUELTIGKEIT_MENGE_BASIS_VERSIONENBASIS_VER_GUELTIGKEIT" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="BASIS_VER_GUELTIGKEIT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE__x0020_FLAECHEN_ZONE_TYP_MENGE_BASIS_VERSIONENMENGE__x0020_FLAECHEN_ZONE_TYP" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE__x0020_FLAECHEN_ZONE_TYP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE_BEREICH_MENGE_BASIS_VERSIONENMENGE_BEREICH" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE_BEREICH"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE_FZG_TYP_MENGE_BASIS_VERSIONENMENGE_FZG_TYP" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE_FZG_TYP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE_ONR_TYP_MENGE_BASIS_VERSIONENMENGE_ONR_TYP" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE_ONR_TYP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE_ORT_TYP_MENGE_BASIS_VERSIONENMENGE_ORT_TYP" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE_ORT_TYP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_MENGE_TAGESART_MENGE_BASIS_VERSIONENMENGE_TAGESART" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="MENGE_TAGESART"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_REC_LID_MENGE_BASIS_VERSIONENREC_LID" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="REC_LID"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_SEL_FZT_FELD_ZP_MENGE_BASIS_VERSIONENSEL_FZT_FELD_ZP" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="SEL_FZT_FELD_ZP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BASIS_VERSIONEN_To_ZUL_VERKEHRSBETRIEB_MENGE_BASIS_VERSIONENZUL_VERKEHRSBETRIEB" refer="MENGE_BASIS_VERSIONEN_PrimaryKey_0">
+			<xs:selector xpath="ZUL_VERKEHRSBETRIEB"/>
+			<xs:field xpath="BASIS_VERSION"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_BEREICH">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_BEREICH" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_SEL" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_UEB" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD_ZP" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_BEREICH_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_BEREICH_To_REC_SEL_MENGE_BEREICHREC_SEL" refer="MENGE_BEREICH_PrimaryKey_1">
+			<xs:selector xpath="REC_SEL"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BEREICH_To_REC_UEB_MENGE_BEREICHREC_UEB" refer="MENGE_BEREICH_PrimaryKey_1">
+			<xs:selector xpath="REC_UEB"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_BEREICH_To_SEL_FZT_FELD_ZP_MENGE_BEREICHSEL_FZT_FELD_ZP" refer="MENGE_BEREICH_PrimaryKey_1">
+			<xs:selector xpath="SEL_FZT_FELD_ZP"/>
+			<xs:field xpath="BEREICH_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_FAHRTART">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FAHRTART_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_FAHRTART" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_FRT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_FAHRTART_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FAHRTART_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_FAHRTART_To_REC_FRT_MENGE_FAHRTARTREC_FRT" refer="MENGE_FAHRTART_PrimaryKey_0">
+			<xs:selector xpath="REC_FRT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FAHRTART_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_FGR">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="ORT_HZTF" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_FRT" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD_ZP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="UEB_FZT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_FGR_To_ORT_HZTF_MENGE_FGRORT_HZTF" refer="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="ORT_HZTF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_FGR_To_REC_FRT_MENGE_FGRREC_FRT" refer="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="REC_FRT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_FGR_To_SEL_FZT_FELD_MENGE_FGRSEL_FZT_FELD" refer="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="SEL_FZT_FELD"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_FGR_To_SEL_FZT_FELD_ZP_MENGE_FGRSEL_FZT_FELD_ZP" refer="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="SEL_FZT_FELD_ZP"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_FGR_To_UEB_FZT_MENGE_FGRUEB_FZT" refer="MENGE_FGR_PrimaryKey_0">
+			<xs:selector xpath="UEB_FZT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_FZG_TYP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_LAENGE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_SITZ" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_STEH" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SONDER_PLATZ" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_FZG_TYP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="FAHRZEUG" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_UMLAUF" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_FZG_TYP_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FZG_TYP_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_FZG_TYP_To_FAHRZEUG_MENGE_FZG_TYPFAHRZEUG" refer="MENGE_FZG_TYP_PrimaryKey_1">
+			<xs:selector xpath="FAHRZEUG"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FZG_TYP_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_FZG_TYP_To_REC_UMLAUF_MENGE_FZG_TYPREC_UMLAUF" refer="MENGE_FZG_TYP_PrimaryKey_1">
+			<xs:selector xpath="REC_UMLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FZG_TYP_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_ONR_TYP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_ONR_TYP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_HP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD_ZP" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_ONR_TYP_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_ONR_TYP_To_REC_HP_MENGE_ONR_TYPREC_HP" refer="MENGE_ONR_TYP_PrimaryKey_1">
+			<xs:selector xpath="REC_HP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_ONR_TYP_To_SEL_FZT_FELD_ZP_MENGE_ONR_TYPSEL_FZT_FELD_ZP" refer="MENGE_ONR_TYP_PrimaryKey_1">
+			<xs:selector xpath="SEL_FZT_FELD_ZP"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_ORT_TYP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_TYP_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_ORT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_ORT_TYP_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ORT_TYP_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_ORT_TYP_To_REC_ORT_MENGE_ORT_TYPREC_ORT" refer="MENGE_ORT_TYP_PrimaryKey_1">
+			<xs:selector xpath="REC_ORT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ORT_REF_ORT_TYP"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="MENGE_TAGESART">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="FIRMENKALENDER" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_UMLAUF" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="MENGE_TAGESART_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="TAGESART_NR"/>
+		</xs:key>
+		<xs:keyref name="MENGE_TAGESART_To_FIRMENKALENDER_MENGE_TAGESARTFIRMENKALENDER" refer="MENGE_TAGESART_PrimaryKey_1">
+			<xs:selector xpath="FIRMENKALENDER"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="TAGESART_NR"/>
+		</xs:keyref>
+		<xs:keyref name="MENGE_TAGESART_To_REC_UMLAUF_MENGE_TAGESARTREC_UMLAUF" refer="MENGE_TAGESART_PrimaryKey_1">
+			<xs:selector xpath="REC_UMLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="TAGESART_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="ORT_HZTF">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="HP_HZT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="ORT_HZTF_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FGR_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="REC_ANR">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANR_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="200"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="LID_VERLAUF" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_ANR_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ANR_NR"/>
+		</xs:key>
+		<xs:keyref name="REC_ANR_To_LID_VERLAUF_REC_ANRLID_VERLAUF" refer="REC_ANR_PrimaryKey_0">
+			<xs:selector xpath="LID_VERLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ANR_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_FRT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FRT_FID">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FRT_START" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_KU_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FAHRTART_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_LI_VAR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UM_UID" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUGNR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DURCHBI_FRT_START">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="DURCHBI_FRT_ENDE">
+					<xs:simpleType>
+						<xs:restriction base="xs:boolean"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_FRT_HZT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_FRT_PrimaryKey_2">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FRT_FID"/>
+		</xs:key>
+		<xs:keyref name="REC_FRT_To_REC_FRT_HZT_REC_FRTREC_FRT_HZT" refer="REC_FRT_PrimaryKey_2">
+			<xs:selector xpath="REC_FRT_HZT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FRT_FID"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_FRT_HZT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FRT_FID">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FRT_HZT_ZEIT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_FRT_HZT_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="FRT_FID"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="REC_HP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="HALTEPUNKT_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZUSATZ_INFO" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_HP_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:key>
+		<xs:unique name="REC_HP_UniqueKey_3">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="REC_LID">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="STR_LI_VAR">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ROUTEN_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_RI_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LI_KUERZEL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LIDNAME" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ROUTEN_ART" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="LINIEN_CODE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="EINZELANSCHLUSS" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="EINZELANSCHLUSS" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="LID_VERLAUF" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_FRT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_LID_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="LI_NR"/>
+			<xs:field xpath="STR_LI_VAR"/>
+		</xs:key>
+		<xs:keyref name="REC_LID_To_EINZELANSCHLUSS_REC_LIDEINZELANSCHLUSS" refer="REC_LID_PrimaryKey_1">
+			<xs:selector xpath="EINZELANSCHLUSS"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ZUB_LI_NR"/>
+			<xs:field xpath="ZUB_LI_RI_NR"/>
+			<xs:field xpath="ABB_LI_NR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_LID_To_EINZELANSCHLUSS_REC_LIDEINZELANSCHLUSS1" refer="REC_LID_PrimaryKey_1">
+			<xs:selector xpath="EINZELANSCHLUSS"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ABB_LI_NR"/>
+			<xs:field xpath="ABB_LI_RI_NR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_LID_To_LID_VERLAUF_REC_LIDLID_VERLAUF" refer="REC_LID_PrimaryKey_1">
+			<xs:selector xpath="LID_VERLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="LI_NR"/>
+			<xs:field xpath="STR_LI_VAR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_LID_To_REC_FRT_REC_LIDREC_FRT" refer="REC_LID_PrimaryKey_1">
+			<xs:selector xpath="REC_FRT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="LI_NR"/>
+			<xs:field xpath="STR_LI_VAR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_OM">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORM_KUERZEL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORMACODE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORM_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_OM_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:key>
+		<xs:unique name="REC_OM_UniqueKey_2">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:unique>
+	</xs:element>
+	<xs:element name="REC_ORT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NAME" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_REF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_REF_ORT_TYP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_REF_ORT_LANGNR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_REF_ORT_KUERZEL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="8"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_REF_ORT_NAME" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZONE_WABE_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_POS_LAENGE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_POS_BREITE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_POS_HOEHE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_RICHTUNG" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="HAST_NR_LOKAL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="HST_NR_NATIONAL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="HST_NR_INTERNATIONAL" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="30"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="LID_VERLAUF" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="ORT_HZTF" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_HP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="REC_OM" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_ORT_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:key>
+		<xs:keyref name="REC_ORT_To_LID_VERLAUF_REC_ORTLID_VERLAUF" refer="REC_ORT_PrimaryKey_1">
+			<xs:selector xpath="LID_VERLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_ORT_To_ORT_HZTF_REC_ORTORT_HZTF" refer="REC_ORT_PrimaryKey_1">
+			<xs:selector xpath="ORT_HZTF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_ORT_To_REC_HP_REC_ORTREC_HP" refer="REC_ORT_PrimaryKey_1">
+			<xs:selector xpath="REC_HP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:keyref>
+		<xs:keyref name="REC_ORT_To_REC_OM_REC_ORTREC_OM" refer="REC_ORT_PrimaryKey_1">
+			<xs:selector xpath="REC_OM"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_SEL">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_LAENGE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_SEL_ZP" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="SEL_FZT_FELD_ZP" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_SEL_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+		</xs:key>
+		<xs:keyref name="REC_SEL_To_REC_SEL_ZP_REC_SELREC_SEL_ZP" refer="REC_SEL_PrimaryKey_1">
+			<xs:selector xpath="REC_SEL_ZP"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+		</xs:keyref>
+		<xs:keyref name="REC_SEL_To_SEL_FZT_FELD_REC_SELSEL_FZT_FELD" refer="REC_SEL_PrimaryKey_1">
+			<xs:selector xpath="SEL_FZT_FELD"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+		</xs:keyref>
+		<xs:keyref name="REC_SEL_To_SEL_FZT_FELD_ZP_REC_SELSEL_FZT_FELD_ZP" refer="REC_SEL_PrimaryKey_1">
+			<xs:selector xpath="SEL_FZT_FELD_ZP"/>
+			<xs:field xpath="BEREICH_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_SEL_ZP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZP_ONR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZP_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZP_LAENGE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZP_LFD_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_SEL_ZP_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+			<xs:field xpath="ZP_ONR"/>
+			<xs:field xpath="ZP_TYP"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="REC_UEB">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_LAENGE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="UEB_FZT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_UEB_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="UEB_ZIEL_TYP"/>
+			<xs:field xpath="UEB_ZIEL"/>
+		</xs:key>
+		<xs:keyref name="REC_UEB_To_UEB_FZT_REC_UEBUEB_FZT" refer="REC_UEB_PrimaryKey_1">
+			<xs:selector xpath="UEB_FZT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="UEB_ZIEL_TYP"/>
+			<xs:field xpath="UEB_ZIEL"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_UMLAUF">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UM_UID">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANF_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ANF_ONR_TYP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="END_ORT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="END_ONR_TYP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FZG_TYP_NR" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="REC_FRT" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_UMLAUF_PrimaryKey_2">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="TAGESART_NR"/>
+			<xs:field xpath="UM_UID"/>
+		</xs:key>
+		<xs:keyref name="REC_UMLAUF_To_REC_FRT_REC_UMLAUFREC_FRT" refer="REC_UMLAUF_PrimaryKey_2">
+			<xs:selector xpath="REC_FRT"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="TAGESART_NR"/>
+			<xs:field xpath="UM_UID"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="REC_UMS">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="EINAN_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="TAGESART_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UMS_BEGINN">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UMS_ENDE">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UMS_MIN" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UMS_MAX" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="MAX_VERZ_MAN" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="MAX_VERZ_AUTO" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_UMS_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="EINAN_NR"/>
+			<xs:field xpath="TAGESART_NR"/>
+			<xs:field xpath="UMS_BEGINN"/>
+			<xs:field xpath="UMS_ENDE"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="REC_ZNR">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZNR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FAHEREKURZTEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="44"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEITENTEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="160"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZNR_TEXT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="160"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZNR_CODE" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="68"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="LID_VERLAUF" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="REC_ZNR_PrimaryKey_0">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ZNR_NR"/>
+		</xs:key>
+		<xs:keyref name="REC_ZNR_To_LID_VERLAUF_REC_ZNRLID_VERLAUF" refer="REC_ZNR_PrimaryKey_0">
+			<xs:selector xpath="LID_VERLAUF"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="ZNR_NR"/>
+		</xs:keyref>
+	</xs:element>
+	<xs:element name="SEL_FZT_FELD">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_FZT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="SEL_FZT_FELD_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="FGR_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="SEL_FZT_FELD_ZP">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZP_ONR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ZP_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="SEL_FZT_ZP" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="SEL_FZT_FELD_ZP_PrimaryKey_4">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="FGR_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="SEL_ZIEL"/>
+			<xs:field xpath="SEL_ZIEL_TYP"/>
+			<xs:field xpath="ZP_ONR"/>
+			<xs:field xpath="ZP_TYP"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="UEB_FZT">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BEREICH_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="FGR_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ONR_TYP_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ORT_NR">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_ZIEL_TYP">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_ZIEL">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UEB_FAHRZEIT" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="UEB_FZT_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="BEREICH_NR"/>
+			<xs:field xpath="FGR_NR"/>
+			<xs:field xpath="ONR_TYP_NR"/>
+			<xs:field xpath="ORT_NR"/>
+			<xs:field xpath="UEB_ZIEL_TYP"/>
+			<xs:field xpath="UEB_ZIEL"/>
+		</xs:key>
+	</xs:element>
+	<xs:element name="ZUL_VERKEHRSBETRIEB">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="BASIS_VERSION">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="UNTERNEHMEN">
+					<xs:simpleType>
+						<xs:restriction base="xs:integer">
+							<xs:maxInclusive value="2147483647"/>
+							<xs:minInclusive value="-2147483648"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="ABK_UNTERNEHMEN" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="BETRIEBSGEBIET_BEZ" nillable="true">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="40"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element ref="FAHRZEUG" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="ZUL_VERKEHRSBETRIEB_PrimaryKey_1">
+			<xs:selector xpath="."/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="UNTERNEHMEN"/>
+		</xs:key>
+		<xs:keyref name="ZUL_VERKEHRSBETRIEB_To_FAHRZEUG_ZUL_VERKEHRSBETRIEBFAHRZEUG" refer="ZUL_VERKEHRSBETRIEB_PrimaryKey_1">
+			<xs:selector xpath="FAHRZEUG"/>
+			<xs:field xpath="BASIS_VERSION"/>
+			<xs:field xpath="UNTERNEHMEN"/>
+		</xs:keyref>
+	</xs:element>
+</xs:schema>

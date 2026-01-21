@@ -1,0 +1,74 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-cyan-100 text-cyan-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-replay text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Umläufe</h2>
+                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative flex items-center">
+                <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
+                <input type="text" pInputText placeholder="Suchen..."
+                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+            </div>
+            <p-button label="Neuer Umlauf" icon="pi pi-plus" [routerLink]="['/rec-umlauf/new']" severity="success"
+                size="small"></p-button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-table #dt [value]="rows" [rows]="50" [paginator]="true"
+            [globalFilterFields]="['UM_UID', 'TAGESART_NR', 'FZG_TYP_NR']" styleClass="p-datatable-striped"
+            [rowHover]="true" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="UM_UID" class="font-semibold text-sm text-slate-700">Umlauf UID <p-sortIcon
+                            field="UM_UID"></p-sortIcon></th>
+                    <th pSortableColumn="TAGESART_NR" class="font-semibold text-sm text-slate-700">Tagesart <p-sortIcon
+                            field="TAGESART_NR"></p-sortIcon></th>
+                    <th pSortableColumn="FZG_TYP_NR" class="font-semibold text-sm text-slate-700">Fahrzeugtyp
+                        <p-sortIcon field="FZG_TYP_NR"></p-sortIcon>
+                    </th>
+                    <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr>
+                    <td class="font-mono font-bold text-blue-600">
+                        <a [routerLink]="['/rec-umlauf', row.UM_UID]" [queryParams]="{tagesart: row.TAGESART_NR}"
+                            class="hover:underline">
+                            {{ row.UM_UID }}
+                        </a>
+                    </td>
+                    <td>{{ row.TAGESART_NR }}</td>
+                    <td>{{ row.FZG_TYP_NR }}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <p-button icon="pi pi-file-pdf" [text]="true" severity="info" size="small"
+                                [routerLink]="['/kursblatt', row.UM_UID]" target="_blank"
+                                pTooltip="Kursblatt anzeigen"></p-button>
+                            <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"
+                                [routerLink]="['/rec-umlauf', row.UM_UID]" [queryParams]="{tagesart: row.TAGESART_NR}"
+                                pTooltip="Bearbeiten"></p-button>
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                (onClick)="deleteUmlauf(row)" pTooltip="Löschen"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-4">Keine Umläufe gefunden.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

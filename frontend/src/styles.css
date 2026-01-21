@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* PrimeNG Icons */
+@import "primeicons/primeicons.css";
+/* Note: PrimeNG v19+ uses theme presets configured in component providers, not CSS imports */
+
+.live-select .dropdown-menu {
+  display: block;
+}
+
+.line-number-block {
+  display: inline-block;
+  padding: 0.1em 0.4em;
+  background-color: #003264;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 0.3em;
+}
+
+button:not(:disabled),
+[type=button]:not(:disabled),
+.btn:not(:disabled),
+.nav-link {
+  cursor: default;
+}
+
+input[type=color] {
+  width: 3em;
+}
+
+main {
+  display: flex;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+  background: rgba(0, 0, 0, 0.2) !important;
+}
+
+body {
+  overflow-y: hidden;
+}
+
+.content-column {
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+router-outlet {
+  display: none;
+}
+
+/* Sidebar Version Picker Panel - Custom Dark Theme */
+.version-dropdown-panel {
+  background-color: #1e293b !important;
+  /* Slate-800 */
+  border: 1px solid #334155 !important;
+  /* Slate-700 */
+  color: #e2e8f0 !important;
+  /* Slate-200 */
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.5) !important;
+}
+
+.version-dropdown-panel .p-select-filter-container {
+  background-color: #1e293b !important;
+  border-bottom: 1px solid #334155 !important;
+  padding: 0.75rem !important;
+}
+
+.version-dropdown-panel .p-select-filter {
+  background-color: #0f172a !important;
+  /* Slate-900 */
+  border: 1px solid #334155 !important;
+  color: #fff !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+.version-dropdown-panel .p-select-filter-icon {
+  color: #94a3b8 !important;
+  /* Slate-400 */
+}
+
+.version-dropdown-panel .p-select-list-container {
+  background-color: #1e293b !important;
+}
+
+/* Selected item highlight - high specificity to beat Aura primary color */
+.version-dropdown-panel .p-select-option.p-highlight,
+.version-dropdown-panel .p-select-option.p-select-option-selected,
+.version-dropdown-panel .p-select-option[data-p-highlight="true"],
+.version-dropdown-panel .p-select-option-selected {
+  background-color: #2563eb !important;
+  /* Blue-600 */
+  color: #ffffff !important;
+}
+
+.version-dropdown-panel .p-highlight *,
+.version-dropdown-panel .p-select-option-selected *,
+.version-dropdown-panel [data-p-highlight="true"] * {
+  color: #ffffff !important;
+}
+
+.version-dropdown-panel .p-select-option:not(.p-highlight):not(.p-select-option-selected):hover {
+  background-color: #334155 !important;
+  /* Slate-700 */
+  color: #ffffff !important;
+}
+
+/* Footer styling */
+.version-dropdown-panel .p-select-footer {
+  background-color: #0f172a !important;
+  /* Slate-900 */
+  border-top: 1px solid #334155 !important;
+  padding: 0.5rem !important;
+}
+
+/* Main Sidebar Select Component Overrides */
+app-sidebar p-select,
+app-sidebar .p-select {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+  color: #fff !important;
+}
+
+app-sidebar .p-select-label,
+app-sidebar .p-placeholder,
+app-sidebar .p-select-label-container {
+  color: #fff !important;
+}
+
+app-sidebar .p-select-dropdown {
+  color: #94a3b8 !important;
+}
+
+app-sidebar .p-button.p-button-text.text-blue-400 {
+  color: #60a5fa !important;
+}
+
+app-sidebar .p-button.p-button-text.text-blue-400:hover {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Sticky Table Headers for all PrimeNG Tables */
+::ng-deep .p-datatable .p-datatable-thead>tr>th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1 !important;
+  background-color: var(--p-content-background) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}

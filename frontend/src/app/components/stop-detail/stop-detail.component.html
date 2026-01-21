@@ -1,0 +1,259 @@
+<!-- stop-detail.component.html -->
+
+<div *ngIf="recOrt" class="container mx-auto p-4 max-w-7xl animate-fade-in">
+  <div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center">
+          <i class="pi pi-map-marker text-xl" [class.text-blue-600]="isGroup"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+            {{ isGroup ? 'Ortsgruppe bearbeiten (Parent)' : (recOrt.ORT_NR ? 'Haltestelle bearbeiten' : 'Neue
+            Haltestelle') }}
+          </h2>
+          <p *ngIf="recOrt.ORT_NAME" class="text-xs text-slate-500 font-medium">
+            {{ isGroup ? 'Gruppen-ID: ' + recOrt.ORT_NR : recOrt.ORT_NAME }}
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-button label="Speichern" icon="pi pi-check" severity="success" size="small"
+          (onClick)="onSubmit()"></p-button>
+        <p-button label="Zurück" icon="pi pi-arrow-left" routerLink="/stops" severity="secondary" size="small"
+          [text]="true"></p-button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-auto p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Data Column -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+
+          <!-- Basic Information Card -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-id-card text-blue-500"></i> Stammdaten
+              </h3>
+              <span class="text-xs font-mono bg-slate-200 text-slate-600 px-2 py-1 rounded">
+                {{ isGroup ? 'GROUP' : 'REC_ORT' }}
+              </span>
+            </div>
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">
+                  {{ isGroup ? 'Interne Ref-ID' : 'Nummer (ORT_NR)' }}
+                </label>
+                <p-inputNumber [(ngModel)]="recOrt.ORT_NR" [useGrouping]="false" styleClass="w-full" class="w-full"
+                  [disabled]="isGroup"></p-inputNumber>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">
+                  {{ isGroup ? 'Gruppen-Badge (LangNr)' : 'Typ (ONR_TYP_NR)' }}
+                </label>
+                <div *ngIf="!isGroup">
+                  <p-inputNumber [(ngModel)]="recOrt.ONR_TYP_NR" [disabled]="true" styleClass="w-full"
+                    class="p-input-filled w-full"></p-inputNumber>
+                </div>
+                <div *ngIf="isGroup">
+                  <p-inputNumber [(ngModel)]="recOrt.ORT_REF_ORT_LangNr" [useGrouping]="false" styleClass="w-full"
+                    class="w-full"></p-inputNumber>
+                </div>
+              </div>
+
+              <div class="md:col-span-2 flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Bezeichnung</label>
+                <input pInputText [(ngModel)]="recOrt.ORT_NAME" class="w-full font-bold text-lg"
+                  placeholder="Haltestellen Name" />
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Kürzel</label>
+                <input pInputText [(ngModel)]="recOrt.ORT_REF_ORT_KUERZEL" class="w-full" />
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Übergeordnete Gruppe (ORT_REF_ORT)</label>
+                <p-inputNumber [(ngModel)]="recOrt.ORT_REF_ORT" styleClass="w-full" class="w-full" [useGrouping]="false"
+                  placeholder="z.B. 1000"></p-inputNumber>
+                <small class="text-slate-500">Leer lassen für keine Gruppenzuordnung</small>
+              </div>
+
+              <div class="flex flex-col gap-2" *ngIf="!isGroup">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Wabennummer (Tarifzone)</label>
+                <p-inputNumber [(ngModel)]="recOrt.ZONE_WABE_NR" styleClass="w-full" class="w-full"
+                  [useGrouping]="false"></p-inputNumber>
+              </div>
+            </div>
+          </div>
+
+          <!-- Coordinates & Map -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-map text-red-500"></i> Position
+              </h3>
+            </div>
+            <div class="p-4 grid grid-cols-2 gap-4 bg-slate-50 border-b border-slate-100"
+              *ngIf="!isGroup || (recOrt && recOrt.ORT_POS_LAENGE)">
+              <div class="flex flex-col gap-1">
+                <label class="text-xs text-slate-500">Latitude</label>
+                <p-inputNumber [(ngModel)]="latDecimal" [minFractionDigits]="6" [maxFractionDigits]="8" mode="decimal"
+                  (onInput)="onCoordinateChange()" styleClass="w-full" class="w-full"
+                  [disabled]="isGroup"></p-inputNumber>
+              </div>
+              <div class="flex flex-col gap-1">
+                <label class="text-xs text-slate-500">Longitude</label>
+                <p-inputNumber [(ngModel)]="lonDecimal" [minFractionDigits]="6" [maxFractionDigits]="8" mode="decimal"
+                  (onInput)="onCoordinateChange()" styleClass="w-full" class="w-full"
+                  [disabled]="isGroup"></p-inputNumber>
+              </div>
+            </div>
+            <!-- Leaflet Map Container -->
+            <div class="relative w-full h-80 z-0">
+              <div id="map" class="absolute inset-0 z-0"></div>
+            </div>
+          </div>
+
+          <!-- HAST/HST NR (Hide for Group) -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngIf="!isGroup">
+            <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">HAST_NR (Lokal)</label>
+                <p-inputNumber [(ngModel)]="recOrt.HAST_NR_LOKAL" styleClass="w-full" class="w-full"></p-inputNumber>
+              </div>
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">HST_NR (Int)</label>
+                <input pInputText [(ngModel)]="recOrt.HST_NR_INTERNATIONAL" class="w-full" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar / Linked Data Column -->
+        <div class="flex flex-col gap-6">
+
+          <!-- GROUP CHILDREN (Only for Group) -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col flex-1"
+            *ngIf="isGroup">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-sitemap text-amber-600"></i> Enthaltene Haltestellen
+              </h3>
+            </div>
+            <div class="flex-1 overflow-auto">
+              <ul class="divide-y divide-slate-100">
+                <li *ngFor="let child of groupChildren"
+                  class="p-3 hover:bg-slate-50 flex items-center justify-between group">
+                  <div class="flex-1 cursor-pointer" [routerLink]="['/stops', child.ORT_NR]">
+                    <p class="font-semibold text-sm text-slate-700">{{ child.ORT_NAME }}</p>
+                    <div class="flex gap-2 text-xs text-slate-400">
+                      <span>Nr: {{ child.ORT_NR }}</span>
+                      <span>LangNr: {{ child.ORT_REF_ORT_LangNr }}</span>
+                    </div>
+                  </div>
+                  <div class="flex gap-1">
+                    <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                      [routerLink]="['/stops', child.ORT_NR]"></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+
+          <!-- Linked Haltepunkte (REC_HP) (Only if Not Group) -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col flex-1"
+            *ngIf="!isGroup">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-map-marker text-green-600"></i> Haltepunkte
+              </h3>
+              <p-button icon="pi pi-plus" [text]="true" size="small" (onClick)="addHp()"
+                pTooltip="HP hinzufügen"></p-button>
+            </div>
+
+            <div class="flex-1 overflow-auto">
+              <p-table [value]="recOrt.recHps || []" styleClass="p-datatable-striped" [rowHover]="true">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 25%">Nr.</th>
+                    <th style="width: 40%">DHID</th>
+                    <th style="width: 35%">Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-hp>
+                  <tr>
+                    <td class="p-1">
+                      <input pInputText type="number" [(ngModel)]="hp.HALTEPUNKT_NR"
+                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white focus:ring-1" />
+                    </td>
+                    <td class="p-1">
+                      <input pInputText type="text" [(ngModel)]="hp.DHID"
+                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white focus:ring-1"
+                        placeholder="de:..." />
+                    </td>
+                    <td class="p-1 text-right">
+                      <div class="flex justify-end gap-1">
+                        <button pButton icon="pi pi-check" class="p-button-text p-button-success p-button-sm w-6 h-6"
+                          (click)="saveHp(hp)"></button>
+                        <button pButton icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm w-6 h-6"
+                          (click)="deleteHp(hp)"></button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="3" class="text-center p-4 text-xs text-slate-400">Keine HPs vorhanden</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+
+          <!-- Sub Orts (Platforms/Tracks) (Only if Not Group) -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col"
+            *ngIf="!isGroup">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-sitemap text-amber-600"></i> Unterorte
+              </h3>
+              <p-button icon="pi pi-plus" [text]="true" size="small" (onClick)="addSubOrt()"
+                pTooltip="Unterort hinzufügen" *ngIf="!isNew"></p-button>
+            </div>
+
+            <div class="flex-1 overflow-auto" *ngIf="recOrt.subOrts && recOrt.subOrts.length > 0">
+              <ul class="divide-y divide-slate-100">
+                <li *ngFor="let sub of recOrt.subOrts"
+                  class="p-3 hover:bg-slate-50 flex items-center justify-between group">
+                  <div class="flex-1 cursor-pointer" [routerLink]="['/stops', sub.ORT_NR]">
+                    <p class="font-semibold text-sm text-slate-700">{{ sub.ORT_NAME }}</p>
+                    <p class="text-xs text-slate-400">Nr: {{ sub.ORT_NR }}</p>
+                  </div>
+                  <div class="flex gap-1">
+                    <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm"
+                      [routerLink]="['/stops', sub.ORT_NR]"></button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="p-8 text-center text-slate-400" *ngIf="!recOrt.subOrts || recOrt.subOrts.length === 0">
+              <i class="pi pi-sitemap text-4xl mb-2 text-slate-300"></i>
+              <p class="text-sm">Keine Unterorte vorhanden</p>
+              <p class="text-xs" *ngIf="!isNew">Klicke auf '+' um einen Unterort hinzuzufügen</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

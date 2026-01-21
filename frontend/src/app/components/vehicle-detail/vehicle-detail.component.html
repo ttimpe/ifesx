@@ -1,0 +1,54 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngIf="vehicle">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <a routerLink="/vehicles">
+                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
+            </a>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">Fahrzeug: {{ vehicle.FZG_TEXT || vehicle.FZG_NR }}</h2>
+                <p class="text-xs text-slate-500">FZG_NR: {{ vehicle.FZG_NR }}</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <p-button label="Speichern" icon="pi pi-save" severity="success" (onClick)="save()"></p-button>
+            <p-button label="Löschen" icon="pi pi-trash" severity="danger" [outlined]="true"
+                (onClick)="delete()"></p-button>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+        <div class="max-w-3xl mx-auto">
+            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Fahrzeug Nummer (FZG_NR)</label>
+                        <input pInputText [(ngModel)]="vehicle.FZG_NR" [disabled]="true" class="w-full" />
+                        <small class="text-slate-400">Kann nicht geändert werden</small>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Bezeichnung / Kennzeichen</label>
+                        <input pInputText [(ngModel)]="vehicle.FZG_TEXT" placeholder="z.B. BI-NV 101" class="w-full" />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Fahrzeugtyp</label>
+                        <p-select [options]="types" [(ngModel)]="vehicle.FZG_TYP_NR" optionLabel="FZG_TYP_TEXT"
+                            optionValue="FZG_TYP_NR" placeholder="Typ wählen..." styleClass="w-full"
+                            appendTo="body"></p-select>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Unternehmen</label>
+                        <p-inputNumber [(ngModel)]="vehicle.UNTERNEHMEN" [useGrouping]="false"
+                            styleClass="w-full"></p-inputNumber>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<p-confirmDialog></p-confirmDialog>

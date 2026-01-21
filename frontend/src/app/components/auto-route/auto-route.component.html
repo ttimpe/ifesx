@@ -1,0 +1,18 @@
+  <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display': displayStyle}">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Auto-Route</h5>
+          <button  type="button" class="btn close" data-dismiss="modal" aria-label="Close" (click)="isVisible = false">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <app-stop-search-field #originStopField (onSelectStop)="onSelectAutoRouteOriginStop($event)"></app-stop-search-field>
+          <app-stop-search-field #destinationStopField (onSelectStop)="onSelectAutoRouteDestinationStop($event)"></app-stop-search-field>        </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="findRoute()">Route finden</button>
+          </div>
+        </div>
+      </div>
+    </div>

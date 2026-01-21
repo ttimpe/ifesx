@@ -1,0 +1,88 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-users text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                    {{ isNew ? 'Neuer Bereich / Betriebszweig' : 'Bereich / Betriebszweig bearbeiten' }}
+                </h2>
+                <p *ngIf="!isNew && model" class="text-xs text-slate-500 font-medium">
+                    {{ model.STR_BEREICH }} - {{ model.BEREICH_TEXT }}
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <p-button label="Speichern" icon="pi pi-check" (onClick)="save()" severity="success"
+                size="small"></p-button>
+            <p-button *ngIf="!isNew" label="Löschen" icon="pi pi-trash" (onClick)="delete()" severity="danger"
+                size="small" [outlined]="true"></p-button>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-auto p-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+                <!-- Card Header with Icon -->
+                <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center shadow-inner">
+                        <i class="pi pi-users text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800 tracking-tight">Stammdaten</h3>
+                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Grundkonfiguration des
+                            Bereichs</p>
+                    </div>
+                </div>
+
+                <form *ngIf="model" class="p-8 space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
+
+                        <!-- ID Selection -->
+                        <div class="flex flex-col gap-2 group">
+                            <label class="font-bold text-slate-700 flex items-center gap-2">
+                                <span>Bereich Nummer (ID)</span>
+                                <i class="pi pi-info-circle text-slate-400 text-xs"
+                                    pTooltip="Eindeutige ID des Bereichs"></i>
+                            </label>
+                            <p-inputNumber [(ngModel)]="model.BEREICH_NR" name="bereichNr" [disabled]="!isNew"
+                                [useGrouping]="false" class="w-full" styleClass="w-full"
+                                placeholder="Automatisch vergeben"></p-inputNumber>
+                            <small class="text-slate-400 italic" *ngIf="isNew">Wird automatisch vergeben wenn 0 oder
+                                leer.</small>
+                        </div>
+
+                        <!-- Basis Version -->
+                        <div class="flex flex-col gap-2 opacity-70">
+                            <label class="font-bold text-slate-700">Basis Version</label>
+                            <p-inputNumber [(ngModel)]="model.BASIS_VERSION" name="basisVersion" [disabled]="true"
+                                [useGrouping]="false" class="w-full" styleClass="w-full"></p-inputNumber>
+                        </div>
+
+                        <!-- Kürzel -->
+                        <div class="flex flex-col gap-2 col-span-1">
+                            <label class="font-bold text-slate-700">Kürzel (STR_BEREICH)</label>
+                            <input type="text" pInputText [(ngModel)]="model.STR_BEREICH" name="strBereich"
+                                maxlength="6" placeholder="Bsp: STAD" class="w-full" />
+                            <small class="text-slate-400">Maximal 6 Zeichen.</small>
+                        </div>
+
+                        <!-- Text / Name -->
+                        <div class="flex flex-col gap-2 col-span-1 md:col-span-2">
+                            <label class="font-bold text-slate-700">Beschreibung (BEREICH_TEXT)</label>
+                            <input type="text" pInputText [(ngModel)]="model.BEREICH_TEXT" name="bereichText"
+                                maxlength="40" placeholder="Aussagekräftiger Name des Bereichs (z.B. Bus, Bahn)"
+                                class="w-full" />
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

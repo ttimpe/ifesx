@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ifesx-backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/uploads:/app/uploads
+      - ./timetable.sqlite3:/app/timetable.sqlite3
+      - ./backend/routes.json:/app/routes.json
+      # Use an anonymous volume for node_modules to prevent local host modules from overriding container modules
+      - /app/node_modules
+      - ./public:/app/public # Helper to serve static files
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ifesx-frontend
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./frontend/src:/app/src
+      - /app/node_modules
+      - ./public:/app/dist/ifesx-frontend # Output build to shared public folder
+    environment:
+      # Crucial for hot reload in Docker (polling)
+      - CHOKIDAR_USEPOLLING=true
+      - POLLING_INTERVAL=2000
+    restart: unless-stopped
+    depends_on:
+      - backend

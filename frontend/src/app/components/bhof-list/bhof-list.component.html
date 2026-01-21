@@ -1,0 +1,79 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-building text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Betriebshöfe</h2>
+                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative flex items-center">
+                <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
+                <input type="text" pInputText placeholder="Suchen..." (input)="applyFilterGlobal($event, 'contains')"
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-purple-500 focus:!ring-2 focus:!ring-purple-100 !bg-white transition-all shadow-sm" />
+            </div>
+            <a routerLink="/betriebshoefe/new">
+                <p-button label="Neuer Betriebshof" icon="pi pi-plus" severity="success" size="small"></p-button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-table #dt [value]="rows" [rows]="100" [paginator]="true"
+            [globalFilterFields]="['BHOF_NR', 'BHOF_TEXT', 'STR_BHOF']" [tableStyle]="{ 'min-width': '50rem' }"
+            [rowHover]="true" styleClass="p-datatable-striped">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="BHOF_NR" class="font-semibold text-sm text-slate-700" style="width:15%">Nr
+                        <p-sortIcon field="BHOF_NR"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="STR_BHOF" class="font-semibold text-sm text-slate-700" style="width:20%">Kürzel
+                        <p-sortIcon field="STR_BHOF"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="BHOF_TEXT" class="font-semibold text-sm text-slate-700" style="width:45%">
+                        Beschreibung
+                        <p-sortIcon field="BHOF_TEXT"></p-sortIcon>
+                    </th>
+                    <th class="font-semibold text-sm text-slate-700" style="width:20%">Aktionen</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+                <tr class="hover:bg-slate-50 transition-colors cursor-pointer"
+                    [routerLink]="['/betriebshoefe', row.BHOF_NR]">
+                    <td class="font-mono text-slate-600">{{ row.BHOF_NR }}</td>
+                    <td class="font-semibold text-purple-600">{{ row.STR_BHOF }}</td>
+                    <td>{{ row.BHOF_TEXT }}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"></p-button>
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                (onClick)="delete(row); $event.stopPropagation()"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-8 text-slate-500">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="pi pi-building text-4xl mb-3 text-slate-300"></i>
+                            <p>Keine Betriebshöfe gefunden.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <p-toast></p-toast>
+    <p-confirmDialog></p-confirmDialog>
+</div>

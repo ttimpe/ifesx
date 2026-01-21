@@ -1,0 +1,9 @@
+<div class="live-select">
+  <span *ngIf="selectedStop">{{ selectedStop.name }}</span>
+  <input #inputField *ngIf="!selectedStop" type="text" id="stopSearch" [(ngModel)]="stopSearchTerm" (input)="searchStops()" name="stopSearch" placeholder="Type to search stops">
+
+  <div class="dropdown-menu" *ngIf="stopSearchTerm.length > 2">
+    <button class="dropdown-item" type="button" *ngFor="let stop of availableStops" (click)="selectStop(stop)">{{ stop.name }}</button>
+
+  </div>
+</div>

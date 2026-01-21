@@ -1,0 +1,69 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                <fa-icon [icon]="faExchangeAlt" class="text-xl"></fa-icon>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Anschlüsse</h2>
+                <p class="text-xs text-slate-500 font-medium">{{connections.length}} Einträge gefunden</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Suchen..."
+                    class="p-inputtext-sm w-48" />
+            </span>
+            <p-button label="Neu" icon="pi pi-plus" (onClick)="create()"></p-button>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="flex-1 overflow-auto p-0">
+        <p-table #dt [value]="connections" [rows]="50" [paginator]="true"
+            [globalFilterFields]="['ANSCHLUSS_NAME', 'EINAN_NR']" styleClass="p-datatable-sm p-datatable-striped"
+            [rowHover]="true">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="EINAN_NR" style="width: 10%">Nr <p-sortIcon field="EINAN_NR"></p-sortIcon></th>
+                    <th pSortableColumn="ANSCHLUSS_NAME">Name <p-sortIcon field="ANSCHLUSS_NAME"></p-sortIcon></th>
+                    <th>Zubringer</th>
+                    <th>Abbringer</th>
+                    <th>UMS Einträge</th>
+                    <th style="width: 10%" class="text-center">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item>
+                <tr class="cursor-pointer hover:bg-slate-50 transition-colors" (click)="edit(item)">
+                    <td class="font-mono text-slate-500">{{ item.EINAN_NR }}</td>
+                    <td class="font-medium text-slate-800">{{ item.ANSCHLUSS_NAME || '-' }}</td>
+                    <td>
+                        <div class="font-medium text-xs">{{ item.ZUB_LI_NR }} (Ref: {{ item.ZUB_ORT_REF_ORT }})</div>
+                    </td>
+                    <td>
+                        <div class="font-medium text-xs">{{ item.ABB_LI_NR }} (Ref: {{ item.ABB_ORT_REF_ORT }})</div>
+                    </td>
+                    <td>
+                        <div class="text-xs text-slate-500">{{ item.recUms?.length || 0 }} Regeln</div>
+                    </td>
+                    <td class="text-center">
+                        <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center p-8">
+                        <div class="flex flex-col items-center justify-center text-slate-400 gap-2">
+                            <fa-icon [icon]="faExchangeAlt" class="text-4xl opacity-20"></fa-icon>
+                            <p>Keine Anschlüsse gefunden.</p>
+                            <p-button label="Ersten Anschluss anlegen" [text]="true" (onClick)="create()"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

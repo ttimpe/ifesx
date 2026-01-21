@@ -1,0 +1,75 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-sitemap text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Netzrelationen</h2>
+                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative flex items-center">
+                <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
+                <input type="text" pInputText placeholder="Ort, Ziel..."
+                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+            </div>
+            <p-button label="Neue Relation" icon="pi pi-plus" [routerLink]="['/rec-sel/add']" severity="success"
+                size="small"></p-button>
+        </div>
+    </div>
+
+    <!-- Table -->
+
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-table #dt [value]="rows" [rows]="50" [paginator]="true"
+            [globalFilterFields]="['ORT_NR', 'ORT_NAME', 'SEL_ZIEL', 'SEL_ZIEL_NAME']" styleClass="p-datatable-striped"
+            [rowHover]="true" [loading]="loading">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="ORT_NAME" class="font-semibold text-sm text-slate-700">Von Ort <p-sortIcon
+                            field="ORT_NAME"></p-sortIcon></th>
+                    <th pSortableColumn="SEL_ZIEL_NAME" class="font-semibold text-sm text-slate-700">Nach Ort
+                        <p-sortIcon field="SEL_ZIEL_NAME"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="SEL_LAENGE" class="font-semibold text-sm text-slate-700" style="width: 15%">
+                        Distanz <p-sortIcon field="SEL_LAENGE"></p-sortIcon></th>
+                    <th class="font-semibold text-sm text-slate-700" style="width: 10%">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr>
+                    <td>
+                        <a [routerLink]="['/rec-sel', row.ORT_NR + '-' + row.SEL_ZIEL]"
+                            [queryParams]="{ version: selectedBasisVersion }"
+                            class="font-bold text-blue-600 hover:underline">
+                            {{ row.ORT_NAME }}
+                        </a>
+                        <span class="text-slate-400 text-xs ml-1">({{ row.ORT_NR }})</span>
+                    </td>
+                    <td>
+                        {{ row.SEL_ZIEL_NAME }}
+                        <span class="text-slate-400 text-xs ml-1">({{ row.SEL_ZIEL }})</span>
+                    </td>
+                    <td class="font-mono">{{ row.SEL_LAENGE ? row.SEL_LAENGE + ' m' : '-' }}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small"
+                                [routerLink]="['/rec-sel', row.ORT_NR + '-' + row.SEL_ZIEL]"
+                                [queryParams]="{ version: selectedBasisVersion }" pTooltip="Bearbeiten"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-4">Keine Netzrelationen gefunden.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

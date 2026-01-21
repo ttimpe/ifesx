@@ -1,0 +1,71 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-clock text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrzeitgruppen</h2>
+                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative flex items-center">
+                <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
+                <input type="text" pInputText placeholder="Suchen..."
+                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+            </div>
+            <a routerLink="/rec-fgr/new">
+                <p-button label="Neu" icon="pi pi-plus" severity="success" size="small"></p-button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-table #dt [value]="rows" [rows]="100" [paginator]="true" [loading]="loadingIndicator"
+            [globalFilterFields]="['FGR_NR', 'STR_FGR', 'FGR_TEXT']" [tableStyle]="{ 'min-width': '50rem' }"
+            [rowHover]="true" styleClass="p-datatable-striped">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="FGR_NR" class="font-semibold text-sm text-slate-700" style="width:20%">Nr <p-sortIcon field="FGR_NR"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="STR_FGR" class="font-semibold text-sm text-slate-700" style="width:20%">Kürzel <p-sortIcon field="STR_FGR"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="FGR_TEXT" class="font-semibold text-sm text-slate-700" style="width:40%">Beschreibung <p-sortIcon
+                            field="FGR_TEXT"></p-sortIcon></th>
+                    <th class="font-semibold text-sm text-slate-700" style="width:20%">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr class="hover:bg-slate-50 transition-colors cursor-pointer" [routerLink]="['/rec-fgr', row.FGR_NR]">
+                    <td class="font-medium text-slate-600">{{ row.FGR_NR }}</td>
+                    <td>{{ row.STR_FGR }}</td>
+                    <td>{{ row.FGR_TEXT }}</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <a [routerLink]="['/rec-fgr', row.FGR_NR]">
+                                <p-button icon="pi pi-pencil" [text]="true" severity="secondary"
+                                    size="small"></p-button>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-8 text-slate-500">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="pi pi-clock text-4xl mb-3 text-slate-300"></i>
+                            <p>Keine Fahrzeitgruppen gefunden.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

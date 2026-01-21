@@ -1,0 +1,142 @@
+<!-- line-detail.component.html -->
+<div *ngIf="line" class="container mx-auto p-4 max-w-7xl animate-fade-in">
+  <div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 bg-violet-100 text-violet-600 rounded-lg flex items-center justify-center">
+          <i class="pi pi-share-alt text-xl"></i>
+        </div>
+        <div>
+          <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+            {{ line.LI_NR ? 'Linie bearbeiten' : 'Neue Linie' }}
+          </h2>
+          <p *ngIf="line.LI_KUERZEL || line.LIDNAME" class="text-xs text-slate-500 font-medium">
+            {{ line.LI_KUERZEL }}{{ line.LIDNAME ? ' - ' + line.LIDNAME : '' }}
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <p-button label="Speichern" icon="pi pi-check" severity="success" size="small"
+          (onClick)="saveLine()"></p-button>
+        <p-button label="Zurück" icon="pi pi-arrow-left" routerLink="/lines" severity="secondary" size="small"
+          [text]="true"></p-button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-auto p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Main Data Column -->
+        <div class="lg:col-span-1 flex flex-col gap-6">
+
+          <!-- Basic Data & Colors -->
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-palette text-purple-500"></i> Stammdaten
+              </h3>
+            </div>
+            <div class="p-6 flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Linien-ID (LI_NR)</label>
+                <p-inputNumber [(ngModel)]="line.LI_NR" [useGrouping]="false" styleClass="w-full"
+                  placeholder="z.B. 4"></p-inputNumber>
+                <small class="text-slate-500">⚠️ Änderung aktualisiert alle abhängigen Datensätze (Varianten, Fahrten,
+                  etc.)</small>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Nummer (LI_KUERZEL)</label>
+                <input pInputText [(ngModel)]="line.LI_KUERZEL" class="w-full font-bold" />
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <label class="text-xs font-semibold text-slate-500 uppercase">Bezeichnung (LIDNAME)</label>
+                <input pInputText [(ngModel)]="line.LIDNAME" class="w-full" />
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2">
+                  <label class="text-xs font-semibold text-slate-500 uppercase">Hintergrund</label>
+                  <div class="flex gap-2 items-center">
+                    <p-colorPicker [(ngModel)]="line.LIN_FARBE"></p-colorPicker>
+                    <span class="text-sm font-mono text-slate-600">{{line.LIN_FARBE}}</span>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label class="text-xs font-semibold text-slate-500 uppercase">Textfarbe</label>
+                  <div class="flex gap-2 items-center">
+                    <p-colorPicker [(ngModel)]="line.LIN_TEXT_FARBE"></p-colorPicker>
+                    <span class="text-sm font-mono text-slate-600">{{line.LIN_TEXT_FARBE}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Preview -->
+              <div
+                class="mt-4 p-4 bg-slate-50 rounded-lg flex flex-col gap-2 items-center justify-center border border-slate-200 border-dashed">
+                <span class="text-xs text-slate-400 uppercase font-semibold">Vorschau</span>
+                <span class="inline-block px-4 py-2 rounded text-xl font-bold min-w-[4rem] text-center shadow-sm"
+                  [ngStyle]="{'background-color': line.LIN_FARBE, 'color': line.LIN_TEXT_FARBE}">
+                  {{ line.LI_KUERZEL }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Routes Column -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
+            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="pi pi-map-marker text-blue-600"></i> Fahrwege
+              </h3>
+              <p-button label="Neu" icon="pi pi-plus" (onClick)="addVariant()" size="small"></p-button>
+            </div>
+            <!-- PrimeNG Table for Variants -->
+            <div class="flex-1 overflow-auto bg-white p-2">
+              <p-table [value]="variants" [rows]="10" [paginator]="true" styleClass="p-datatable-striped"
+                [rowHover]="true">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th style="width: 15%">Code</th>
+                    <th style="width: 45%">Bezeichnung</th>
+                    <th style="width: 15%">Richtung</th>
+                    <th style="width: 15%">Aktionen</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-variant>
+                  <tr class="hover:bg-slate-50 transition-colors cursor-pointer" (click)="editVariant(variant)">
+                    <td class="font-mono text-slate-500 font-bold">{{ variant.STR_LI_VAR }}</td>
+                    <td class="text-sm font-medium">{{ variant.LIDNAME || '-' }}</td>
+                    <td class="text-sm text-slate-600">{{ variant.LI_RI_NR }}</td>
+                    <td>
+                      <div class="flex gap-1">
+                        <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"
+                          (onClick)="editVariant(variant); $event.stopPropagation()"></p-button>
+                        <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                          (onClick)="deleteVariant(variant); $event.stopPropagation()"></p-button>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="4" class="text-center p-8 text-slate-500">
+                      <div class="flex flex-col items-center justify-center">
+                        <i class="pi pi-map text-4xl mb-3 text-slate-300"></i>
+                        <p>Keine Fahrwege vorhanden.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

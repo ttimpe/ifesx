@@ -1,0 +1,106 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-arrow-right-arrow-left text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                    Netzrelation {{ sel.ORT_NR ? (sel.ORT_NAME || 'Start') + ' → ' + (sel.SEL_ZIEL_NAME || 'Ziel') :
+                    'Neu' }}
+                </h2>
+                <p *ngIf="sel.ORT_NR && sel.SEL_ZIEL" class="text-xs text-slate-500 font-medium">
+                    {{sel.SEL_LAENGE || 0}} m
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <p-button label="Speichern" icon="pi pi-check" (onClick)="save()" severity="success"
+                size="small"></p-button>
+            <p-button *ngIf="!isNew" label="Löschen" icon="pi pi-trash" (onClick)="delete()" severity="danger"
+                size="small" [outlined]="true"></p-button>
+        </div>
+    </div>
+
+    <!-- Content: Full-width 2-column Grid -->
+    <div class="flex-1 overflow-hidden">
+        <p-toast></p-toast>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-0 h-full">
+
+            <!-- Left Column: Form -->
+            <div class="bg-slate-50 border-r border-slate-200 overflow-auto">
+                <div class="p-6">
+                    <h3 class="font-bold text-slate-800 mb-6">Eigenschaften</h3>
+
+                    <div class="space-y-6">
+                        <div class="flex flex-col gap-2">
+                            <label class="font-bold text-slate-700">Startort</label>
+                            <p-autoComplete [(ngModel)]="selectedStartOrt" [suggestions]="filteredStartOrte"
+                                (completeMethod)="filterOrte($event, 'start')" (onSelect)="onStartSelect($event)"
+                                field="ORT_NAME" [dropdown]="true" placeholder="Startort suchen..." styleClass="w-full"
+                                inputStyleClass="w-full" class="w-full">
+                                <ng-template let-ort pTemplate="item">
+                                    <div class="flex justify-between items-center w-full">
+                                        <span>{{ort.ORT_NAME}}</span>
+                                        <span
+                                            class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">#{{ort.ORT_NR}}</span>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <small *ngIf="sel.ORT_NR" class="text-slate-500">ID: {{sel.ORT_NR}} (Typ:
+                                {{sel.ONR_TYP_NR}})</small>
+                        </div>
+
+                        <div class="flex justify-center">
+                            <i class="pi pi-arrow-down text-slate-300 text-xl"></i>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label class="font-bold text-slate-700">Zielort</label>
+                            <p-autoComplete [(ngModel)]="selectedDestOrt" [suggestions]="filteredDestOrte"
+                                (completeMethod)="filterOrte($event, 'dest')" (onSelect)="onDestSelect($event)"
+                                field="ORT_NAME" [dropdown]="true" placeholder="Zielort suchen..." styleClass="w-full"
+                                inputStyleClass="w-full" class="w-full">
+                                <ng-template let-ort pTemplate="item">
+                                    <div class="flex justify-between items-center w-full">
+                                        <span>{{ort.ORT_NAME}}</span>
+                                        <span
+                                            class="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded">#{{ort.ORT_NR}}</span>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <small *ngIf="sel.SEL_ZIEL" class="text-slate-500">ID: {{sel.SEL_ZIEL}} (Typ:
+                                {{sel.SEL_ZIEL_TYP}})</small>
+                        </div>
+
+                        <div class="flex flex-col gap-2 border-t pt-4 border-slate-200">
+                            <label class="font-bold text-slate-700">Distanz</label>
+                            <div class="flex gap-2">
+                                <p-inputNumber [(ngModel)]="sel.SEL_LAENGE" suffix=" m" [useGrouping]="true"
+                                    styleClass="flex-1" class="flex-1"></p-inputNumber>
+                                <p-button label="EFA" icon="pi pi-download" (onClick)="getDistanceFromEFA()"
+                                    severity="info" size="small" [loading]="isLoadingEFA"
+                                    [disabled]="!selectedStartOrt || !selectedDestOrt" pTooltip="Distanz aus EFA laden"
+                                    tooltipPosition="top">
+                                </p-button>
+                            </div>
+                            <small class="text-slate-500">Klicke auf "EFA" um die Distanz automatisch zu
+                                berechnen</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Map -->
+            <div class="bg-white overflow-hidden relative">
+                <div class="absolute top-4 left-4 z-10 bg-white px-3 py-2 rounded-lg shadow-md border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-sm">Karte</h3>
+                </div>
+                <div id="map" class="absolute inset-0 z-0"></div>
+            </div>
+        </div>
+    </div>
+</div>

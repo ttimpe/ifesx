@@ -1,0 +1,430 @@
+- Generating browser application bundles (phase: setup)...
+✔ Browser application bundle generation complete.
+✔ Browser application bundle generation complete.
+
+Warning: src/app/components/announcement-list/announcement-list.component.ts:31:5 - warning NG8113: IconField is not used within the template of AnnouncementListComponent
+
+31     IconField,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/announcement-list/announcement-list.component.ts:32:5 - warning NG8113: InputIcon is not used within the template of AnnouncementListComponent
+
+32     InputIcon,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/destination-list/destination-list.component.ts:31:5 - warning NG8113: IconField is not used within the template of DestinationListComponent
+
+31     IconField,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/destination-list/destination-list.component.ts:32:5 - warning NG8113: InputIcon is not used within the template of DestinationListComponent
+
+32     InputIcon,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/help/help.component.ts:12:54 - warning NG8113: Button is not used within the template of HelpComponent
+
+12     imports: [CommonModule, TitlebarComponent, Card, Button, Accordion, AccordionPanel, AccordionHeader, AccordionContent]
+                                                        ~~~~~~
+
+
+Warning: src/app/components/line-detail/line-detail.component.ts:31:5 - warning NG8113: InputNumber is not used within the template of LineDetailComponent
+
+31     InputNumber,
+       ~~~~~~~~~~~
+
+
+Warning: src/app/components/line-detail/line-detail.component.ts:35:5 - warning NG8113: Select is not used within the template of LineDetailComponent
+
+35     Select,
+       ~~~~~~
+
+
+Warning: src/app/components/line-list/line-list.component.ts:23:60 - warning NG8113: TitlebarComponent is not used within the template of LineListComponent
+
+23   imports: [CommonModule, RouterModule, FontAwesomeModule, TitlebarComponent, TableModule,
+                                                              ~~~~~~~~~~~~~~~~~
+
+
+Warning: src/app/components/line-list/line-list.component.ts:28:5 - warning NG8113: Tooltip is not used within the template of LineListComponent
+
+28     Tooltip]
+       ~~~~~~~
+
+
+Warning: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:34:5 - warning NG8113: Button is not used within the template of RecFztMatrixComponent
+
+34     Button,
+       ~~~~~~
+
+
+Warning: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:35:5 - warning NG8113: InputText is not used within the template of RecFztMatrixComponent
+
+35     InputText,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:36:5 - warning NG8113: IconField is not used within the template of RecFztMatrixComponent
+
+36     IconField,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:37:5 - warning NG8113: InputIcon is not used within the template of RecFztMatrixComponent
+
+37     InputIcon,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:38:5 - warning NG8113: Tooltip is not used within the template of RecFztMatrixComponent
+
+38     Tooltip,
+       ~~~~~~~
+
+
+Warning: src/app/components/rec-om-detail/rec-om-detail.component.ts:53:9 - warning NG8113: IconField is not used within the template of RecOmDetailComponent
+
+53         IconField,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-om-detail/rec-om-detail.component.ts:54:9 - warning NG8113: InputIcon is not used within the template of RecOmDetailComponent
+
+54         InputIcon,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-om-detail/rec-om-detail.component.ts:55:9 - warning NG8113: Tooltip is not used within the template of RecOmDetailComponent
+
+55         Tooltip,
+           ~~~~~~~
+
+
+Warning: src/app/components/rec-om-detail/rec-om-detail.component.ts:56:9 - warning NG8113: Card is not used within the template of RecOmDetailComponent
+
+56         Card, // Changed from CardModule to Card for standalone consistency
+           ~~~~
+
+
+Warning: src/app/components/rec-om-list/rec-om-list.component.ts:31:9 - warning NG8113: IconField is not used within the template of RecOmListComponent
+
+31         IconField,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-om-list/rec-om-list.component.ts:32:9 - warning NG8113: InputIcon is not used within the template of RecOmListComponent
+
+32         InputIcon,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-sel-list/rec-sel-list.component.ts:31:9 - warning NG8113: IconField is not used within the template of RecSelListComponent
+
+31         IconField,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-sel-list/rec-sel-list.component.ts:32:9 - warning NG8113: InputIcon is not used within the template of RecSelListComponent
+
+32         InputIcon,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-umlauf-list/rec-umlauf-list.component.ts:27:9 - warning NG8113: IconField is not used within the template of RecUmlaufListComponent
+
+27         IconField,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/rec-umlauf-list/rec-umlauf-list.component.ts:28:9 - warning NG8113: InputIcon is not used within the template of RecUmlaufListComponent
+
+28         InputIcon,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/special-character-list/special-character-list.component.ts:31:5 - warning NG8113: IconField is not used within the template of SpecialCharacterListComponent
+
+31     IconField,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/special-character-list/special-character-list.component.ts:32:5 - warning NG8113: InputIcon is not used within the template of SpecialCharacterListComponent
+
+32     InputIcon,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/stop-detail/stop-detail.component.ts:46:5 - warning NG8113: IconField is not used within the template of StopDetailComponent
+
+46     IconField,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/stop-detail/stop-detail.component.ts:47:5 - warning NG8113: InputIcon is not used within the template of StopDetailComponent
+
+47     InputIcon,
+       ~~~~~~~~~
+
+
+Warning: src/app/components/stop-detail/stop-detail.component.ts:49:5 - warning NG8113: Dialog is not used within the template of StopDetailComponent
+
+49     Dialog,
+       ~~~~~~
+
+
+Warning: src/app/components/stop-list/stop-list.component.ts:20:100 - warning NG8113: Tooltip is not used within the template of StopListComponent
+
+20   imports: [CommonModule, TableModule, FontAwesomeModule, Button, InputText, IconField, InputIcon, Tooltip]
+                                                                                                      ~~~~~~~
+
+
+Warning: src/app/components/vehicle-list/vehicle-list.component.ts:33:9 - warning NG8113: IconField is not used within the template of VehicleListComponent
+
+33         IconField,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/vehicle-list/vehicle-list.component.ts:34:9 - warning NG8113: InputIcon is not used within the template of VehicleListComponent
+
+34         InputIcon,
+           ~~~~~~~~~
+
+
+Warning: src/app/components/vehicle-list/vehicle-list.component.ts:35:9 - warning NG8113: Tooltip is not used within the template of VehicleListComponent
+
+35         Tooltip,
+           ~~~~~~~
+
+
+Warning: /Users/tobias/Developer/ifesx-frontend/src/app/components/network-map-editor/network-map-editor.component.ts depends on 'leaflet'. CommonJS or AMD dependencies can cause optimization bailouts.
+For more info see: https://angular.dev/tools/cli/build#configuring-commonjs-dependencies
+
+
+
+Error: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.html:39:96 - error TS2339: Property 'value' does not exist on type 'Event'.
+
+39                     <p-inputNumber [(ngModel)]="row.SEL_FZT" (onInput)="updateTime(row, $event.value)" [min]="0"
+                                                                                                  ~~~~~
+
+  src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:41:16
+    41   templateUrl: './rec-fzt-matrix.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component RecFztMatrixComponent.
+
+
+Error: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.html:39:104 - error NG8002: Can't bind to 'min' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'min' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+39                     <p-inputNumber [(ngModel)]="row.SEL_FZT" (onInput)="updateTime(row, $event.value)" [min]="0"
+                                                                                                          ~~~~~~~~~
+
+  src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:41:16
+    41   templateUrl: './rec-fzt-matrix.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component RecFztMatrixComponent.
+
+
+Error: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.html:40:25 - error NG8002: Can't bind to 'showButtons' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'showButtons' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+40                         [showButtons]="true" buttonLayout="horizontal" inputId="minmax-buttons" mode="decimal"
+                           ~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:41:16
+    41   templateUrl: './rec-fzt-matrix.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component RecFztMatrixComponent.
+
+
+Error: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.html:41:25 - error NG8002: Can't bind to 'step' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'step' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+41                         [step]="10" decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary"
+                           ~~~~~~~~~~~
+
+  src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:41:16
+    41   templateUrl: './rec-fzt-matrix.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component RecFztMatrixComponent.
+
+
+Error: src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.html:43:25 - error NG8002: Can't bind to 'inputStyle' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'inputStyle' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+43                         [inputStyle]="{'width': '80px', 'text-align': 'center'}">
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/rec-fzt-matrix/rec-fzt-matrix.component.ts:41:16
+    41   templateUrl: './rec-fzt-matrix.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component RecFztMatrixComponent.
+
+
+Error: src/app/components/rec-sel-detail/rec-sel-detail.component.ts:54:9 - error NG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.
+
+54         CardModule,
+           ~~~~~~~~~~
+
+  src/app/components/rec-sel-detail/rec-sel-detail.component.ts:54:9
+    54         CardModule,
+               ~~~~~~~~~~
+    Unknown reference.
+
+
+Error: src/app/components/rec-sel-detail/rec-sel-detail.component.ts:54:9 - error TS2304: Cannot find name 'CardModule'.
+
+54         CardModule,
+           ~~~~~~~~~~
+
+
+Error: src/app/components/rec-sel-detail/rec-sel-detail.component.ts:56:9 - error NG1010: 'imports' must be an array of components, directives, pipes, or NgModules.
+  Value could not be determined statically.
+
+56         AutoCompleteModule
+           ~~~~~~~~~~~~~~~~~~
+
+  src/app/components/rec-sel-detail/rec-sel-detail.component.ts:56:9
+    56         AutoCompleteModule
+               ~~~~~~~~~~~~~~~~~~
+    Unknown reference.
+
+
+Error: src/app/components/rec-sel-detail/rec-sel-detail.component.ts:56:9 - error TS2552: Cannot find name 'AutoCompleteModule'. Did you mean 'AutoComplete'?
+
+56         AutoCompleteModule
+           ~~~~~~~~~~~~~~~~~~
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:2:3 - error NG8001: 'app-titlebar' is not a known element:
+1. If 'app-titlebar' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-titlebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+
+2   <app-titlebar title="Sonderzeichen Details" [canGoBack]="true" class="mb-6 block"></app-titlebar>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:2:47 - error NG8002: Can't bind to 'canGoBack' since it isn't a known property of 'app-titlebar'.
+1. If 'app-titlebar' is an Angular component and it has 'canGoBack' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-titlebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+2   <app-titlebar title="Sonderzeichen Details" [canGoBack]="true" class="mb-6 block"></app-titlebar>
+                                                ~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:12:9 - error NG8001: 'p-inputNumber' is not a known element:
+1. If 'p-inputNumber' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+
+12         <p-inputNumber id="number" [(ngModel)]="specialCharacter.number" [useGrouping]="false" class="w-full"
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+13           styleClass="w-full"></p-inputNumber>
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:12:36 - error NG8002: Can't bind to 'ngModel' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'ngModel' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+12         <p-inputNumber id="number" [(ngModel)]="specialCharacter.number" [useGrouping]="false" class="w-full"
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:12:74 - error NG8002: Can't bind to 'useGrouping' since it isn't a known property of 'p-inputNumber'.
+1. If 'p-inputNumber' is an Angular component and it has 'useGrouping' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'p-inputNumber' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+12         <p-inputNumber id="number" [(ngModel)]="specialCharacter.number" [useGrouping]="false" class="w-full"
+                                                                            ~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/special-character-detail/special-character-detail.component.html:19:44 - error NG8002: Can't bind to 'ngModel' since it isn't a known property of 'input'.
+
+19         <input pInputText id="stringValue" [(ngModel)]="specialCharacter.stringValue" class="w-full" />
+                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/special-character-detail/special-character-detail.component.ts:18:16
+    18   templateUrl: './special-character-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component SpecialCharacterDetailComponent.
+
+
+Error: src/app/components/stop-detail/stop-detail.component.html:3:3 - error NG8001: 'app-titlebar' is not a known element:
+1. If 'app-titlebar' is an Angular component, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-titlebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+
+3   <app-titlebar [title]="'Haltestelle Bearbeiten'" [canGoBack]="true" class="mb-6 block"></app-titlebar>
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/stop-detail/stop-detail.component.ts:40:16
+    40   templateUrl: './stop-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component StopDetailComponent.
+
+
+Error: src/app/components/stop-detail/stop-detail.component.html:3:52 - error NG8002: Can't bind to 'canGoBack' since it isn't a known property of 'app-titlebar'.
+1. If 'app-titlebar' is an Angular component and it has 'canGoBack' input, then verify that it is included in the '@Component.imports' of this component.
+2. If 'app-titlebar' is a Web Component then add 'CUSTOM_ELEMENTS_SCHEMA' to the '@Component.schemas' of this component to suppress this message.
+3. To allow any property add 'NO_ERRORS_SCHEMA' to the '@Component.schemas' of this component.
+
+3   <app-titlebar [title]="'Haltestelle Bearbeiten'" [canGoBack]="true" class="mb-6 block"></app-titlebar>
+                                                     ~~~~~~~~~~~~~~~~~~
+
+  src/app/components/stop-detail/stop-detail.component.ts:40:16
+    40   templateUrl: './stop-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component StopDetailComponent.
+
+
+Error: src/app/components/stop-detail/stop-detail.component.html:154:13 - error NG8002: Can't bind to 'routerLink' since it isn't a known property of 'li'.
+
+154             [routerLink]="['/stops', sub.ORT_NR]">
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  src/app/components/stop-detail/stop-detail.component.ts:40:16
+    40   templateUrl: './stop-detail.component.html',
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Error occurs in the template of component StopDetailComponent.
+
+
+

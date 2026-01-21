@@ -1,0 +1,219 @@
+<div class="flex flex-col flex-shrink-0 p-4 text-white bg-slate-900 w-72 h-screen border-r border-slate-700">
+    <div class="flex items-center mb-6">
+        <div
+            class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-blue-500/30">
+            <span class="font-bold text-xl">X</span>
+        </div>
+        <span class="text-xl font-semibold tracking-tight">IFES X</span>
+    </div>
+
+    <div class="mb-6 relative"> <!-- relative for ConfirmPopup -->
+        <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Datenversorgung</label>
+
+        <p-confirmPopup></p-confirmPopup>
+
+        <p-select [options]="versionen" [(ngModel)]="selectedVersion" optionLabel="BASIS_VERSION_TEXT"
+            (onChange)="onVersionChange()" [style]="{'width':'100%'}" placeholder="Wähle Version" [filter]="true"
+            filterBy="BASIS_VERSION_TEXT"
+            styleClass="w-full bg-slate-800 text-white border-slate-700 hover:border-slate-600 focus:border-blue-500 shadow-sm"
+            [appendTo]="'body'" panelStyleClass="version-dropdown-panel">
+
+            <ng-template pTemplate="selectedItem">
+                <div class="flex flex-col" *ngIf="selectedVersion">
+                    <span class="font-medium">{{ selectedVersion.BASIS_VERSION_TEXT }}</span>
+                    <span class="text-xs text-slate-400" *ngIf="getValidityDate(selectedVersion.BASIS_VERSION)">
+                        ab {{ getValidityDate(selectedVersion.BASIS_VERSION) }}
+                    </span>
+                </div>
+            </ng-template>
+
+            <ng-template let-version pTemplate="item">
+                <div class="flex items-center justify-between w-full group">
+                    <div class="flex flex-col">
+                        <span class="font-medium">{{ version.BASIS_VERSION_TEXT }}</span>
+                        <span class="text-xs text-slate-500">
+                            {{ getValidityDate(version.BASIS_VERSION) ? 'ab ' + getValidityDate(version.BASIS_VERSION) :
+                            'Keine Gültigkeit' }}
+                        </span>
+                    </div>
+                    <button pButton icon="pi pi-trash"
+                        class="p-button-text p-button-danger p-button-sm opacity-0 group-hover:opacity-100 transition-opacity"
+                        (click)="deleteVersion($event, version)"></button>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <div class="p-2 border-t border-slate-700 bg-slate-800">
+                    <p-button label="Neue DV erstellen" icon="pi pi-plus" size="small" [text]="true"
+                        styleClass="w-full text-left text-blue-400 hover:text-blue-300"
+                        (onClick)="navigateToCreateVersion()">
+                    </p-button>
+                </div>
+            </ng-template>
+        </p-select>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <ul class="space-y-1">
+            <li>
+                <a routerLink="/calendar" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faCalendar"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span class="font-medium">Firmenkalender</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <li class="pt-4 pb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-3">Netz & Fahrplan</span>
+            </li>
+
+            <li>
+                <a routerLink="/stops" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faCircleH"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Haltestellen</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/lines" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faRoute"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Linien</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/vehicles" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faBus"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Fahrzeuge</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/destinations" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faLocationCrosshairs"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Ziele</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/rec-anr" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faVolumeHigh"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Ansagen</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/betriebshoefe" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faBuilding"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Betriebshöfe</span>
+                </a>
+            </li>
+
+
+            <!-- Divider -->
+            <li class="pt-4 pb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-3">Datenversorgung</span>
+            </li>
+
+            <li>
+                <a routerLink="/network" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faMap"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Netzeditor</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/rec-om" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faMapMarkerAlt"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Ortsmarken</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/rec-sel" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faRoute"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Netzrelationen</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/rec-umlauf" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faBus"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Umläufe</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/rec-ueb" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faRoute"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Übergänge</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/connections" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faExchangeAlt"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Anschlüsse</span>
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/rec-bereich" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faLayerGroup"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Bereiche / Zweige</span>
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/rec-fgr" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faClock"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Fahrzeitgruppen</span>
+                </a>
+            </li>
+
+            <li>
+                <a routerLink="/rec-fzt-matrix" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faTableList"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Fahrzeiten</span>
+                </a>
+            </li>
+
+            <!-- Divider -->
+            <li class="pt-4 pb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-3">System</span>
+            </li>
+
+            <li>
+                <a routerLink="/help" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faQuestionCircle"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Hilfe & Doku</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+</div>

@@ -1,0 +1,5 @@
+.live-select .dropdown-menu {
+  max-height: 10em;
+  overflow-y: scroll;
+  margin-bottom: 3em;
+}

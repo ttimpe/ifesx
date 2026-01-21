@@ -1,0 +1,234 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center">
+                <fa-icon [icon]="faBus" class="text-xl"></fa-icon>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrzeuge</h2>
+                <p class="text-xs text-slate-500 font-medium">Fahrzeugtypen und Fahrzeuge verwalten</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <p-button label="Neuer Fahrzeugtyp" icon="pi pi-folder-plus" severity="secondary"
+                (onClick)="openTypeDialog()" size="small"></p-button>
+            <p-button label="Batch erstellen" icon="pi pi-copy" severity="secondary" (onClick)="openBatchCreate()"
+                size="small"></p-button>
+            <p-button label="Neues Fahrzeug" icon="pi pi-plus" severity="success" (onClick)="openCreate()"
+                size="small"></p-button>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-treeTable [value]="treeData" styleClass="p-treetable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="font-semibold text-sm text-slate-700" style="width: 50%">Fahrzeugtyp / Fahrzeug</th>
+                    <th class="font-semibold text-sm text-slate-700" style="width: 25%">Kennzeichen</th>
+                    <th class="font-semibold text-sm text-slate-700" style="width: 25%">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                <tr [ttRow]="rowNode">
+                    <td>
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        <span [class.font-bold]="rowData.isType" [class.text-blue-600]="rowData.isType"
+                            [class.ml-2]="!rowData.isType">
+                            <i [class]="rowData.isType ? 'pi pi-folder mr-2' : 'pi pi-car mr-2'"></i>
+                            {{ rowData.name }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="font-mono text-sm">{{ rowData.polkenn }}</span>
+                    </td>
+                    <td>
+                        <div class="flex gap-1" *ngIf="rowData.isType">
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                pTooltip="Typ löschen" (onClick)="deleteType(rowData.typeData)"></p-button>
+                        </div>
+                        <div class="flex gap-1" *ngIf="!rowData.isType">
+                            <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"
+                                (onClick)="editVehicle(rowData.actions)"></p-button>
+                            <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                (onClick)="deleteVehicle(rowData.actions)"></p-button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="3" class="text-center p-4 text-slate-400">
+                        Keine Fahrzeugtypen oder Fahrzeuge vorhanden
+                    </td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+    </div>
+</div>
+
+<!-- Single Create Dialog -->
+<p-dialog header="Neues Fahrzeug" [(visible)]="showCreate" [modal]="true" [style]="{width: '500px'}"
+    styleClass="p-fluid">
+    <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Fahrzeug Nummer (FZG_NR)</label>
+            <p-inputNumber [(ngModel)]="newVehicle.FZG_NR" [useGrouping]="false"></p-inputNumber>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Polizeiliches Kennzeichen (POLKENN)</label>
+            <input pInputText [(ngModel)]="newVehicle.POLKENN" placeholder="z.B. BI-NV-101" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Bezeichnung (optional)</label>
+            <input pInputText [(ngModel)]="newVehicle.FZG_TEXT" placeholder="z.B. Gelenkbus 1" />
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Fahrzeugtyp</label>
+            <p-select [options]="types" [(ngModel)]="newVehicle.FZG_TYP_NR" optionLabel="FZG_TYP_TEXT"
+                optionValue="FZG_TYP_NR" placeholder="Typ wählen..." appendTo="body"></p-select>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Unternehmen</label>
+            <p-inputNumber [(ngModel)]="newVehicle.UNTERNEHMEN" [useGrouping]="false"></p-inputNumber>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Abbrechen" icon="pi pi-times" (onClick)="showCreate = false" [text]="true"
+            severity="secondary"></p-button>
+        <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="saveNew()"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- Batch Create Dialog -->
+<p-dialog header="Fahrzeuge Batch-Erstellung" [(visible)]="showBatchCreate" [modal]="true" [style]="{width: '600px'}">
+    <div class="flex flex-col gap-4 pt-4">
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Startnummer</label>
+                <p-inputNumber [(ngModel)]="batchParams.startNumber" [useGrouping]="false"
+                    placeholder="z.B. 5001"></p-inputNumber>
+                <small class="text-slate-500">Erste Fahrzeugnummer</small>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Anzahl</label>
+                <p-inputNumber [(ngModel)]="batchParams.count" [useGrouping]="false" [min]="1" [max]="100"
+                    placeholder="z.B. 10"></p-inputNumber>
+                <small class="text-slate-500">Wie viele Fahrzeuge erstellen?</small>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Kennzeichen-Präfix (POLKENN)</label>
+            <input pInputText [(ngModel)]="batchParams.polkennPrefix" placeholder="z.B. 'BI-NV-' oder 'DE-ABC-'" />
+            <small class="text-slate-500">Wird vor die Nummer gesetzt: "BI-NV-5001", "BI-NV-5002", ...</small>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Fahrzeugtyp</label>
+            <p-select [options]="types" [(ngModel)]="batchParams.fzgTypNr" optionLabel="FZG_TYP_TEXT"
+                optionValue="FZG_TYP_NR" placeholder="Typ wählen..." appendTo="body"></p-select>
+        </div>
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+            *ngIf="batchParams.startNumber && batchParams.count && batchParams.polkennPrefix">
+            <p class="text-sm font-semibold text-blue-900 mb-2">Vorschau:</p>
+            <div class="flex flex-wrap gap-2">
+                <span *ngFor="let i of [0,1,2]"
+                    class="px-2 py-1 bg-white rounded text-xs font-mono border border-blue-300">
+                    {{ batchParams.polkennPrefix }}{{ batchParams.startNumber + i }}
+                </span>
+                <span class="px-2 py-1 text-xs text-blue-600" *ngIf="batchParams.count > 3">... +{{ batchParams.count -
+                    3 }} weitere</span>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Abbrechen" icon="pi pi-times" (onClick)="showBatchCreate = false" [text]="true"
+            severity="secondary"></p-button>
+        <p-button label="Erstellen" icon="pi pi-check" severity="success" (onClick)="executeBatchCreate()"
+            [disabled]="!batchParams.startNumber || !batchParams.count || !batchParams.fzgTypNr"></p-button>
+    </ng-template>
+</p-dialog>
+
+<!-- Vehicle Type Dialog -->
+<p-dialog [header]="isEditingType ? 'Fahrzeugtyp bearbeiten' : 'Neuer Fahrzeugtyp'" [(visible)]="showTypeDialog"
+    [modal]="true" [style]="{width: '600px'}">
+    <div class="flex flex-col gap-4 pt-4">
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Bezeichnung <span class="text-red-500">*</span></label>
+            <input pInputText [(ngModel)]="currentType.FZG_TYP_TEXT" placeholder="z.B. Niederflur-Bus" />
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Länge (mm)</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_LAENGE" [useGrouping]="false"
+                    placeholder="z.B. 12000"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Breite (cm)</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_TYP_BREITE" [useGrouping]="false"
+                    placeholder="z.B. 250"></p-inputNumber>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Höhe (cm)</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_TYP_HOEHE" [useGrouping]="false"
+                    placeholder="z.B. 320"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Gewicht (kg)</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_TYP_GEWICHT" [useGrouping]="false"
+                    placeholder="z.B. 18000"></p-inputNumber>
+            </div>
+        </div>
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Kurzbezeichnung</label>
+            <input pInputText [(ngModel)]="currentType.STR_FZG_TYP" placeholder="z.B. NB" maxlength="6" />
+        </div>
+        <p-divider></p-divider>
+        <div class="grid grid-cols-3 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Sitzplätze</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_TYP_SITZ" [useGrouping]="false"
+                    placeholder="z.B. 40"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Stehplätze</label>
+                <p-inputNumber [(ngModel)]="currentType.FZG_TYP_STEH" [useGrouping]="false"
+                    placeholder="z.B. 60"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Sonderplätze (Rollstuhl)</label>
+                <p-inputNumber [(ngModel)]="currentType.SONDER_PLATZ" [useGrouping]="false"
+                    placeholder="z.B. 1"></p-inputNumber>
+            </div>
+        </div>
+        <p-divider></p-divider>
+        <div class="grid grid-cols-3 gap-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Bat.-Typ Nr</label>
+                <p-inputNumber [(ngModel)]="currentType.BATTERIE_TYP_NR" [useGrouping]="false"
+                    placeholder="Optional"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Verbr. (Wh/km)</label>
+                <p-inputNumber [(ngModel)]="currentType.VERBRAUCH_DISTANZ" [useGrouping]="false"
+                    placeholder="Optional"></p-inputNumber>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-bold text-sm">Verbr. (Wh/h)</label>
+                <p-inputNumber [(ngModel)]="currentType.VERBRAUCH_ZEIT" [useGrouping]="false"
+                    placeholder="Optional"></p-inputNumber>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="Abbrechen" icon="pi pi-times" (onClick)="showTypeDialog = false" [text]="true"
+            severity="secondary"></p-button>
+        <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="saveType()"
+            [disabled]="!currentType.FZG_TYP_TEXT"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

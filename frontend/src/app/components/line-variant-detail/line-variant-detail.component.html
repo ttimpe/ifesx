@@ -1,0 +1,172 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngIf="variant">
+
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <a [routerLink]="['/lines', lineId]">
+                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
+            </a>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                    {{ isNew ? 'Neuen Linienverlauf erstellen' : 'Linienverlauf: ' + variant.STR_LI_VAR }}
+                </h2>
+                <p class="text-xs text-slate-500 font-medium" *ngIf="line">Linie: {{ line.STR_LID }} - {{ line.LIN_NAME
+                    }}</p>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <p-button label="Speichern" icon="pi pi-save" severity="success" (onClick)="saveHeader()"></p-button>
+            <p-button *ngIf="!isNew" label="Löschen" icon="pi pi-trash" severity="danger" [outlined]="true"
+                (onClick)="deleteVariant()"></p-button>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+        <div class="max-w-5xl mx-auto flex flex-col gap-6">
+
+            <!-- Header Data -->
+            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Linienverlauf Code (STR_LI_VAR)</label>
+                        <input pInputText [(ngModel)]="variant.STR_LI_VAR" placeholder="z.B. V1, STD" class="w-full" />
+                        <small class="text-slate-400">Eindeutige Kennung (max 6 Zeichen)</small>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Bezeichnung (LIDNAME)</label>
+                        <input pInputText [(ngModel)]="variant.LIDNAME" class="w-full" />
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Routennummer (RBL)</label>
+                        <p-inputNumber [(ngModel)]="variant.ROUTEN_NR" [useGrouping]="false" placeholder="z.B. 101"
+                            styleClass="w-full" class="w-full block"></p-inputNumber>
+                        <small class="text-slate-400">Für Bordrechner</small>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-sm font-medium text-slate-700">Richtung</label>
+                        <p-dropdown [options]="directionOptions" [(ngModel)]="variant.LI_RI_NR" optionLabel="label"
+                            optionValue="value" placeholder="Richtung wählen" styleClass="w-full"
+                            appendTo="body"></p-dropdown>
+                    </div>
+                </div>
+            </p-card>
+
+            <!-- Stops List -->
+            <div class="flex flex-col gap-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-slate-800">Verlauf (Haltestellen)</h3>
+                    <p-button label="Halt hinzufügen" icon="pi pi-plus" severity="success" size="small"
+                        [outlined]="true" (onClick)="openAddStop()" [disabled]="!variant.STR_LI_VAR"></p-button>
+                </div>
+
+                <p-table [value]="stops" [rowHover]="true"
+                    styleClass="p-datatable-striped shadow-sm border border-slate-200 rounded-xl">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 5%">Lfd Nr</th>
+                            <th style="width: 20%">Ort / Haltestelle</th>
+                            <th style="width: 8%">Haltepunkt</th>
+                            <th style="width: 12%">Ansage</th>
+                            <th style="width: 8%">Ziel</th>
+                            <th style="width: 7%" class="text-center">Bedarf</th>
+                            <th style="width: 7%" class="text-center">Einstieg</th>
+                            <th style="width: 7%" class="text-center">Ausstieg</th>
+                            <th style="width: 7%" class="text-center">Knoten</th>
+                            <th style="width: 7%" class="text-center">Produktiv</th>
+                            <th style="width: 7%">Aktionen</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-stop>
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="font-mono text-slate-500">{{ stop.LI_LFD_NR }}</td>
+                            <td>
+                                <div class="font-medium text-slate-800">{{ stop.ort?.ORT_NAME || stop.ORT_NR }}</div>
+                                <div class="text-xs text-slate-500" *ngIf="stop.ort?.ORT_REF_ORT_NAME">
+                                    {{ stop.ort.ORT_REF_ORT_NAME }}
+                                </div>
+                            </td>
+                            <td class="font-mono text-xs">{{ stop.HALTEPUNKT_NR || '-' }}</td>
+                            <td>
+                                <p-dropdown [options]="allAnnouncements" [(ngModel)]="stop.ANR_NR"
+                                    optionLabel="ANR_NAME" optionValue="ANR_NR" [showClear]="true" placeholder="Keine"
+                                    styleClass="w-full text-xs" [filter]="true" filterBy="ANR_NAME,ANR_NR"
+                                    (onChange)="updateStop(stop)" appendTo="body">
+                                </p-dropdown>
+                            </td>
+                            <td>
+                                <p-dropdown [options]="allDestinations" [(ngModel)]="stop.ZNR_NR" optionLabel="ZNR_TEXT"
+                                    optionValue="ZNR_NR" [showClear]="true" placeholder="Keine"
+                                    styleClass="w-full text-xs" [filter]="true" filterBy="ZNR_TEXT,ZNR_NR"
+                                    (onChange)="updateStop(stop)" appendTo="body">
+                                </p-dropdown>
+                            </td>
+                            <td class="text-center">
+                                <p-checkbox [(ngModel)]="stop.BEDARFSHALT" [binary]="true"
+                                    (onChange)="updateStop(stop)"></p-checkbox>
+                            </td>
+                            <td class="text-center">
+                                <p-checkbox [(ngModel)]="stop.EINSTEIGEVERBOT" [binary]="true"
+                                    (onChange)="updateStop(stop)"></p-checkbox>
+                            </td>
+                            <td class="text-center">
+                                <p-checkbox [(ngModel)]="stop.AUSSTEIGEVERBOT" [binary]="true"
+                                    (onChange)="updateStop(stop)"></p-checkbox>
+                            </td>
+                            <td class="text-center">
+                                <p-checkbox [(ngModel)]="stop.LI_KNOTEN" [binary]="true"
+                                    (onChange)="updateStop(stop)"></p-checkbox>
+                            </td>
+                            <td class="text-center">
+                                <p-checkbox [(ngModel)]="stop.PRODUKTIV" [binary]="true"
+                                    (onChange)="updateStop(stop)"></p-checkbox>
+                            </td>
+                            <td>
+                                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                    (onClick)="removeStop(stop)"></p-button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="11" class="text-center p-6 text-slate-400">
+                                <span *ngIf="!variant?.STR_LI_VAR">Bitte speichere zuerst den Linienverlauf, um
+                                    Haltestellen
+                                    hinzuzufügen.</span>
+                                <span *ngIf="variant?.STR_LI_VAR">Noch keine Haltestellen. Klicke "Halt hinzufügen" oben
+                                    rechts.</span>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Halt hinzufügen" [(visible)]="showAddStopDialog" [modal]="true" [style]="{ width: '400px' }">
+    <div class="flex flex-col gap-4 pt-4">
+        <div class="flex flex-col gap-2">
+            <label>Haltestelle auswählen</label>
+            <p-dropdown [options]="allStops" [(ngModel)]="newStopData.ORT_NR" optionLabel="ORT_NAME"
+                optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR,ORT_REF_ORT_NAME" [virtualScroll]="true"
+                [itemSize]="30" placeholder="Suche nach Haltestelle..." styleClass="w-full" appendTo="body">
+                <ng-template let-ort pTemplate="item">
+                    <div class="flex flex-col">
+                        <span class="font-medium">{{ ort.ORT_NAME }}</span>
+                        <span class="text-xs text-slate-500" *ngIf="ort.ORT_REF_ORT_NAME">Gleis von: {{
+                            ort.ORT_REF_ORT_NAME }}</span>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="flex justify-end pt-4">
+            <p-button label="Hinzufügen" icon="pi pi-check" (click)="addStop(); $event.stopPropagation()"
+                [disabled]="!newStopData.ORT_NR || isSubmittingStop"></p-button>
+        </div>
+    </div>
+</p-dialog>

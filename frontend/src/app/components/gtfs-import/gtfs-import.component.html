@@ -1,0 +1,6 @@
+<h1>GTFS import</h1>
+<div class="file-drop" (drop)="onDrop($event)" (dragover)="onDragOver($event)">
+  <p>Drag and drop a GTFS ZIP file here, or click to select one.</p>
+  <input type="file" (change)="onFileSelected($event)" accept=".zip" />
+
+</div>

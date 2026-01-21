@@ -1,0 +1,65 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header Toolbar -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+                <i class="pi pi-compass text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Übergangszeiten</h2>
+                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="relative flex items-center">
+                <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
+                <input type="text" pInputText placeholder="Suchen..." (input)="applyFilterGlobal($event, 'contains')"
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+            </div>
+            <a routerLink="/rec-ueb/new">
+                <p-button label="Neu" icon="pi pi-plus" severity="success" size="small"></p-button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto bg-white p-2">
+        <p-table #dt [value]="rows" [rows]="100" [paginator]="true" [globalFilterFields]="['ORT_NR', 'UEB_ZIEL']"
+            [tableStyle]="{ 'min-width': '50rem' }" [rowHover]="true" styleClass="p-datatable-striped">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="ORT_NR" class="font-semibold text-sm text-slate-700" style="width:30%">Von Ort <p-sortIcon field="ORT_NR"></p-sortIcon></th>
+                    <th pSortableColumn="UEB_ZIEL" class="font-semibold text-sm text-slate-700" style="width:30%">Nach Ort <p-sortIcon field="UEB_ZIEL"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="UEB_LAENGE" class="font-semibold text-sm text-slate-700" style="width:20%">Länge (m) <p-sortIcon
+                            field="UEB_LAENGE"></p-sortIcon></th>
+                    <th class="font-semibold text-sm text-slate-700" style="width:20%">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr class="hover:bg-slate-50 transition-colors cursor-pointer">
+                    <td class="font-medium text-slate-600">{{ row.ORT_NR }}</td>
+                    <td class="font-medium text-slate-600">{{ row.UEB_ZIEL }}</td>
+                    <td>{{ row.UEB_LAENGE }}</td>
+                    <td>
+                        <a [routerLink]="['/rec-ueb', 'detail']" [queryParams]="getDetailParams(row)">
+                            <p-button icon="pi pi-eye" [text]="true" severity="secondary" size="small"></p-button>
+                        </a>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-8 text-slate-500">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="pi pi-compass text-4xl mb-3 text-slate-300"></i>
+                            <p>Keine Übergangszeiten gefunden.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

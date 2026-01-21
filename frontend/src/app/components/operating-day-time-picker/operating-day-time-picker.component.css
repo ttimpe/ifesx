@@ -1,0 +1,6 @@
+.operating-day-time-picker:valid {
+  background-color: lightgreen;
+}
+.operating-day-time-picker:invalid {
+  background-color: lightcoral;
+}

@@ -1,0 +1,13 @@
+<div class="pdf-container" *ngIf="rawPdfUrl">
+    <div class="actions">
+        <a [href]="rawPdfUrl" target="_blank" class="btn-primary">
+            Kursblatt PDF öffnen
+        </a>
+    </div>
+    <div class="info-text">
+        Das Kursblatt wurde als PDF generiert. Klicken Sie auf den Button oben, um es anzuzeigen.
+    </div>
+</div>
+<div *ngIf="!rawPdfUrl" class="loading">
+    Loading...
+</div>
