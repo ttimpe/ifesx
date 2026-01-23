@@ -17,7 +17,7 @@ IFES X ist ein umfassendes webbasiertes Managementsystem für ÖPNV-Daten gemä�
 ### Backend
 - **Runtime**: Node.js mit TypeScript
 - **Framework**: Express.js
-- **Datenbank**: PostgreSQL mit Sequelize ORM
+- **Datenbank**: SQLite mit Sequelize ORM
 - **Datenverarbeitung**: Eigener VDV 451/452 Parser, GTFS Worker Threads
 
 ### Frontend
@@ -59,7 +59,7 @@ ifesx/
 ### Voraussetzungen
 - Docker & Docker Compose
 - Node.js 18+ (für lokale Entwicklung)
-- PostgreSQL 14+ (falls Docker nicht genutzt wird)
+- Node.js 18+ (für lokale Entwicklung)
 
 ### Schnellstart mit Docker
 
@@ -77,7 +77,7 @@ ifesx/
 3. **Anwendung aufrufen**
    - Frontend: `http://localhost:4200`
    - Backend API: `http://localhost:3000`
-   - Datenbank: `localhost:5432`
+   - Backend API: `http://localhost:3000`
 
 ### Lokales Entwicklungs-Setup
 
@@ -320,11 +320,7 @@ Erstelle eine `.env` Datei im Backend-Verzeichnis:
 
 ```env
 # Datenbank
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=ifesx
-DB_USER=postgres
-DB_PASSWORD=dein_passwort
+DB_FILE=timetable.sqlite3
 
 # Server
 PORT=3000
