@@ -97,6 +97,9 @@ export class VehicleListComponent implements OnInit {
     }
 
     buildTreeData() {
+        // Sort types by FZG_TYP_NR
+        this.types.sort((a, b) => a.FZG_TYP_NR - b.FZG_TYP_NR);
+
         this.treeData = this.types.map(type => ({
             data: {
                 isType: true,
@@ -108,6 +111,13 @@ export class VehicleListComponent implements OnInit {
             },
             children: this.vehicles
                 .filter(v => v.FZG_TYP_NR === type.FZG_TYP_NR)
+                .sort((a, b) => {
+                    // Sort vehicles by FZG_NR (Int-Index)
+                    // If FZG_NR is a string, use localeCompare with numeric: true
+                    // Assuming FZG_NR is numeric based on VDV standard, but let's be safe if it's treated as string
+                    // Checking the model might show it's a number. If it is number:
+                    return a.FZG_NR - b.FZG_NR;
+                })
                 .map(vehicle => ({
                     data: {
                         isType: false,

@@ -1,1 +1,62 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+
+# Angular
+frontend/.angular/
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/.cache
+
+# Backend build
+backend/dist/
+backend/build/
+backend/tmp/
+
+# Database
+*.sqlite3
+*.db
+*.sqlite
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# OS
 .DS_Store
+Thumbs.db
+*.log
+
+# Docker
+docker-compose.override.yml
+
+# Public build artifacts (if not needed in git)
+public/
+
+# Uploads
+uploads/
+data/
+
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/

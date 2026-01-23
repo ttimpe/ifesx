@@ -42,8 +42,8 @@ export class LineListComponent implements OnInit {
   loadLines() {
     this.lineService.getLines(this.selectedBasisVersion).subscribe(lines => {
       lines.sort((a: RecLid, b: RecLid) => {
-        // Safe parsing or string comparison for LI_KUERZEL
-        return (a.LI_KUERZEL || '').localeCompare(b.LI_KUERZEL || '');
+        // Natural sort order (1, 2, 10 instead of 1, 10, 2)
+        return (a.LI_KUERZEL || '').localeCompare(b.LI_KUERZEL || '', undefined, { numeric: true });
       })
       this.lines = lines
     });

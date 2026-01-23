@@ -51,7 +51,8 @@ export class BhofListComponent implements OnInit {
 
     loadData(): void {
         this.service.getAll(this.basisVersion).subscribe(data => {
-            this.rows = data;
+            // Sort by BHOF_NR (Int-Index)
+            this.rows = data.sort((a, b) => a.BHOF_NR - b.BHOF_NR);
         });
     }
 

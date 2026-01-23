@@ -88,8 +88,8 @@ export class StopListComponent implements OnInit {
         key: String(child.ORT_NR)
       }));
 
-      // Sort children by name
-      childrenNodes.sort((a, b) => a.data.name.localeCompare(b.data.name));
+      // Sort children by name (natural sort)
+      childrenNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
 
       rootNodes.push({
         data: {
@@ -106,8 +106,8 @@ export class StopListComponent implements OnInit {
       });
     });
 
-    // Sort Groups by Name
-    rootNodes.sort((a, b) => a.data.name.localeCompare(b.data.name));
+    // Sort Groups by Name (natural sort)
+    rootNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
 
     // Add orphans at the bottom or top?
     const orphanNodes: TreeNode[] = orphans.map(child => ({
@@ -121,7 +121,7 @@ export class StopListComponent implements OnInit {
       leaf: true,
       key: String(child.ORT_NR)
     }));
-    orphanNodes.sort((a, b) => a.data.name.localeCompare(b.data.name));
+    orphanNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
 
     return [...rootNodes, ...orphanNodes];
   }
