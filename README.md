@@ -1,85 +1,85 @@
-# IFES X - VDV 452 Transit Data Management System
+# IFES X - VDV 452 ÖPNV-Datenmanagementsystem
 
-IFES X is a comprehensive web-based management system for public transit data conforming to the VDV 452/451 standard. It provides full CRUD operations for all VDV data entities, GTFS import/export capabilities, and an intuitive Angular-based user interface.
+IFES X ist ein umfassendes webbasiertes Managementsystem für ÖPNV-Daten gemäß dem VDV 452/451 Standard. Es bietet vollständige CRUD-Operationen für alle VDV-Datenobjekte, GTFS Import-/Export-Funktionen und eine intuitive, auf Angular basierende Benutzeroberfläche.
 
-## 🚀 Features
+## 🚀 Funktionen
 
-- **VDV 452 Data Management**: Complete support for all VDV 452 entities including stops, lines, routes, trips, calendars, and vehicles
-- **GTFS Import/Export**: Seamless conversion between GTFS and VDV 452 formats
-- **VDV 451/452 File Import/Export**: Native support for VDV X10 file format
-- **Hierarchical Data Structure**: Proper handling of VDV parent-child relationships (stops, lines, etc.)
-- **Cascading Updates**: Intelligent cascading updates when modifying primary identifiers
-- **Multi-Basis Version Support**: Work with multiple `BASIS_VERSION` instances simultaneously
-- **Calendar Management**: Full support for day types (`TAGESART`), company calendars (`FIRMENKALENDER`), and basis versions
+- **VDV 452 Datenmanagement**: Vollständige Unterstützung aller VDV 452 Entitäten, einschließlich Haltestellen, Linien, Verläufen, Fahrten, Kalendern und Fahrzeugen
+- **GTFS Import/Export**: Nahtlose Konvertierung zwischen GTFS und VDV 452 Formaten
+- **VDV 451/452 Datei-Import/Export**: Native Unterstützung für das VDV X10 Dateiformat
+- **Hierarchische Datenstruktur**: Korrekte Handhabung von VDV Eltern-Kind-Beziehungen (Haltestellen, Linien, etc.)
+- **Kaskadierende Aktualisierungen**: Intelligente kaskadierende Updates bei Änderung von Primärschlüsseln
+- **Multi-Basisversionen**: Gleichzeitige Arbeit mit mehreren `BASIS_VERSION` Instanzen
+- **Kalender-Management**: Volle Unterstützung für Tagesarten (`MENGE_TAGESART`), Firmenkalender (`FIRMENKALENDER`) und Basisversionen
 
-## 📋 Tech Stack
+## 📋 Technologie-Stack
 
 ### Backend
-- **Runtime**: Node.js with TypeScript
+- **Runtime**: Node.js mit TypeScript
 - **Framework**: Express.js
-- **Database**: PostgreSQL with Sequelize ORM
-- **Data Processing**: Custom VDV 451/452 parser, GTFS worker threads
+- **Datenbank**: PostgreSQL mit Sequelize ORM
+- **Datenverarbeitung**: Eigener VDV 451/452 Parser, GTFS Worker Threads
 
 ### Frontend
 - **Framework**: Angular 18+
-- **UI Library**: PrimeNG
+- **UI Bibliothek**: PrimeNG
 - **Styling**: Tailwind CSS
 - **State Management**: RxJS
 
-### Infrastructure
-- **Containerization**: Docker & Docker Compose
+### Infrastruktur
+- **Containerisierung**: Docker & Docker Compose
 - **Reverse Proxy**: Nginx
-- **Development**: Hot-reload for both frontend and backend
+- **Entwicklung**: Hot-Reload für Frontend und Backend
 
-## 🏗️ Project Structure
+## 🏗️ Projektstruktur
 
 ```
 ifesx/
-├── backend/           # Express.js API server
+├── backend/           # Express.js API Server
 │   ├── src/
-│   │   ├── models/    # Sequelize models for VDV entities
-│   │   ├── controllers/ # API endpoint controllers
-│   │   ├── workers/   # Background workers (GTFS import)
-│   │   ├── utils/     # VDV parser, helper functions
-│   │   └── app.ts     # Express app entry point
+│   │   ├── models/    # Sequelize Models für VDV-Entitäten
+│   │   ├── controllers/ # API Endpunkt Controller
+│   │   ├── workers/   # Hintergrund-Worker (GTFS Import)
+│   │   ├── utils/     # VDV Parser, Hilfsfunktionen
+│   │   └── app.ts     # Express App Einstiegspunkt
 │   └── Dockerfile
-├── frontend/          # Angular application
+├── frontend/          # Angular Anwendung
 │   ├── src/app/
-│   │   ├── components/ # UI components
-│   │   ├── models/    # TypeScript interfaces
-│   │   ├── services/  # HTTP services
+│   │   ├── components/ # UI Komponenten
+│   │   ├── models/    # TypeScript Interfaces
+│   │   ├── services/  # HTTP Services
 │   │   └── app.routes.ts
 │   └── Dockerfile
-├── nginx/             # Reverse proxy config
+├── nginx/             # Reverse Proxy Konfiguration
 └── docker-compose.yml
 ```
 
 ## 🛠️ Setup & Installation
 
-### Prerequisites
+### Voraussetzungen
 - Docker & Docker Compose
-- Node.js 18+ (for local development)
-- PostgreSQL 14+ (if not using Docker)
+- Node.js 18+ (für lokale Entwicklung)
+- PostgreSQL 14+ (falls Docker nicht genutzt wird)
 
-### Quick Start with Docker
+### Schnellstart mit Docker
 
-1. **Clone the repository**
+1. **Repository klonen**
    ```bash
    git clone <repository-url>
    cd ifesx
    ```
 
-2. **Start the services**
+2. **Dienste starten**
    ```bash
    docker-compose up -d
    ```
 
-3. **Access the application**
+3. **Anwendung aufrufen**
    - Frontend: `http://localhost:4200`
    - Backend API: `http://localhost:3000`
-   - Database: `localhost:5432`
+   - Datenbank: `localhost:5432`
 
-### Local Development Setup
+### Lokales Entwicklungs-Setup
 
 #### Backend
 ```bash
@@ -95,212 +95,212 @@ npm install
 npm start
 ```
 
-## 📊 VDV 452 Data Model Reference
+## 📊 VDV 452 Datenmodell Referenz
 
-### 1. Infrastructure
+### 1. Infrastruktur
 
-#### REC_ORT (Places/Stops)
-Represents physical locations including stop groups and individual stops.
+#### REC_ORT (Orte/Haltestellen)
+Repräsentiert physische Orte, einschließlich Haltestellengruppen und einzelnen Haltestellen.
 
-**Key Fields:**
-- `ORT_NR` - Place ID (Primary Key)
-- `ORT_NAME` - Place name
-- `ORT_REF_ORT` - Reference to parent place (for hierarchical grouping)
-- `ORT_POS_BREITE` / `ORT_POS_LAENGE` - GPS coordinates (WGS84)
-- `ORT_TYP` - Place type (1=Stop, 2=Area, etc.)
+**Wichtige Felder:**
+- `ORT_NR` - Orts-ID (Primärschlüssel)
+- `ORT_NAME` - Ortsname
+- `ORT_REF_ORT` - Referenz zum übergeordneten Ort (für hierarchische Gruppierung)
+- `ORT_POS_BREITE` / `ORT_POS_LAENGE` - GPS Koordinaten (WGS84)
+- `ORT_TYP` - Ortstyp (1=Hst, 2=Ortsteil, etc.)
 
-#### REC_HP (Stop Points)
-Individual boarding points at a stop location.
+#### REC_HP (Haltepunkte/Steige)
+Einzelne Einstiegspunkte an einer Haltestelle.
 
-**Key Fields:**
-- `HP_NR` - Stop point ID
-- `ORT_NR` - Reference to parent place
-- `HP_NAME` - Stop point name
-- `POS_BREITE` / `POS_LAENGE` - GPS coordinates
+**Wichtige Felder:**
+- `HP_NR` - Haltepunktnummer
+- `ORT_NR` - Referenz zum übergeordneten Ort
+- `HP_NAME` - Haltepunktname
+- `POS_BREITE` / `POS_LAENGE` - GPS Koordinaten
 
-#### REC_SEL (Route Segments)
-Network segments connecting two stops.
+#### REC_SEL (Streckensegmente)
+Netzwerksegmente die zwei Orte verbinden.
 
-**Key Fields:**
-- `SEL_FZT_FELD_NR` - Segment ID
-- `SEL_RICHTUNG` - Direction (H=outbound, R=return)
-- `ORT_NR_VON` / `ORT_NR_NACH` - From/To stop IDs
-- `SEL_FZT` - Travel time in seconds
+**Wichtige Felder:**
+- `SEL_FZT_FELD_NR` - Fahrzeitfeldnummer
+- `SEL_RICHTUNG` - Richtung (H=Hin, R=Rück)
+- `ORT_NR_VON` / `ORT_NR_NACH` - Von/Bis Orts-ID
+- `SEL_FZT` - Fahrzeit in Sekunden
 
-#### REC_OM (Place Markers)
-Specific points along routes for distance/time calculations.
+#### REC_OM (Ortsmarken)
+Spezifische Punkte entlang von Strecken für Distanz-/Zeitberechnungen.
 
-### 2. Line Planning
+### 2. Linienplanung
 
-#### REC_LID (Lines)
-Transit lines (e.g., "Line 4", "Bus 121").
+#### REC_LID (Linien)
+Verkehrslinien (z.B., "Linie 4", "Bus 121").
 
-**Key Fields:**
-- `LI_NR` - Line ID (Primary Key) - **Now editable with cascading updates**
-- `STR_LI_VAR` - Line variant
-- `LI_R_NACH_ZIEL` - Destination for return direction
-- `LI_H_NACH_ZIEL` - Destination for outbound direction
-- `LI_LI_KU` - Short line name
+**Wichtige Felder:**
+- `LI_NR` - Liniennummer (Primärschlüssel) - **Jetzt bearbeitbar mit kaskadierenden Updates**
+- `STR_LI_VAR` - Linienvariante
+- `LI_R_NACH_ZIEL` - Zieltext Rückrichtung
+- `LI_H_NACH_ZIEL` - Zieltext Hinrichtung
+- `LI_LI_KU` - Linienkürzel
 
-#### LID_VERLAUF (Routes)
-Ordered sequence of stops for a line variant.
+#### LID_VERLAUF (Routenverlauf)
+Geordnete Abfolge von Orten für eine Linienvariante.
 
-**Key Fields:**
-- `LI_NR` / `STR_LI_VAR` - Line and variant reference
-- `LI_LFD_NR` - Sequence number
-- `ORT_NR` - Stop ID
-- `SEL_ZNR` - Destination ID (for announcements)
+**Wichtige Felder:**
+- `LI_NR` / `STR_LI_VAR` - Linien- und Variantenreferenz
+- `LI_LFD_NR` - Laufende Nummer
+- `ORT_NR` - Orts-ID
+- `SEL_ZNR` - Zielnummer (für Ansagen/Matrix)
 
-#### MENGE_FGR (Vehicle Groups)
-Vehicle type groups for line assignment.
+#### MENGE_FGR (Fahrzeuggruppen)
+Fahrzeugartgruppe für die Linienzuordnung.
 
-### 3. Schedule & Operations
+### 3. Fahrplan & Betrieb
 
-#### REC_FRT (Trips)
-Individual vehicle trips along a route.
+#### REC_FRT (Fahrten)
+Einzelne Fahrzeugfahrten entlang eines Verlaufs.
 
-**Key Fields:**
-- `FRT_FID` - Trip ID (Primary Key)
-- `LI_NR` / `STR_LI_VAR` - Line and variant
-- `FRT_START` - Start time in seconds from midnight
-- `UM_UID` - Block/rotation ID
-- `TAGESART_NR` - Service day type
+**Wichtige Felder:**
+- `FRT_FID` - Fahrt-ID (Primärschlüssel)
+- `LI_NR` / `STR_LI_VAR` - Linie und Variante
+- `FRT_START` - Startzeit in Sekunden ab Mitternacht
+- `UM_UID` - Umlauf-ID
+- `TAGESART_NR` - Tagesart
 
-#### REC_UMS (Transfers/Timetable Points)
-Scheduled arrival/departure times for each stop on a trip.
+#### REC_UMS (Haltestellenfahrplan/Umschlagszeiten)
+Geplante Ankunfts-/Abfahrtszeiten für jeden Halt einer Fahrt.
 
-**Key Fields:**
-- `FRT_FID` - Trip ID reference
-- `LI_LFD_NR` - Stop sequence number
-- `UMS_ANKUNFT` / `UMS_ABFAHRT` - Arrival/departure time (seconds from midnight)
+**Wichtige Felder:**
+- `FRT_FID` - Fahrt-ID Referenz
+- `LI_LFD_NR` - Laufende Nummer im Verlauf
+- `UMS_ANKUNFT` / `UMS_ABFAHRT` - Ankunfts-/Abfahrtszeit (Sekunden ab Mitternacht)
 
-#### MENGE_TAGESART (Day Types)
-Service calendar day types (e.g., "Mo-Fr", "Sa", "So").
+#### MENGE_TAGESART (Tagesarten)
+Betriebskalender-Tagesarten (z.B., "Mo-Fr", "Sa", "So").
 
-**Key Fields:**
-- `TAGESART_NR` - Day type ID
-- `TAGESART_TEXT` - Description
+**Wichtige Felder:**
+- `TAGESART_NR` - Tagesartnummer
+- `TAGESART_TEXT` - Beschreibung
 
-#### FIRMENKALENDER (Company Calendar)
-Assigns date ranges to day types.
+#### FIRMENKALENDER
+Weist Datumsbereichen Tagesarten zu.
 
-**Key Fields:**
-- `BETRIEBSTAG` - Operating date (YYYYMMDD)
-- `TAGESART_NR` - Day type for this date
+**Wichtige Felder:**
+- `BETRIEBSTAG` - Betriebstag (YYYYMMDD)
+- `TAGESART_NR` - Tagesartnummer für dieses Datum
 
-#### MENGE_BASIS_VERSIONEN (Basis Versions)
-Version control for datasets.
+#### MENGE_BASIS_VERSIONEN (Basisversionen)
+Versionskontrolle für Datensätze.
 
-**Key Fields:**
-- `BASIS_VERSION` - Version number (e.g., 20250101)
+**Wichtige Felder:**
+- `BASIS_VERSION` - Versionsnummer (z.B., 20250101)
 
-#### MENGE_BHOF (Depots/Betriebshöfe)
-Bus/tram depot locations.
+#### MENGE_BHOF (Betriebshöfe)
+Depotstandorte für Busse/Bahnen.
 
-**Key Fields:**
-- `BHOF_NR` - Depot ID
-- `BHOF_TEXT` - Depot name
-- `STR_BHOF` - Depot abbreviation
+**Wichtige Felder:**
+- `BHOF_NR` - Betriebshofnummer
+- `BHOF_TEXT` - Name des Betriebshofs
+- `STR_BHOF` - Kürzel
 
-### 4. Passenger Information (FIS)
+### 4. Fahrgastinformation (FIS)
 
-#### REC_ZNR (Destinations)
-Destination texts for passenger information systems.
+#### REC_ZNR (Ziele)
+Zieltexte für Fahrgastinformationssysteme.
 
-**Key Fields:**
-- `ZNR` - Destination ID
-- `ZIELTEXT` - Destination text
-- `ZIELTEXT_KURZ` - Short destination
+**Wichtige Felder:**
+- `ZNR` - Zielnummer
+- `ZIELTEXT` - Zieltext (Front/Seite)
+- `ZIELTEXT_KURZ` - Kurzzieltext
 
-#### REC_ANR (Announcements)
-Automated announcement texts.
+#### REC_ANR (Ansagen)
+Automatisierte Ansagetexte.
 
-### 5. Disposition & Connections
+### 5. Disposition & Anschlüsse
 
-#### REC_UEB (Vehicle Transitions)
-Describes vehicle handoffs between trips (e.g., line changes, direction changes).
+#### REC_UEB (Überläufer/Wagenübergänge)
+Beschreibt Fahrzeugübergänge zwischen Fahrten (z.B. Linienwechsel, Richtungswechsel).
 
-**Key Fields:**
-- `UEB_NR` - Transition ID
-- `UEB_FAHRZEIT` - Transition time in seconds
+**Wichtige Felder:**
+- `UEB_NR` - Übergangsnummer
+- `UEB_FAHRZEIT` - Übergangszeit in Sekunden
 
-#### EINZELANSCHLUSS (Connection Protection)
-Guaranteed transfer connections between trips.
+#### EINZELANSCHLUSS (Anschlusssicherung)
+Garantierte Umsteigeverbindungen.
 
-**Components:**
-- **EINZELANSCHLUSS (VDV 432)**: Defines WHICH trips are connected
-- **REC_UMS (VDV 232)**: Defines WHEN and HOW LONG to wait
+**Komponenten:**
+- **EINZELANSCHLUSS (VDV 432)**: Definiert WER auf WEN wartet
+- **REC_UMS (VDV 232)**: Definiert WANN und WIE LANGE gewartet wird
 
-#### REC_FZG (Vehicles)
-Physical fleet management.
+#### REC_FZG (Fahrzeuge)
+Physisches Flottenmanagement.
 
-**Tables:**
-- `REC_FZG_TYP` - Vehicle classes (e.g., "MAN Lion's City 12C")
-- `REC_FZG` - Individual vehicles with registration numbers
+**Tabellen:**
+- `REC_FZG_TYP` - Fahrzeugtypen (z.B., "MAN Lion's City 12C")
+- `REC_FZG` - Einzelne Fahrzeuge mit Kennzeichen und Wagennummer
 
-## 🔄 Key Workflows
+## 🔄 Wichtige Workflows
 
 ### GTFS Import
-1. Navigate to "Import/Export"
-2. Select GTFS tab
-3. Choose `BASIS_VERSION` or create new
-4. Upload GTFS ZIP file
-5. Monitor import progress
-6. Review imported data in respective entity views
+1. Navigiere zu "Import/Export"
+2. Wähle den GTFS Tab
+3. Wähle `BASIS_VERSION` oder erstelle eine neue
+4. Lade die GTFS ZIP-Datei hoch
+5. Überwache den Importfortschritt
+6. Überprüfe die importierten Daten in den jeweiligen Ansichten
 
 ### VDV 452 Import
-1. Navigate to "Import/Export" → VDV 452 tab
-2. Select `BASIS_VERSION` and table type
-3. Upload `.x10` file
-4. Data is parsed and imported into selected table
+1. Navigiere zu "Import/Export" → VDV 452 Tab
+2. Wähle `BASIS_VERSION` und den Tabellentyp
+3. Lade die `.x10` Datei hoch
+4. Daten werden geparst und in die ausgewählte Tabelle importiert
 
 ### VDV 452 Export
-1. Navigate to "Import/Export" → VDV 452 tab
-2. Select `BASIS_VERSION` and table type
-3. Click "Export"
-4. Download ISO-8859-1 encoded `.x10` file
+1. Navigiere zu "Import/Export" → VDV 452 Tab
+2. Wähle `BASIS_VERSION` und Tabellentyp
+3. Klicke auf "Exportieren"
+4. Lade die ISO-8859-1 kodierte `.x10` Datei herunter
 
-### Editing Line IDs (with Cascading Updates)
-When editing the `LI_NR` field on an existing line:
-1. Open line in detail view
-2. Modify `LI_NR` field
-3. Click "Save"
-4. Confirm cascading update warning
-5. System automatically updates all dependent records:
-   - `LID_VERLAUF` (route sequences)
-   - `REC_FRT` (trips)
-   - `REC_UMS` (timetable points)
+### Linien-ID Bearbeitung (mit kaskadierenden Updates)
+Beim Bearbeiten des `LI_NR` Feldes einer existierenden Linie:
+1. Öffne die Linie in der Detailansicht
+2. Ändere das `LI_NR` Feld
+3. Klicke auf "Speichern"
+4. Bestätige die Warnung zum kaskadierenden Update
+5. Das System aktualisiert automatisch alle abhängigen Datensätze:
+   - `LID_VERLAUF` (Routenverläufe)
+   - `REC_FRT` (Fahrten)
+   - `REC_UMS` (Fahrplzeiten)
 
-⚠️ **Warning**: This operation is transactional and affects multiple tables. Ensure the new ID doesn't conflict with existing lines.
+⚠️ **Warnung**: Diese Operation ist transaktionsbasiert und betrifft mehrere Tabellen. Stelle sicher, dass die neue ID nicht mit existierenden Linien kollidiert.
 
-## 📡 API Endpoints
+## 📡 API Endpunkte
 
-### Core Resources
-- `GET/POST /api/vdv/orte` - Stops/Places
-- `GET/POST /api/vdv/haltepunkte` - Stop points
-- `GET/POST /api/lines` - Lines
-- `PUT /api/lines/:oldId/change-id` - Cascade line ID update
-- `GET/POST /api/variants` - Line variants
-- `GET/POST /api/trips` - Trips
-- `GET/POST /api/vdv/betriebshoefe` - Depots
+### Kern-Ressourcen
+- `GET/POST /api/vdv/orte` - Orte/Haltestellen
+- `GET/POST /api/vdv/haltepunkte` - Haltepunkte
+- `GET/POST /api/lines` - Linien
+- `PUT /api/lines/:oldId/change-id` - Kaskadierendes Linien-ID Update
+- `GET/POST /api/variants` - Linienvarianten
+- `GET/POST /api/trips` - Fahrten
+- `GET/POST /api/vdv/betriebshoefe` - Betriebshöfe
 
-### Calendar & Versions
-- `GET /api/calendar/basis-versions` - Basis versions
-- `GET /api/calendar/day-types` - Day types
-- `GET /api/calendar/company-calendar` - Company calendar
+### Kalender & Versionen
+- `GET /api/calendar/basis-versions` - Basisversionen
+- `GET /api/calendar/day-types` - Tagesarten
+- `GET /api/calendar/company-calendar` - Firmenkalender
 
 ### Import/Export
-- `POST /api/gtfs/import` - GTFS import
-- `POST /api/gtfs/export` - GTFS export
-- `POST /api/vdv/import` - VDV 451/452 import
-- `GET /api/vdv/export/:table` - VDV 451/452 export
-- `GET /api/vdv/supported-tables` - List importable tables
+- `POST /api/gtfs/import` - GTFS Import
+- `POST /api/gtfs/export` - GTFS Export
+- `POST /api/vdv/import` - VDV 451/452 Import
+- `GET /api/vdv/export/:table` - VDV 451/452 Export
+- `GET /api/vdv/supported-tables` - Liste importierbarer Tabellen
 
-### Vehicles
-- `GET/POST /api/vdv/vehicles` - Vehicles
-- `GET/POST /api/vdv/vehicle-types` - Vehicle types
+### Fahrzeuge
+- `GET/POST /api/vdv/vehicles` - Fahrzeuge
+- `GET/POST /api/vdv/vehicle-types` - Fahrzeugtypen
 
-## 🧪 Testing
+## 🧪 Tests
 
 ### Backend Tests
 ```bash
@@ -314,41 +314,41 @@ cd frontend
 npm test
 ```
 
-## 🚦 Environment Variables
+## 🚦 Umgebungsvariablen
 
-Create `.env` file in backend directory:
+Erstelle eine `.env` Datei im Backend-Verzeichnis:
 
 ```env
-# Database
+# Datenbank
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=ifesx
 DB_USER=postgres
-DB_PASSWORD=your_password
+DB_PASSWORD=dein_passwort
 
 # Server
 PORT=3000
 NODE_ENV=development
 
-# Frontend URL (for CORS)
+# Frontend URL (für CORS)
 FRONTEND_URL=http://localhost:4200
 ```
 
-## 📝 License
+## 📝 Lizenz
 
-[Add your license here]
+[Lizenz hier einfügen]
 
-## 👥 Contributors
+## 👥 Mitwirkende
 
-[Add contributors]
+[Mitwirkende hinzufügen]
 
 ## 📞 Support
 
-For issues, questions, or contributions, please [open an issue](link-to-issues).
+Für Probleme, Fragen oder Beiträge, bitte [ein Issue öffnen](link-to-issues).
 
 ---
 
-**VDV Standard References:**
-- VDV 451: Interface for timetable data
-- VDV 452: Data model for planning and operations
-- VDV 454: ÖPNV data exchange format
+**VDV Standard Referenzen:**
+- VDV 451: Schnittstelle für Fahrplandaten
+- VDV 452: Datenmodell für Planung und Betrieb
+- VDV 454: ÖPNV Datenaustauschformat
