@@ -80,7 +80,8 @@ export class SidebarComponent implements OnInit {
 
         // Restore selection
         if (this.selectedDVID) {
-          this.selectedVersion = this.versionen.find(v => v.id === this.selectedDVID);
+          const id = parseInt(this.selectedDVID, 10);
+          this.selectedVersion = this.versionen.find(v => v.BASIS_VERSION === id);
         }
 
         if (!this.selectedVersion && this.versionen.length > 0) {
@@ -112,7 +113,7 @@ export class SidebarComponent implements OnInit {
 
   onVersionChange(): void {
     if (this.selectedVersion) {
-      this.selectedDVID = this.selectedVersion.id;
+      this.selectedDVID = this.selectedVersion.BASIS_VERSION.toString();
       localStorage.setItem('selectedDV', this.selectedDVID);
       this.calendarService.setSelectedVersion(this.selectedVersion.BASIS_VERSION);
     }
@@ -135,8 +136,8 @@ export class SidebarComponent implements OnInit {
       accept: () => {
         this.calendarService.deleteVersion(version).subscribe({
           next: () => {
-            this.versionen = this.versionen.filter(v => v.id !== version.id);
-            if (this.selectedVersion?.id === version.id) {
+            this.versionen = this.versionen.filter(v => v.BASIS_VERSION !== version.BASIS_VERSION);
+            if (this.selectedVersion?.BASIS_VERSION === version.BASIS_VERSION) {
               this.selectedVersion = this.versionen.length > 0 ? this.versionen[0] : undefined;
               this.onVersionChange();
             }

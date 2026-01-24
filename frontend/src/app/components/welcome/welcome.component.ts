@@ -77,8 +77,7 @@ export class WelcomeComponent {
         // Looking at previous codes: maxVersion + 1. Since list is empty -> 1.
         const newVer: BasisVersion = {
             BASIS_VERSION: 1,
-            BASIS_VERSION_TEXT: this.versionText,
-            id: crypto.randomUUID()
+            BASIS_VERSION_TEXT: this.versionText
         };
 
         this.calendarService.createVersion(newVer).subscribe({
