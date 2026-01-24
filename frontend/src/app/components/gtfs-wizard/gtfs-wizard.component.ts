@@ -180,19 +180,36 @@ export class GtfsWizardComponent {
         this.pollInterval = setInterval(() => {
             this.gtfsService.getProgress(importId).subscribe(p => {
                 this.importProgress = p;
+
+                // Check for completion or error
+                const errorStage = p.stages.find(s => s.name === 'Error');
+                const doneStage = p.stages.find(s => s.name === 'Done' && s.completed);
+
+                if (errorStage) {
+                    clearInterval(this.pollInterval);
+                    this.messageService.add({ severity: 'error', summary: 'Import Fehler', detail: errorStage.details });
+                    this.importing = false;
+                } else if (doneStage) {
+                    clearInterval(this.pollInterval);
+                    this.importResult = doneStage.details || 'Import erfolgreich abgeschlossen';
+                    this.importing = false;
+                    // Optional delay to let user see 100%
+                    setTimeout(() => {
+                        this.activeIndex = 3;
+                    }, 1000);
+                }
             });
         }, 500);
 
         this.gtfsService.import(this.tempFile, this.selectedAgency.id, this.basisVersion, importId, this.loadEFADistances).subscribe({
             next: (res) => {
-                clearInterval(this.pollInterval);
-                this.importResult = res.message;
-                this.importing = false;
-                this.activeIndex = 3;
+                // Import started successfully, polling continues...
+                console.log('Import started, tracking progress...', res);
             },
             error: (err) => {
+                // If the START call fails (e.g. 400 Bad Request), stop polling
                 clearInterval(this.pollInterval);
-                this.messageService.add({ severity: 'error', summary: 'Import Fehler', detail: err.error?.error || 'Unbekannter Fehler' });
+                this.messageService.add({ severity: 'error', summary: 'Start-Fehler', detail: err.error?.error || 'Konnte Import nicht starten' });
                 this.importing = false;
             }
         });
