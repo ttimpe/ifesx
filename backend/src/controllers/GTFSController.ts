@@ -26,7 +26,7 @@ const upload = multer({ dest: 'uploads/' }); // Temp storage
 // EFA Distance Loading Helper
 const getDistanceFromEFA = async (originDHID: string, destDHID: string): Promise<number | null> => {
     try {
-        const url = `https://westfalenfahrplan.de/nwl-efa/XML_TRIP_REQUEST2?outputFormat=rapidJSON&name_origin=${encodeURIComponent(originDHID)}&name_destination=${encodeURIComponent(destDHID)}&type_origin=any&type_destination=any&itdTripDateTimeDepArr=dep&anyObjFilter_origin=2&anyObjFilter_destination=2`;
+        const url = `https://westfalenfahrplan.de/nwl-efa/XML_TRIP_REQUEST2?outputFormat=rapidJSON&coordOutputDistance=1&name_origin=${encodeURIComponent(originDHID)}&name_destination=${encodeURIComponent(destDHID)}&type_origin=any&type_destination=any&itdTripDateTimeDepArr=dep&anyObjFilter_origin=2&anyObjFilter_destination=2`;
 
         const response = await axios.get(url, { timeout: 10000 });
 
