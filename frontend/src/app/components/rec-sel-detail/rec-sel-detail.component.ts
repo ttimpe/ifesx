@@ -233,7 +233,7 @@ export class RecSelDetailComponent implements OnInit, AfterViewInit {
         const originId = this.selectedStartOrt.HST_NR_INTERNATIONAL || this.selectedStartOrt.ORT_NAME;
         const destinationId = this.selectedDestOrt.HST_NR_INTERNATIONAL || this.selectedDestOrt.ORT_NAME;
 
-        const url = `https://westfalenfahrplan.de/nwl-efa/XML_TRIP_REQUEST2?outputFormat=rapidJSON&name_origin=${encodeURIComponent(originId)}&name_destination=${encodeURIComponent(destinationId)}&type_origin=any&type_destination=any&itdTripDateTimeDepArr=dep&anyObjFilter_origin=2&anyObjFilter_destination=2`;
+        const url = `https://westfalenfahrplan.de/nwl-efa/XML_TRIP_REQUEST2?outputFormat=rapidJSON&coordOutputDistance=1&name_origin=${encodeURIComponent(originId)}&name_destination=${encodeURIComponent(destinationId)}&type_origin=any&type_destination=any&itdTripDateTimeDepArr=dep&anyObjFilter_origin=2&anyObjFilter_destination=2`;
 
         console.log(`Querying EFA for distance: ${originId} -> ${destinationId}`);
 

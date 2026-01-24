@@ -92,7 +92,7 @@ export class CalendarService {
   }
 
   editVersion(version: BasisVersion): Observable<BasisVersion> {
-    return this.http.put<BasisVersion>(`${this.basisUrl}/versionen/${version.id}`, version)
+    return this.http.put<BasisVersion>(`${this.basisUrl}/versionen/${version.BASIS_VERSION}`, version)
   }
 
   deleteVersion(version: BasisVersion): Observable<any> {

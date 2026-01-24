@@ -134,7 +134,7 @@ export class CalendarOverviewComponent implements OnInit {
         if (this.selectedBasisVersion) {
           this.selectedBasisVersion.BASIS_VERSION_TEXT = res.BASIS_VERSION_TEXT;
 
-          const idx = this.basisVersions.findIndex(v => v.id === res.id);
+          const idx = this.basisVersions.findIndex(v => v.BASIS_VERSION === res.BASIS_VERSION);
           if (idx !== -1) {
             this.basisVersions[idx] = res;
           }
@@ -158,7 +158,7 @@ export class CalendarOverviewComponent implements OnInit {
 
       const savedVersionId = localStorage.getItem('selectedDV');
       if (savedVersionId) {
-        this.selectedBasisVersion = this.basisVersions.find(v => v.id === savedVersionId);
+        this.selectedBasisVersion = this.basisVersions.find(v => v.BASIS_VERSION === parseInt(savedVersionId, 10));
       }
 
       if (!this.selectedBasisVersion && this.basisVersions.length > 0) {
@@ -434,8 +434,8 @@ export class CalendarOverviewComponent implements OnInit {
 
     const newVer: BasisVersion = {
       BASIS_VERSION: maxVersion + 1,
-      BASIS_VERSION_TEXT: `Version ${maxVersion + 1}`,
-      id: crypto.randomUUID()
+      BASIS_VERSION_TEXT: `Version ${maxVersion + 1}`
+      // id: crypto.randomUUID() // Removed
     };
 
     this.calendarService.createVersion(newVer).subscribe({
