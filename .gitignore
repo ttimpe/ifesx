@@ -23,6 +23,7 @@ backend/tmp/
 *.sqlite3
 *.db
 *.sqlite
+timetable.sqlite3
 
 # Environment variables
 .env
