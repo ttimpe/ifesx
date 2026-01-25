@@ -57,8 +57,12 @@
             <div *ngIf="!isNew">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-lg font-bold text-slate-800">Fahrten (REC_FRT)</h3>
-                    <p-button label="Fahrt hinzufügen" icon="pi pi-plus" size="small" severity="success"
-                        (onClick)="toggleTripForm()"></p-button>
+                    <div class="flex gap-2">
+                        <p-button label="Verfügbare Fahrten" icon="pi pi-search" size="small" severity="secondary"
+                            (onClick)="openOrphanDialog()"></p-button>
+                        <p-button label="Fahrt hinzufügen" icon="pi pi-plus" size="small" severity="success"
+                            (onClick)="toggleTripForm()"></p-button>
+                    </div>
                 </div>
 
                 <!-- New Trip Form -->
@@ -133,6 +137,29 @@
                     </div>
                 </p-card>
 
+                <!-- Gantt Chart Visualization -->
+                <div class="mb-4 bg-white rounded-xl shadow-sm border border-slate-200 p-4 overflow-hidden">
+                    <h4 class="text-sm font-bold text-slate-700 mb-2">Zeitliche Übersicht</h4>
+                    <div class="relative h-16 bg-slate-50 border border-slate-200 rounded w-full overflow-hidden">
+                        <!-- Hour Markers (0-28h) -->
+                        <div class="absolute inset-0 flex pointer-events-none">
+                            <div *ngFor="let h of [0,4,8,12,16,20,24]"
+                                class="flex-1 border-r border-slate-200 text-xs text-slate-400 p-1">
+                                {{h}}:00
+                            </div>
+                        </div>
+
+                        <!-- Trip Bars -->
+                        <div *ngFor="let trip of trips"
+                            class="absolute top-2 h-8 bg-indigo-500 rounded shadow-sm opacity-80 hover:opacity-100 cursor-pointer transition-all"
+                            [style.left.%]="(trip.FRT_START || 0) / 86400 * 100" [style.width.%]="1800 / 86400 * 100"
+                            [title]="'Fahrt ' + trip.FRT_FID + ' (' + formatTime(trip.FRT_START) + ')'">
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-400 mt-1 text-right">* Breite = pauschal 30 Min.</p>
+                </div>
+
+
                 <!-- Trips Table -->
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
                     <p-table [value]="trips" styleClass="p-datatable-sm p-datatable-striped" [rowHover]="true">
@@ -186,3 +213,42 @@
         </div>
     </div>
 </div>
+
+<!-- Orphan Trips Dialog -->
+<p-dialog header="Vorhandene Fahrten hinzufügen" [(visible)]="showOrphanDialog" [modal]="true" [style]="{width: '70vw'}"
+    [draggable]="false" [resizable]="false">
+    <div class="p-4">
+        <p class="text-sm text-slate-600 mb-4">Wähle Fahrten aus, die noch keinem Umlauf zugeordnet sind.</p>
+
+        <p-table [value]="orphanTrips" [paginator]="true" [rows]="10" styleClass="p-datatable-sm">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Start</th>
+                    <th>Linie</th>
+                    <th>Ziel / Variante</th>
+                    <th class="text-right">Aktion</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-orphan>
+                <tr>
+                    <td class="font-mono text-indigo-600 font-bold">{{ formatTime(orphan.FRT_START) }}</td>
+                    <td>Linie {{ orphan.LI_NR }}</td>
+                    <td>
+                        <div class="flex flex-col">
+                            <span class="text-sm">{{ getVariantDisplayName(orphan.LI_NR, orphan.STR_LI_VAR) }}</span>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <p-button label="Hinzufügen" icon="pi pi-plus" size="small" severity="success"
+                            (onClick)="assignOrphan(orphan)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="4" class="text-center p-4">Keine passenden freien Fahrten gefunden.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>

@@ -41,6 +41,40 @@ export class RecFrtController {
         }
     }
 
+    // Get orphan trips (UM_UID is null)
+    async getOrphanTrips(req: Request, res: Response) {
+        try {
+            const basisVersion = parseInt(req.query.basisVersion as string);
+            if (!basisVersion) {
+                return res.status(400).json({ error: 'basisVersion required' });
+            }
+
+            const where: any = {
+                BASIS_VERSION: basisVersion,
+                UM_UID: null
+            };
+
+            if (req.query.liNr) where.LI_NR = parseInt(req.query.liNr as string);
+            if (req.query.tagesartNr) where.TAGESART_NR = parseInt(req.query.tagesartNr as string);
+
+            const trips = await RecFrt.findAll({
+                where,
+                include: [
+                    // If associations setup in Model, we would include RecLid here.
+                    // But let's check RecFrt.ts model definition first.
+                    // It has foreign keys but maybe not BelongsTo?
+                    // Assuming we can just fetch raw or configure association.
+                    // Let's assume standard sequelize pattern.
+                ],
+                order: [['FRT_START', 'ASC']]
+            });
+            res.json(trips);
+        } catch (error) {
+            console.error('Error fetching orphan trips:', error);
+            res.status(500).json({ error: 'Failed to fetch orphan trips' });
+        }
+    }
+
     // Get single trip by composite key
     async getByCompositeKey(req: Request, res: Response) {
         try {

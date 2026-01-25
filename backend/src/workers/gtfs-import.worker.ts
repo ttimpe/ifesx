@@ -19,6 +19,7 @@ import { MengeFgr } from '../models/VDV/MengeFgr';
 import { RecSel } from '../models/VDV/RecSel';
 import { RecSelFztFeld } from '../models/VDV/RecSelFztFeld';
 import { MengeBereich } from '../models/VDV/MengeBereich';
+import { Tagesart } from '../models/VDV/Tagesart';
 
 // Helper to report progress
 const reportProgress = (stage: string, current: number, total: number, details: string = '', completed: boolean = false) => {
@@ -407,9 +408,37 @@ const runImport = async () => {
             }
         }
 
-        // --- IMPORT LINES ---
-        reportProgress('Importing Lines', 0, agencyRoutes.length);
+        // --- IMPORT TAGESARTEN (Moved Up) ---
+        reportProgress('Processing Day Types', 0, 100);
+        const serviceIdMap = new Map<string, number>();
+        const calendars = await readCsv(zip, 'calendar.txt');
+        let nextTagesartNr = await Tagesart.max('TAGESART_NR', { where: { BASIS_VERSION } }) as number || 0;
+
+        for (const cal of calendars) {
+            if (!serviceIdMap.has(cal.service_id)) {
+                nextTagesartNr++;
+                const nr = nextTagesartNr;
+                await Tagesart.create({ BASIS_VERSION, TAGESART_NR: nr, TAGESART_TEXT: cal.service_id.substring(0, 40) });
+                serviceIdMap.set(cal.service_id, nr);
+            }
+        }
+        // Handle calendar_dates.txt
+        const calendarDates = await readCsv(zip, 'calendar_dates.txt');
+        for (const cd of calendarDates) {
+            if (!serviceIdMap.has(cd.service_id)) {
+                nextTagesartNr++;
+                const nr = nextTagesartNr;
+                await Tagesart.create({ BASIS_VERSION, TAGESART_NR: nr, TAGESART_TEXT: cd.service_id.substring(0, 40) });
+                serviceIdMap.set(cd.service_id, nr);
+            }
+        }
+
+
+        // --- IMPORT LINES & TRIPS ---
+        reportProgress('Importing Lines & Trips', 0, agencyRoutes.length);
         let lineIdx = 0;
+        let frtFidCounter = await RecFrt.max('FRT_FID', { where: { BASIS_VERSION } }) as number || 0;
+
         for (const r of agencyRoutes) {
             lineIdx++;
             if (lineIdx % 5 === 0) reportProgress('Importing Lines', lineIdx, agencyRoutes.length, r.route_short_name);
@@ -429,17 +458,26 @@ const runImport = async () => {
 
             const routeTrips = agencyTrips.filter(t => t.route_id === r.route_id);
             const patterns = new Map<string, any[]>();
+
+            // Map each trip to its pattern key to easily retrieve variant later
+            const tripToPatternKey = new Map<string, string>();
+
             for (const trip of routeTrips) {
                 const stops = tripPatterns.get(trip.trip_id);
                 if (!stops || stops.length === 0) continue;
                 const patternKey = stops.map(s => s.stop_id).join('|');
                 if (!patterns.has(patternKey)) patterns.set(patternKey, stops);
+                tripToPatternKey.set(trip.trip_id, patternKey);
             }
 
+            // Create Variants (RecLid) and Dictionary for Trip -> Var Assign
             let variantIdx = 0;
+            const patternKeyToVarId = new Map<string, string>(); // Key -> 001, 002
+
             for (const [key, stops] of patterns) {
                 variantIdx++;
                 const variantId = variantIdx.toString().padStart(3, '0');
+                patternKeyToVarId.set(key, variantId);
 
                 const startStopId = stops[0].stop_id;
                 const endStopId = stops[stops.length - 1].stop_id;
@@ -449,7 +487,6 @@ const runImport = async () => {
                     if (!mappedOrtNr) return 'Unknown';
                     const childOrt = ortsToCreate.get(mappedOrtNr);
                     if (!childOrt) return 'Unknown';
-                    // Use the stored Parent Name directly
                     return childOrt.ORT_REF_ORT_NAME || childOrt.ORT_NAME || 'Unknown';
                 };
 
@@ -514,7 +551,40 @@ const runImport = async () => {
                     }
                 }
             }
+
+            // --- INSERT TRIPS FOR THIS LINE ---
+            // Now that variants are created, insert the trips
+            for (const trip of routeTrips) {
+                const pKey = tripToPatternKey.get(trip.trip_id);
+                if (!pKey) continue;
+
+                const variantId = patternKeyToVarId.get(pKey);
+                if (!variantId) continue;
+
+                const tagesartNr = serviceIdMap.get(trip.service_id) || 1;
+
+                // Calc Times
+                const stops = tripPatterns.get(trip.trip_id)!;
+                const startTime = timeToSeconds(stops[0].dep);
+                // const endTime = timeToSeconds(stops[stops.length-1].arr);
+
+                frtFidCounter++;
+
+                await RecFrt.create({
+                    BASIS_VERSION,
+                    FRT_FID: frtFidCounter,
+                    FRT_START: startTime,
+                    LI_NR: uniqueLiNr,
+                    STR_LI_VAR: variantId,
+                    TAGESART_NR: tagesartNr,
+                    FAHRTART_NR: 1, // Default Normal
+                    UM_UID: null // Orphan
+                    // ZUGNR? Line course?
+                });
+            }
         }
+
+
 
         // --- RELATIONS & TRAVEL TIMES ---
         reportProgress('Importing Relations', 0, 0);

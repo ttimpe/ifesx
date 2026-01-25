@@ -49,4 +49,13 @@ export class RecUmlaufService {
     getAllUms(): Observable<RecUms[]> {
         return this.http.get<RecUms[]>(this.piecesUrl);
     }
+
+    getOrphanTrips(basisVersion: number, tagesartNr?: number, liNr?: number): Observable<import('../models/rec-frt.model').RecFrt[]> {
+        let params = new HttpParams().set('basisVersion', basisVersion.toString());
+        if (tagesartNr) params = params.set('tagesartNr', tagesartNr.toString());
+        if (liNr) params = params.set('liNr', liNr.toString());
+
+        return this.http.get<import('../models/rec-frt.model').RecFrt[]>('/api/vdv/rec-frt/orphans', { params });
+    }
 }
+

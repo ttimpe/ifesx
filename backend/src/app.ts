@@ -129,6 +129,7 @@ vdvRouter.get('/block-pieces', recUmlaufController.getAllUms);
 vdvRouter.get('/rec-frt', recFrtController.getAll);
 vdvRouter.get('/rec-frt/by-umlauf/:umUid', recFrtController.getByUmlauf);
 vdvRouter.get('/rec-frt/next-fid/:basisVersion', recFrtController.getNextFrtFid);
+vdvRouter.get('/rec-frt/orphans', (req, res) => recFrtController.getOrphanTrips(req, res));
 vdvRouter.get('/rec-frt/:basisVersion/:frtFid', recFrtController.getByCompositeKey);
 vdvRouter.post('/rec-frt', recFrtController.create);
 vdvRouter.put('/rec-frt/:basisVersion/:frtFid', recFrtController.update);

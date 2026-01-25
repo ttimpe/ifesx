@@ -24,11 +24,13 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
 
+import { DialogModule } from 'primeng/dialog';
+
 @Component({
     selector: 'app-rec-umlauf-detail',
     standalone: true,
     imports: [CommonModule, FormsModule, RouterModule,
-        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule],
+        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule, DialogModule],
     templateUrl: './rec-umlauf-detail.component.html',
     styleUrls: ['./rec-umlauf-detail.component.css']
 })
@@ -229,6 +231,29 @@ export class RecUmlaufDetailComponent implements OnInit {
         } else {
             this.router.navigate(['/rec-umlauf']);
         }
+    }
+
+    // --- ORPHAN TRIPS HANDLING ---
+    showOrphanDialog = false;
+    orphanTrips: RecFrt[] = [];
+
+    openOrphanDialog(): void {
+        this.showOrphanDialog = true;
+        this.loadOrphans();
+    }
+
+    loadOrphans(): void {
+        this.service.getOrphanTrips(this.item.BASIS_VERSION, this.item.TAGESART_NR).subscribe(res => {
+            this.orphanTrips = res;
+        });
+    }
+
+    assignOrphan(trip: RecFrt): void {
+        const update = { ...trip, UM_UID: this.item.UM_UID };
+        this.recFrtService.update(update).subscribe(() => {
+            this.loadTrips();
+            this.loadOrphans(); // Refresh list
+        });
     }
 }
 
