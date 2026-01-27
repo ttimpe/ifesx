@@ -72,6 +72,50 @@ export class RecUmlaufController {
         }
     }
 
+    public update = async (req: Request, res: Response) => {
+        try {
+            const { BASIS_VERSION, TAGESART_NR, UM_UID } = req.body;
+            // Primary key cannot be changed easily, but fields can be.
+            // However, RecUmlauf mostly contains keys. 
+            // If the user wants to change "Kursnummer" (LI_KU_NR), that is actually stored in REC_FRT (RecFrt).
+            // But maybe RecUmlauf has attributes too? 
+            // Model shows: ANF_ORT, END_ORT, FZG_TYP_NR etc.
+
+            const [updated] = await RecUmlauf.update(req.body, {
+                where: { BASIS_VERSION, TAGESART_NR, UM_UID }
+            });
+
+            // Also, if the user edits the Kurs/Course Number (LI_KU_NR), we might need to update all trips?
+            // Wait, LI_KU_NR is on REC_FRT. RecUmlauf doesn't have LI_KU_NR in the model I saw (only ID).
+            // Let's check model again. 
+            // RecUmlauf.ts: ANF_ORT, END_ORT, FZG_TYP_NR... NO LI_KU_NR.
+            // The "Kursnummer" is implicitly the UM_UID or stored on the trips.
+            // If the user wants to set FZG_TYP_NR or END_ORT, this update works.
+
+            if (updated) res.json({ success: true });
+            else res.status(404).json({ error: 'Not found' });
+
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    public delete = async (req: Request, res: Response) => {
+        try {
+            const { BASIS_VERSION, TAGESART_NR, UM_UID } = req.query;
+            // Also delete (or unlink) trips?
+            // Unlink trips
+            await RecFrt.update({ UM_UID: null }, { where: { BASIS_VERSION, TAGESART_NR, UM_UID } });
+
+            const deleted = await RecUmlauf.destroy({
+                where: { BASIS_VERSION, TAGESART_NR, UM_UID }
+            });
+            res.json({ success: !!deleted });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
     // --- RecUms / Block Pieces ---
 
     /**

@@ -68,8 +68,8 @@ export class CalendarController {
             }
 
             // Update fields
-            if (req.body.tagesart_text !== undefined) {
-                tagesart.TAGESART_TEXT = req.body.tagesart_text
+            if (req.body.TAGESART_TEXT !== undefined || req.body.tagesart_text !== undefined) {
+                tagesart.TAGESART_TEXT = req.body.TAGESART_TEXT || req.body.tagesart_text;
             }
 
             await tagesart.save()

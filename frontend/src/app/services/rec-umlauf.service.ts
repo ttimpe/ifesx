@@ -36,14 +36,17 @@ export class RecUmlaufService {
     }
 
     update(item: RecUmlauf): Observable<RecUmlauf> {
-        // VDV usually updates by deleting/re-creating or using composite key. 
-        // For now, assuming UM_UID is unique enough for update if backend supports it.
-        // Or pass full obj.
-        return this.http.put<RecUmlauf>(`${this.apiUrl}/${item.UM_UID}`, item);
+        return this.http.put<RecUmlauf>(this.apiUrl, item);
     }
 
-    delete(umUid: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${umUid}`);
+    delete(basisVersion: number, tagesartNr: number, umUid: number): Observable<void> {
+        return this.http.delete<void>(this.apiUrl, {
+            params: {
+                BASIS_VERSION: basisVersion.toString(),
+                TAGESART_NR: tagesartNr.toString(),
+                UM_UID: umUid.toString()
+            }
+        });
     }
 
     getAllUms(): Observable<RecUms[]> {

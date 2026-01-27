@@ -1,0 +1,78 @@
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+        <div>
+            <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrten (REC_FRT)</h2>
+            <p class="text-xs text-slate-500 font-medium">{{ trips.length }} Einträge</p>
+        </div>
+        <div class="flex gap-2 items-center">
+            <input pInputText type="text" [(ngModel)]="globalFilter" placeholder="Suche..." class="w-64" />
+            <a routerLink="/rec-frt/new">
+                <p-button label="Neue Fahrt" icon="pi pi-plus" severity="success"></p-button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="flex-1 overflow-auto p-4">
+        <p-table [value]="trips" [loading]="loading"
+            [globalFilterFields]="['FRT_FID', 'LI_NR', 'START_STOP_NAME', 'DISPLAY_DEST_STOP_NAME']"
+            styleClass="p-datatable-sm p-datatable-striped" [rowHover]="true" [paginator]="true" [rows]="25"
+            [showCurrentPageReport]="true" currentPageReportTemplate="Zeige {first} bis {last} von {totalRecords}">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="FRT_FID">FID <p-sortIcon field="FRT_FID"></p-sortIcon></th>
+                    <th pSortableColumn="FRT_START">Abfahrt <p-sortIcon field="FRT_START"></p-sortIcon></th>
+                    <th>Ankunft</th>
+                    <th pSortableColumn="LI_NR">Linie <p-sortIcon field="LI_NR"></p-sortIcon></th>
+                    <th>Von</th>
+                    <th>Nach</th>
+                    <th>Umlauf</th>
+                    <th>Fahrtart</th>
+                    <th class="text-right">Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-trip>
+                <tr>
+                    <td class="text-slate-500 text-xs">{{ trip.FRT_FID }}</td>
+                    <td class="font-bold font-mono text-indigo-600">{{ formatTime(trip.FRT_START) }}</td>
+                    <td class="font-mono text-slate-600">{{ formatTime(trip.FRT_ANKUNFT) }}</td>
+                    <td>
+                        <span class="font-medium">{{ trip.LI_NR }}</span>
+                        <span class="text-xs text-slate-400 ml-1">{{ trip.STR_LI_VAR }}</span>
+                    </td>
+                    <td class="text-sm">{{ trip.START_STOP_NAME || '-' }}</td>
+                    <td class="text-sm">{{ trip.DISPLAY_DEST_STOP_NAME || trip.DEST_STOP_NAME || '-' }}</td>
+                    <td>
+                        <a *ngIf="trip.UM_UID" [routerLink]="['/rec-umlauf/detail']"
+                            [queryParams]="{BASIS_VERSION: trip.BASIS_VERSION, TAGESART_NR: trip.TAGESART_NR, UM_UID: trip.UM_UID}"
+                            class="text-indigo-600 hover:underline">
+                            {{ trip.UM_UID }}
+                        </a>
+                        <span *ngIf="!trip.UM_UID" class="text-slate-400">-</span>
+                    </td>
+                    <td>{{ getFahrtartName(trip.FAHRTART_NR) }}</td>
+                    <td class="text-right flex gap-1 justify-end">
+                        <a [routerLink]="getDetailLink(trip)">
+                            <p-button icon="pi pi-pencil" [text]="true" severity="info" size="small"
+                                pTooltip="Bearbeiten"></p-button>
+                        </a>
+                        <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" pTooltip="Löschen"
+                            (onClick)="deleteTrip(trip)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="9" class="text-center p-8 text-slate-500">
+                        <div class="flex flex-col items-center justify-center">
+                            <i class="pi pi-car text-4xl mb-3 text-slate-300"></i>
+                            <p>Keine Fahrten vorhanden.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <p-confirmDialog></p-confirmDialog>
+    </div>
+</div>

@@ -455,4 +455,52 @@ export class LineController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  // POST /lines/variant-stops/swap
+  public async swapVariantStops(req: Request, res: Response) {
+    try {
+      const { LI_NR, STR_LI_VAR, BASIS_VERSION, INDEX_1, INDEX_2 } = req.body;
+      const basisVersion = BASIS_VERSION || 1;
+
+      if (!LI_NR || !STR_LI_VAR || !INDEX_1 || !INDEX_2) {
+        return res.status(400).json({ error: 'Missing parameters' });
+      }
+
+      await sequelize.transaction(async (t) => {
+        // Safe Swap using a temp placeholder
+        // 1. Move Index 1 to Temp (-1)
+        await LidVerlauf.update(
+          { LI_LFD_NR: -1 },
+          {
+            where: { BASIS_VERSION: basisVersion, LI_NR, STR_LI_VAR, LI_LFD_NR: INDEX_1 },
+            transaction: t
+          }
+        );
+
+        // 2. Move Index 2 to Index 1
+        await LidVerlauf.update(
+          { LI_LFD_NR: INDEX_1 },
+          {
+            where: { BASIS_VERSION: basisVersion, LI_NR, STR_LI_VAR, LI_LFD_NR: INDEX_2 },
+            transaction: t
+          }
+        );
+
+        // 3. Move Temp (-1) to Index 2
+        await LidVerlauf.update(
+          { LI_LFD_NR: INDEX_2 },
+          {
+            where: { BASIS_VERSION: basisVersion, LI_NR, STR_LI_VAR, LI_LFD_NR: -1 },
+            transaction: t
+          }
+        );
+      });
+
+      res.json({ success: true });
+
+    } catch (error: any) {
+      console.error('Swap Error:', error);
+      res.status(500).json({ error: error.message });
+    }
+  }
 }

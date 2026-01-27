@@ -50,11 +50,11 @@ export class CalendarService {
   }
 
   deleteTagesart(tagesart: Tagesart): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/tagesarten/${tagesart.id}`)
+    return this.http.delete<any>(`${this.apiUrl}/tagesarten/${tagesart.TAGESART_NR}`)
   }
 
   updateTagesart(tagesart: Tagesart): Observable<Tagesart> {
-    return this.http.put<Tagesart>(`${this.apiUrl}/tagesarten/${tagesart.id}`, tagesart)
+    return this.http.put<Tagesart>(`${this.apiUrl}/tagesarten/${tagesart.TAGESART_NR}`, tagesart)
   }
 
   // Kalendertage/Betriebstage (20241231) Zuordnung zu Tagesarten

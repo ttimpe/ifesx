@@ -237,4 +237,36 @@ export class LineVariantDetailComponent implements OnInit {
             error: (err: any) => console.error('Error updating stop:', err)
         });
     }
+
+    moveStop(stop: LidVerlauf, direction: 'up' | 'down') {
+        if (!this.stops || this.stops.length < 2) return;
+
+        const currentIndex = this.stops.indexOf(stop);
+        if (currentIndex === -1) return;
+
+        let targetIndex = -1;
+        if (direction === 'up') {
+            if (currentIndex === 0) return; // Already top
+            targetIndex = currentIndex - 1;
+        } else {
+            if (currentIndex === this.stops.length - 1) return; // Already bottom
+            targetIndex = currentIndex + 1;
+        }
+
+        const targetStop = this.stops[targetIndex];
+
+        // Perform Swap via Backend
+        const lfd1 = stop.LI_LFD_NR;
+        const lfd2 = targetStop.LI_LFD_NR;
+
+        this.lineService.swapVariantStops(this.lineId, this.strLiVar, lfd1, lfd2).subscribe({
+            next: () => {
+                this.loadStops(); // Reload to see change
+            },
+            error: (err) => {
+                console.error('Swap failed', err);
+                alert('Swap failed: ' + err.message);
+            }
+        });
+    }
 }

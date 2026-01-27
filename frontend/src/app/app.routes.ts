@@ -41,6 +41,9 @@ import { HelpComponent } from './components/help/help.component';
 import { ConnectionListComponent } from './components/connection-list/connection-list.component';
 import { ConnectionDetailComponent } from './components/connection-detail/connection-detail.component';
 
+import { RecFrtListComponent } from './components/rec-frt-list/rec-frt-list.component';
+import { RecFrtDetailComponent } from './components/rec-frt-detail/rec-frt-detail.component';
+
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout.component';
 
 export const routes: Routes = [
@@ -116,6 +119,22 @@ export const routes: Routes = [
       { path: 'connections', component: ConnectionListComponent },
       { path: 'connections/new', component: ConnectionDetailComponent },
       { path: 'connections/:id', component: ConnectionDetailComponent },
+
+      { path: 'rec-frt', component: RecFrtListComponent },
+      { path: 'rec-frt/new', component: RecFrtDetailComponent },
+      { path: 'rec-frt/:basisVersion/:frtFid', component: RecFrtDetailComponent },
+
+      // VDV 455 Planning
+      { path: 'planning/piece-types', loadComponent: () => import('./components/duty-roster/piece-type-list/piece-type-list.component').then(m => m.PieceTypeListComponent) },
+      { path: 'planning/piece-types/:id', loadComponent: () => import('./components/duty-roster/piece-type-detail/piece-type-detail.component').then(m => m.PieceTypeDetailComponent) },
+
+      { path: 'planning/pieces', loadComponent: () => import('./components/duty-roster/piece-list/piece-list.component').then(m => m.PieceListComponent) },
+      { path: 'planning/pieces/new', loadComponent: () => import('./components/duty-roster/piece-detail/piece-detail.component').then(m => m.PieceDetailComponent) },
+      { path: 'planning/pieces/edit', loadComponent: () => import('./components/duty-roster/piece-detail/piece-detail.component').then(m => m.PieceDetailComponent) },
+
+      { path: 'planning/duties', loadComponent: () => import('./components/duty-roster/duty-list/duty-list.component').then(m => m.DutyListComponent) },
+      { path: 'planning/duties/new', loadComponent: () => import('./components/duty-roster/duty-detail/duty-detail.component').then(m => m.DutyDetailComponent) },
+      { path: 'planning/duties/edit', loadComponent: () => import('./components/duty-roster/duty-detail/duty-detail.component').then(m => m.DutyDetailComponent) },
 
       { path: '', redirectTo: 'lines', pathMatch: 'full' }
     ]

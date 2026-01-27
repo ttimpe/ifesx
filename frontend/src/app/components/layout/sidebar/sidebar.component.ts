@@ -7,7 +7,7 @@ import {
   faCircleH, faTableList, faRoute, faLocationCrosshairs,
   faVolumeHigh, faMap, faCalendar, faMapMarkerAlt,
   faExchangeAlt, faWalking, faLayerGroup, faBus, faQuestionCircle,
-  faClock, faBuilding
+  faClock, faBuilding, faPuzzlePiece, faUserClock
 } from '@fortawesome/free-solid-svg-icons';
 import { CalendarService } from '../../../services/calendar.service';
 import { BasisVersion } from '../../../models/basis-version.model';
@@ -53,6 +53,8 @@ export class SidebarComponent implements OnInit {
   faQuestionCircle = faQuestionCircle;
   faClock = faClock;
   faBuilding = faBuilding;
+  faPuzzlePiece = faPuzzlePiece;
+  faUserClock = faUserClock;
 
   selectedDVID: string | null = localStorage.getItem('selectedDV');
   versionen: BasisVersion[] = [];

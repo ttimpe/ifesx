@@ -121,6 +121,7 @@ vdvRouter.delete('/transfers', recUebController.delete);
 vdvRouter.get('/blocks', recUmlaufController.getAll);
 vdvRouter.get('/blocks/detail', recUmlaufController.getOne);
 vdvRouter.post('/blocks', recUmlaufController.create);
+vdvRouter.delete('/blocks', recUmlaufController.delete);
 
 // RecUms Routes
 vdvRouter.get('/block-pieces', recUmlaufController.getAllUms);
@@ -205,7 +206,6 @@ vdvRouter.post('/menge-fahrtart', mengeFahrtartController.create);
 vdvRouter.put('/menge-fahrtart/:id', mengeFahrtartController.update);
 vdvRouter.delete('/menge-fahrtart/:id', mengeFahrtartController.delete);
 
-// Connections (Einzelanschluss & RecUms)
 const connectionController = new ConnectionController();
 vdvRouter.get('/connections', connectionController.getAll);
 vdvRouter.post('/connections', connectionController.create);
@@ -214,6 +214,33 @@ vdvRouter.put('/connections/:einanNr', connectionController.update);
 vdvRouter.delete('/connections/:einanNr', connectionController.delete);
 vdvRouter.post('/connections/ums', connectionController.addUms);
 vdvRouter.delete('/connections/:einanNr/ums/:tagesartNr/:beginn/:ende', connectionController.deleteUms);
+
+// Duty Roster (VDV 455)
+import { DutyRosterController } from './controllers/DutyRosterController';
+const dutyRosterController = new DutyRosterController();
+
+// Piece Types
+vdvRouter.get('/planning/piece-types', dutyRosterController.getAllPieceTypes);
+vdvRouter.post('/planning/piece-types', dutyRosterController.createPieceType);
+vdvRouter.put('/planning/piece-types/:basisVersion/:id', dutyRosterController.updatePieceType);
+vdvRouter.delete('/planning/piece-types/:basisVersion/:id', dutyRosterController.deletePieceType);
+
+// Duties
+vdvRouter.get('/planning/duties', dutyRosterController.getAllDuties);
+vdvRouter.post('/planning/duties', dutyRosterController.createDuty);
+
+// Pieces
+vdvRouter.get('/planning/pieces', dutyRosterController.getAllPieces);
+vdvRouter.post('/planning/pieces', dutyRosterController.createPiece);
+
+// MengeDienstart (Service Types)
+import { MengeDienstartController } from './controllers/MengeDienstartController';
+const mengeDienstartController = new MengeDienstartController();
+vdvRouter.get('/planning/dienstart', mengeDienstartController.getAll);
+vdvRouter.get('/planning/dienstart/:basisVersion/:id', mengeDienstartController.getById);
+vdvRouter.post('/planning/dienstart', mengeDienstartController.create);
+vdvRouter.put('/planning/dienstart/:basisVersion/:id', mengeDienstartController.update);
+vdvRouter.delete('/planning/dienstart/:basisVersion/:id', mengeDienstartController.delete);
 
 apiRouter.use('/vdv', vdvRouter);
 
@@ -241,6 +268,7 @@ lineRouter.get('/variant-stops', lineController.getVariantStops)
 lineRouter.post('/variant-stops', lineController.addVariantStop)
 lineRouter.put('/variant-stops', lineController.updateVariantStop)
 lineRouter.delete('/variant-stops', lineController.removeVariantStop)
+lineRouter.post('/variant-stops/swap', lineController.swapVariantStops)
 lineRouter.post('/variants', lineController.createVariant)
 lineRouter.put('/variants', lineController.updateVariant)
 lineRouter.delete('/variants', lineController.deleteVariant)

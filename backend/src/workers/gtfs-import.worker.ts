@@ -4,6 +4,7 @@ import AdmZip from 'adm-zip';
 import path from 'path';
 import fs from 'fs';
 import { parse } from '@fast-csv/parse';
+import axios from 'axios';
 
 // Import Database and Models (Worker needs its own connection)
 import { initDB } from '../config/database';
@@ -20,6 +21,7 @@ import { RecSel } from '../models/VDV/RecSel';
 import { RecSelFztFeld } from '../models/VDV/RecSelFztFeld';
 import { MengeBereich } from '../models/VDV/MengeBereich';
 import { Tagesart } from '../models/VDV/Tagesart';
+import { Betriebstag } from '../models/VDV/Betriebstag';
 
 // Helper to report progress
 const reportProgress = (stage: string, current: number, total: number, details: string = '', completed: boolean = false) => {
@@ -66,11 +68,18 @@ const timeToSeconds = (timeStr: string): number => {
 // Main Import Logic
 const runImport = async () => {
     try {
+        console.log('[GTFS Worker] Starting...');
         const { tempFile, agencyId, basisVersion, importId } = workerData;
+        console.log(`[GTFS Worker] ImportID: ${importId}, File: ${tempFile}`);
+
+        if (parentPort) parentPort.postMessage({ type: 'progress', payload: { stage: 'Worker Started', current: 0, total: 100, details: 'Initializing...', completed: false } });
+
         const filePath = path.join(process.cwd(), 'uploads', tempFile);
 
         // Init DB
+        console.log('[GTFS Worker] Initializing DB...');
         await initDB();
+        console.log('[GTFS Worker] DB Initialized.');
 
         if (!fs.existsSync(filePath)) {
             throw new Error(`File not found: ${filePath}`);
@@ -115,13 +124,28 @@ const runImport = async () => {
             GUELTIG_AB: validityDate
         });
 
+        // Cleanup existing data for this basis version to avoid stale records
+        reportProgress('Cleaning Database', 0, 100);
+        await RecFrt.destroy({ where: { BASIS_VERSION } });
+        await LidVerlauf.destroy({ where: { BASIS_VERSION } });
+        await RecLid.destroy({ where: { BASIS_VERSION } });
+        await RecSel.destroy({ where: { BASIS_VERSION } });
+        await RecSelFztFeld.destroy({ where: { BASIS_VERSION } });
+        await RecZnr.destroy({ where: { BASIS_VERSION } });
+
         // 1. Routes
         reportProgress('Reading Routes', 0, 100);
         const allRoutes = await readCsv(zip, 'routes.txt');
         const agencyRoutes = allRoutes.filter(r => {
-            if (!r.agency_id) return true;
-            return String(r.agency_id).trim() === String(agencyId).trim();
+            if (!r.agency_id) return false; // Strict: No ID -> No Import
+            const cleanId = String(r.agency_id).replace(/^"|"$/g, '').trim();
+            return cleanId === String(agencyId).trim();
         });
+        console.log(`[GTFS Worker] Target Agency: '${agencyId}' | Routes Found: ${agencyRoutes.length} / ${allRoutes.length}`);
+        if (agencyRoutes.length > 0) {
+            console.log(`[GTFS Worker] First Match: ${JSON.stringify(agencyRoutes[0].agency_id)} -> Clean: ${String(agencyRoutes[0].agency_id).replace(/^"|"$/g, '').trim()}`);
+        }
+
         const routeIds = new Set(agencyRoutes.map(r => r.route_id));
 
         // 2. Trips
@@ -147,11 +171,112 @@ const runImport = async () => {
                 stop_id: st.stop_id,
                 seq: parseInt(st.stop_sequence),
                 arr: st.arrival_time,
-                dep: st.departure_time
+                dep: st.departure_time,
+                pickup_type: parseInt(st.pickup_type || '0'),
+                drop_off_type: parseInt(st.drop_off_type || '0')
             });
         });
 
         tripPatterns.forEach(p => p.sort((a: any, b: any) => a.seq - b.seq));
+
+        // --- SERVICE DEDUPLICATION ---
+        reportProgress('Deduplicating Services', 0, 100);
+
+        // 1. Group Trips by Service
+        const serviceToTrips = new Map<string, any[]>();
+        agencyTrips.forEach(t => {
+            if (!serviceToTrips.has(t.service_id)) serviceToTrips.set(t.service_id, []);
+            serviceToTrips.get(t.service_id)!.push(t);
+        });
+
+        // 2. Generate Fingerprints
+        const serviceFingerprints = new Map<string, string>(); // service_id -> hash
+        let debugPrintCount = 0;
+        const crypto = require('crypto');
+
+        for (const [sId, sTrips] of serviceToTrips) {
+            // Create signature for each trip: route_id + pattern_content
+            const tripSigs = sTrips.map(t => {
+                const stops = tripPatterns.get(t.trip_id);
+                if (!stops) return 'empty';
+                // Pattern sig: stop_id:dep_time|...
+                const patternSig = stops.map((s: any) => `${s.stop_id}:${s.dep}`).join('|');
+                return `${t.route_id}|${t.direction_id}|${patternSig}`;
+            });
+            // Sort to ensure order doesn't matter for the set of trips
+            tripSigs.sort();
+            const serviceContent = tripSigs.join('||');
+            if (debugPrintCount === 0) {
+                console.log(`[GTFS Import Deb] Sample Fingerprint Content (First 200 chars): ${serviceContent.substring(0, 200)}`);
+            }
+            const hash = crypto.createHash('md5').update(serviceContent).digest('hex');
+            serviceFingerprints.set(sId, hash);
+        }
+
+        // 3. Group by Fingerprint
+        const fingerprintToServices = new Map<string, string[]>();
+        serviceFingerprints.forEach((hash, sId) => {
+            if (!fingerprintToServices.has(hash)) fingerprintToServices.set(hash, []);
+            fingerprintToServices.get(hash)!.push(sId);
+        });
+
+        // 4. Identify Duplicates
+        const serviceMapping = new Map<string, string>(); // duplicate -> master
+        let removedTripsCount = 0;
+        let removedServicesCount = 0;
+
+        let debugPrintCount2 = 0;
+        fingerprintToServices.forEach((services, hash) => {
+            if (debugPrintCount2 < 5) {
+                console.log(`[GTFS Import Deb] Hash ${hash.substring(0, 8)}: ${services.length} services (${services.join(', ')})`);
+                debugPrintCount2++;
+            }
+            if (services.length > 1) {
+                // Sort to ensure deterministic master (e.g. alphabetical)
+                services.sort();
+                const master = services[0];
+                for (let i = 1; i < services.length; i++) {
+                    const dup = services[i];
+                    serviceMapping.set(dup, master);
+                    removedServicesCount++;
+                    removedTripsCount += serviceToTrips.get(dup)!.length;
+                }
+                // Master maps to itself (optional, but good for lookup)
+                serviceMapping.set(master, master);
+            } else {
+                serviceMapping.set(services[0], services[0]);
+            }
+        });
+
+        console.log(`[GTFS Import] Deduplication: Merged ${removedServicesCount} services into their masters. Removed ${removedTripsCount} duplicate trips.`);
+        console.log(`[GTFS Import] Unique Fingerprints: ${fingerprintToServices.size} | Total Services Scanned: ${serviceToTrips.size}`);
+
+        // 5. Prune Trips
+        // We only keep trips whose service_id is a Master (or unique)
+        // Effectively: serviceMapping.get(t.service_id) === t.service_id
+        const filteredAgencyTrips = agencyTrips.filter(t => {
+            const master = serviceMapping.get(t.service_id);
+            return master === t.service_id;
+        });
+
+        // Re-assign to the main variable (mutable approach or just update references)
+        // Since agencyTrips is const, we can't reassign it. We'll use splice or create a new internal var.
+        // Actually, 'const agencyTrips' is defined above. We need to respect scoping.
+        // Better to clear agencyTrips array and push preserved items back, or use a new variable and update later references.
+        // Check usage below:
+        // - used in line 219 (routeTrips loop) -> uses agencyTrips
+        // - used in line 437 (usedServiceIds) -> uses agencyTrips
+
+        // Hack to replace content of const array:
+        agencyTrips.length = 0;
+        agencyTrips.push(...filteredAgencyTrips);
+
+        // Update tripIds set
+        tripIds.clear();
+        agencyTrips.forEach(t => tripIds.add(t.trip_id));
+
+        console.log(`[GTFS Import] Post-Filter: ${agencyTrips.length} trips remaining.`);
+
 
         // 4. Stops
         const allStops = await readCsv(zip, 'stops.txt');
@@ -408,61 +533,184 @@ const runImport = async () => {
             }
         }
 
-        // --- IMPORT TAGESARTEN (Moved Up) ---
+        // --- IMPORT TAGESARTEN (Daily Schedule Deduplication) ---
         reportProgress('Processing Day Types', 0, 100);
-        const serviceIdMap = new Map<string, number>();
+
+        const usedServiceIds = new Set<string>();
+        agencyTrips.forEach(t => usedServiceIds.add(t.service_id));
+        console.log(`[GTFS Import] Used Service IDs (Masters): ${usedServiceIds.size}`);
+
+        // 1. Build Date -> Active Master Services Map
+        const dateToServices = new Map<string, Set<string>>();
         const calendars = await readCsv(zip, 'calendar.txt');
+        const calendarDates = await readCsv(zip, 'calendar_dates.txt');
+
+        const addToDate = (dateStr: string, sId: string) => {
+            if (!dateToServices.has(dateStr)) dateToServices.set(dateStr, new Set());
+            dateToServices.get(dateStr)!.add(sId);
+        };
+        const removeFromDate = (dateStr: string, sId: string) => {
+            if (dateToServices.has(dateStr)) dateToServices.get(dateStr)!.delete(sId);
+        };
+
+        // Process Ranges
+        for (const cal of calendars) {
+            const master = serviceMapping.get(cal.service_id) || cal.service_id;
+            if (!usedServiceIds.has(master)) continue;
+
+            const startY = parseInt(cal.start_date.substring(0, 4));
+            const startM = parseInt(cal.start_date.substring(4, 6)) - 1;
+            const startD = parseInt(cal.start_date.substring(6, 8));
+            const endY = parseInt(cal.end_date.substring(0, 4));
+            const endM = parseInt(cal.end_date.substring(4, 6)) - 1;
+            const endD = parseInt(cal.end_date.substring(6, 8));
+
+            const current = new Date(startY, startM, startD);
+            const end = new Date(endY, endM, endD);
+            const activeDays = [cal.sunday, cal.monday, cal.tuesday, cal.wednesday, cal.thursday, cal.friday, cal.saturday].map(d => d === '1');
+
+            while (current <= end) {
+                if (activeDays[current.getDay()]) {
+                    const dStr = `${current.getFullYear()}${(current.getMonth() + 1).toString().padStart(2, '0')}${current.getDate().toString().padStart(2, '0')}`;
+                    addToDate(dStr, master);
+                }
+                current.setDate(current.getDate() + 1);
+            }
+        }
+
+        // Process Exceptions
+        for (const cd of calendarDates) {
+            const master = serviceMapping.get(cd.service_id) || cd.service_id;
+            if (!usedServiceIds.has(master)) continue;
+            if (cd.exception_type === '1') addToDate(cd.date, master);
+            else if (cd.exception_type === '2') removeFromDate(cd.date, master);
+        }
+
+        // 2. Identify Unique Schedules (Sets of Services)
+        const scheduleToDates = new Map<string, { services: string[], dates: string[] }>();
+
+        for (const [date, services] of dateToServices) {
+            if (services.size === 0) continue;
+            const sortedServices = Array.from(services).sort(); // Sort for deterministic signature
+            const sig = sortedServices.join('|');
+            if (!scheduleToDates.has(sig)) {
+                scheduleToDates.set(sig, { services: sortedServices, dates: [] });
+            }
+            scheduleToDates.get(sig)!.dates.push(date);
+        }
+
+        console.log(`[GTFS Import] Unique Daily Schedules: ${scheduleToDates.size} covering ${dateToServices.size} dates.`);
+
+        // 3. Create Tagesart & Betriebstag
+        // Clean up
+        await RecFrt.destroy({ where: { BASIS_VERSION } });
+        await LidVerlauf.destroy({ where: { BASIS_VERSION } });
+        await RecLid.destroy({ where: { BASIS_VERSION } });
+        await Betriebstag.destroy({ where: { BASIS_VERSION } });
+
         let nextTagesartNr = await Tagesart.max('TAGESART_NR', { where: { BASIS_VERSION } }) as number || 0;
 
-        for (const cal of calendars) {
-            if (!serviceIdMap.has(cal.service_id)) {
-                nextTagesartNr++;
-                const nr = nextTagesartNr;
-                await Tagesart.create({ BASIS_VERSION, TAGESART_NR: nr, TAGESART_TEXT: cal.service_id.substring(0, 40) });
-                serviceIdMap.set(cal.service_id, nr);
+        // Map<MasterService, Set<TagesartNr>> for RecFrt generation
+        const serviceToTagesartNrs = new Map<string, Set<number>>();
+        const betriebstageToCreate: any[] = [];
+
+        for (const [sig, info] of scheduleToDates) {
+            nextTagesartNr++;
+            const tNr = nextTagesartNr;
+            const tName = info.services.length > 3 ? `Comb ${info.services.length} Srv` : info.services.join('+');
+
+            await Tagesart.create({
+                BASIS_VERSION,
+                TAGESART_NR: tNr,
+                TAGESART_TEXT: tName.substring(0, 40)
+            });
+
+            // Map each Service in this Schedule to this Tagesart
+            for (const sId of info.services) {
+                if (!serviceToTagesartNrs.has(sId)) serviceToTagesartNrs.set(sId, new Set());
+                serviceToTagesartNrs.get(sId)!.add(tNr);
             }
-        }
-        // Handle calendar_dates.txt
-        const calendarDates = await readCsv(zip, 'calendar_dates.txt');
-        for (const cd of calendarDates) {
-            if (!serviceIdMap.has(cd.service_id)) {
-                nextTagesartNr++;
-                const nr = nextTagesartNr;
-                await Tagesart.create({ BASIS_VERSION, TAGESART_NR: nr, TAGESART_TEXT: cd.service_id.substring(0, 40) });
-                serviceIdMap.set(cd.service_id, nr);
+
+            // Create Betriebstage for all dates using this Schedule
+            for (const dStr of info.dates) {
+                const year = dStr.substring(0, 4);
+                const month = dStr.substring(4, 6);
+                const day = dStr.substring(6, 8);
+                const text = `${day}.${month}.${year}`;
+
+                betriebstageToCreate.push({
+                    BASIS_VERSION,
+                    BETRIEBSTAG: parseInt(dStr, 10),
+                    BETRIEBSTAG_TEXT: text,
+                    TAGESART_NR: tNr
+                });
             }
         }
 
+        reportProgress('Saving Calendar Days', 0, betriebstageToCreate.length);
+        console.log(`[GTFS Import] Betriebstage to create: ${betriebstageToCreate.length}`);
 
-        // --- IMPORT LINES & TRIPS ---
-        reportProgress('Importing Lines & Trips', 0, agencyRoutes.length);
-        let lineIdx = 0;
-        let frtFidCounter = await RecFrt.max('FRT_FID', { where: { BASIS_VERSION } }) as number || 0;
+        for (let i = 0; i < betriebstageToCreate.length; i += 500) {
+            const chunk = betriebstageToCreate.slice(i, i + 500);
+            await Betriebstag.bulkCreate(chunk);
+        }
+
+
+        // Group agency routes into logical lines by (ShortName + Area)
+        const lineGroups = new Map<string, { liNr: number, bereichNr: number, routes: any[] }>();
 
         for (const r of agencyRoutes) {
-            lineIdx++;
-            if (lineIdx % 5 === 0) reportProgress('Importing Lines', lineIdx, agencyRoutes.length, r.route_short_name);
+            // REMOVED HARDCODED FILTER
 
-            const liNr = parseInt(r.route_short_name.replace(/\D/g, ''), 10) || 0;
-            let uniqueLiNr = liNr;
-            if (uniqueLiNr === 0) {
-                uniqueLiNr = 9000 + lineIdx;
+            const isNumeric = /^\d+$/.test(r.route_short_name);
+            const liNrBase = parseInt(r.route_short_name.replace(/\D/g, ''), 10) || 0;
+            let liNr = liNrBase;
+
+            if (!isNumeric) {
+                // If N1, S50 etc -> Boost by 1000 to avoid collision with Line 1
+                if (liNr > 0) liNr += 1000;
+                else liNr = 9000 + agencyRoutes.indexOf(r);
+            } else if (liNr === 0) {
+                liNr = 9000 + agencyRoutes.indexOf(r);
             }
 
-            // Determine Bereich
             let routeType = parseInt(r.route_type, 10);
             if (isNaN(routeType)) routeType = 3;
-
             const mapping = typeToBereichVal.get(routeType);
-            const bereichNr = mapping ? mapping.id : 2; // Default to Bus
+            const bereichNr = mapping ? mapping.id : 2;
 
-            const routeTrips = agencyTrips.filter(t => t.route_id === r.route_id);
+            const groupKey = `${liNr}-${bereichNr}`;
+            if (!lineGroups.has(groupKey)) {
+                lineGroups.set(groupKey, { liNr, bereichNr, routes: [] });
+            }
+            lineGroups.get(groupKey)!.routes.push(r);
+        }
+
+        reportProgress('Importing Lines & Trips', 0, lineGroups.size);
+        let groupIdx = 0;
+        let frtFidCounter = await RecFrt.max('FRT_FID', { where: { BASIS_VERSION } }) as number || 0;
+
+        // Global Map for Line Variant indices (LI_NR -> next variant index) to ensure uniqueness across groups
+        const globalLineVariantMap = new Map<number, number>();
+
+        for (const [groupKey, group] of lineGroups) {
+            groupIdx++;
+            if (groupIdx % 5 === 0) reportProgress('Importing Lines', groupIdx, lineGroups.size, group.routes[0].route_short_name);
+
+            const uniqueLiNr = group.liNr;
+            const bereichNr = group.bereichNr;
+
+            // Collect ALL trips for ALL routes in this group
+            const groupTrips: any[] = [];
+            for (const r of group.routes) {
+                const rt = agencyTrips.filter(t => t.route_id === r.route_id);
+                groupTrips.push(...rt);
+            }
+
             const patterns = new Map<string, any[]>();
-
-            // Map each trip to its pattern key to easily retrieve variant later
             const tripToPatternKey = new Map<string, string>();
 
-            for (const trip of routeTrips) {
+            for (const trip of groupTrips) {
                 const stops = tripPatterns.get(trip.trip_id);
                 if (!stops || stops.length === 0) continue;
                 const patternKey = stops.map(s => s.stop_id).join('|');
@@ -471,7 +719,9 @@ const runImport = async () => {
             }
 
             // Create Variants (RecLid) and Dictionary for Trip -> Var Assign
-            let variantIdx = 0;
+            // Get current variant index for this LI_NR (or Start at 0)
+            let variantIdx = globalLineVariantMap.get(uniqueLiNr) || 0;
+
             const patternKeyToVarId = new Map<string, string>(); // Key -> 001, 002
 
             for (const [key, stops] of patterns) {
@@ -480,6 +730,7 @@ const runImport = async () => {
                 patternKeyToVarId.set(key, variantId);
 
                 const startStopId = stops[0].stop_id;
+                // Use actual last stop for name (No more tricky revenue logic)
                 const endStopId = stops[stops.length - 1].stop_id;
 
                 const getParentName = (stopId: string): string => {
@@ -509,23 +760,26 @@ const runImport = async () => {
                     });
                 }
 
-                // RecLid
-                const existingLid = await RecLid.findOne({
-                    where: { BASIS_VERSION, LI_NR: uniqueLiNr, STR_LI_VAR: variantId }
+                // RecLid (Upsert to fix stale names)
+                await RecLid.upsert({
+                    BASIS_VERSION,
+                    LI_NR: uniqueLiNr,
+                    STR_LI_VAR: variantId,
+                    LI_KUERZEL: group.routes[0].route_short_name.substring(0, 6),
+                    LIDNAME: lidName.substring(0, 100),
+                    ROUTEN_ART: 1,
+                    ROUTEN_NR: variantIdx,
+                    BEREICH_NR: bereichNr
                 });
-                if (!existingLid) {
-                    await RecLid.create({
+
+                // LidVerlauf - Clean up old stops first to avoid zombies (e.g. if variant got shorter)
+                await LidVerlauf.destroy({
+                    where: {
                         BASIS_VERSION,
                         LI_NR: uniqueLiNr,
-                        STR_LI_VAR: variantId,
-                        STR_LID: r.route_short_name.substring(0, 4),
-                        LI_KUERZEL: r.route_short_name.substring(0, 6),
-                        LIDNAME: lidName.substring(0, 100),
-                        ROUTEN_ART: 1,
-                        ROUTEN_NR: variantIdx,
-                        BEREICH_NR: bereichNr
-                    });
-                }
+                        STR_LI_VAR: variantId
+                    }
+                });
 
                 // LidVerlauf
                 let seq = 0;
@@ -534,7 +788,10 @@ const runImport = async () => {
                     const ortNr = stopIdToOrtNr.get(stop.stop_id);
                     if (ortNr) {
                         try {
-                            await LidVerlauf.create({
+                            const forbiddenEntry = stop.pickup_type === 1;
+                            const forbiddenExit = stop.drop_off_type === 1;
+
+                            await LidVerlauf.upsert({
                                 BASIS_VERSION,
                                 LI_NR: uniqueLiNr,
                                 STR_LI_VAR: variantId,
@@ -542,45 +799,51 @@ const runImport = async () => {
                                 ORT_NR: ortNr,
                                 ONR_TYP_NR: 1,
                                 ZNR_NR: seq === 1 ? znrNr : undefined,
-                                EINSTEIGEVERBOT: false,
-                                AUSSTEIGEVERBOT: false
+                                EINSTEIGEVERBOT: forbiddenEntry,
+                                AUSSTEIGEVERBOT: forbiddenExit
                             });
                         } catch (err) {
-                            // ignore duplicate
+                            // ignore duplicate or error
                         }
                     }
                 }
+
+                // end of variant loop
             }
+
+            // Update global map for next group using this same LI_NR
+            globalLineVariantMap.set(uniqueLiNr, variantIdx);
+
 
             // --- INSERT TRIPS FOR THIS LINE ---
             // Now that variants are created, insert the trips
-            for (const trip of routeTrips) {
+            for (const trip of groupTrips) {
                 const pKey = tripToPatternKey.get(trip.trip_id);
                 if (!pKey) continue;
 
                 const variantId = patternKeyToVarId.get(pKey);
                 if (!variantId) continue;
 
-                const tagesartNr = serviceIdMap.get(trip.service_id) || 1;
+                const tagesartNrs = serviceToTagesartNrs.get(trip.service_id);
+                if (!tagesartNrs) continue;
 
-                // Calc Times
                 const stops = tripPatterns.get(trip.trip_id)!;
                 const startTime = timeToSeconds(stops[0].dep);
-                // const endTime = timeToSeconds(stops[stops.length-1].arr);
 
-                frtFidCounter++;
-
-                await RecFrt.create({
-                    BASIS_VERSION,
-                    FRT_FID: frtFidCounter,
-                    FRT_START: startTime,
-                    LI_NR: uniqueLiNr,
-                    STR_LI_VAR: variantId,
-                    TAGESART_NR: tagesartNr,
-                    FAHRTART_NR: 1, // Default Normal
-                    UM_UID: null // Orphan
-                    // ZUGNR? Line course?
-                });
+                for (const tNr of tagesartNrs) {
+                    frtFidCounter++;
+                    await RecFrt.create({
+                        BASIS_VERSION,
+                        FRT_FID: frtFidCounter,
+                        FRT_START: startTime,
+                        LI_NR: uniqueLiNr,
+                        STR_LI_VAR: variantId,
+                        TAGESART_NR: tNr,
+                        FAHRTART_NR: 1, // Default Normal
+                        UM_UID: null, // Orphan
+                        BEREICH_NR: bereichNr
+                    });
+                }
             }
         }
 
@@ -622,9 +885,50 @@ const runImport = async () => {
             return 1;
         };
 
+        const toRad = (v: number) => v * Math.PI / 180;
+        const calcDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+            const R = 6371000; // Meters
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return Math.round(R * c);
+        };
+
+        const getDistanceFromEFA = async (originDHID: string, destDHID: string): Promise<number | null> => {
+            try {
+                // EFA Request for Westfalenfahrplan (generic endpoint, customizable?)
+                const url = `https://westfalenfahrplan.de/nwl-efa/XML_TRIP_REQUEST2?outputFormat=rapidJSON&coordOutputDistance=1&name_origin=${encodeURIComponent(originDHID)}&name_destination=${encodeURIComponent(destDHID)}&type_origin=any&type_destination=any&itdTripDateTimeDepArr=dep&anyObjFilter_origin=2&anyObjFilter_destination=2`;
+
+                // Short timeout to not block import too long
+                const response = await axios.get(url, { timeout: 3000 });
+
+                if (response.data.journeys && response.data.journeys.length > 0) {
+                    const firstJourney = response.data.journeys[0];
+                    let totalDistance = 0;
+                    if (firstJourney.legs) {
+                        firstJourney.legs.forEach((leg: any) => {
+                            if (leg.distance) totalDistance += leg.distance;
+                        });
+                    }
+                    return totalDistance > 0 ? totalDistance : null;
+                }
+                return null;
+            } catch (error) {
+                // console.warn(`[EFA] Failed/Timeout for ${originDHID} -> ${destDHID}`);
+                return null;
+            }
+        };
+
         const segmentFgrDurations = new Map<string, Set<number>>();
+        const segmentDistances = new Map<string, number>();
 
         reportProgress('Calculating Travel Times', 0, agencyStopTimes.length);
+
+        let processedSegmentsCount = 0;
+        const totalSegmentsEstimate = agencyStopTimes.length; // Approximate
 
         for (const st of agencyStopTimes) {
             if (!st.departure_time || !st.arrival_time) continue;
@@ -637,20 +941,92 @@ const runImport = async () => {
             const s1 = tripStops[stopIdx];
             const s2 = tripStops[stopIdx + 1];
 
-            const fromOrt = stopIdToOrtNr.get(s1.stop_id);
-            const toOrt = stopIdToOrtNr.get(s2.stop_id);
+            const fromOrtNr = stopIdToOrtNr.get(s1.stop_id);
+            const toOrtNr = stopIdToOrtNr.get(s2.stop_id);
 
-            if (!fromOrt || !toOrt || fromOrt === toOrt) continue;
+            if (!fromOrtNr || !toOrtNr || fromOrtNr === toOrtNr) continue;
+
+            // Calculate Distance if not already set (using first occurrence)
+            const segmentBaseKey = `${fromOrtNr}-${toOrtNr}`;
+
+            // Only add to segments to process if not already known
+            if (!segmentDistances.has(segmentBaseKey)) {
+                segmentDistances.set(segmentBaseKey, 0); // Initialize with 0
+            }
 
             const depTime = timeToSeconds(s1.dep);
             const arrTime = timeToSeconds(s2.arr);
             const duration = Math.max(0, arrTime - depTime);
 
             const fgrNr = getTimeWindow(depTime);
-            const key = `${fromOrt}-${toOrt}-${fgrNr}`;
+            const key = `${fromOrtNr}-${toOrtNr}-${fgrNr}`;
 
             if (!segmentFgrDurations.has(key)) segmentFgrDurations.set(key, new Set());
             segmentFgrDurations.get(key)!.add(duration);
+        }
+
+        // --- BATCH PROCESS EFA REQUESTS ---
+        const { loadEFADistances } = workerData;
+        if (loadEFADistances) {
+            const segmentsToFetch = Array.from(segmentDistances.keys());
+            reportProgress('Fetching EFA Distances', 0, segmentsToFetch.length);
+
+            const BATCH_SIZE = 20; // 20 Parallel requests
+            for (let i = 0; i < segmentsToFetch.length; i += BATCH_SIZE) {
+                const batch = segmentsToFetch.slice(i, i + BATCH_SIZE);
+                const promises = batch.map(async (segKey) => {
+                    const [from, to] = segKey.split('-').map(Number);
+                    const ort1 = ortsToCreate.get(from);
+                    const ort2 = ortsToCreate.get(to);
+
+                    if (ort1?.HST_NR_INTERNATIONAL && ort2?.HST_NR_INTERNATIONAL) {
+                        try {
+                            const dist = await getDistanceFromEFA(ort1.HST_NR_INTERNATIONAL, ort2.HST_NR_INTERNATIONAL);
+                            if (dist !== null) {
+                                segmentDistances.set(segKey, dist);
+                            } else {
+                                // Fallback Haversine
+                                const haversine = calcDistance(
+                                    ort1.ORT_POS_BREITE / 10000000, ort1.ORT_POS_LAENGE / 10000000,
+                                    ort2.ORT_POS_BREITE / 10000000, ort2.ORT_POS_LAENGE / 10000000
+                                );
+                                segmentDistances.set(segKey, haversine);
+                            }
+                        } catch (e) {
+                            // Fallback Haversine on Error
+                            const haversine = calcDistance(
+                                ort1.ORT_POS_BREITE / 10000000, ort1.ORT_POS_LAENGE / 10000000,
+                                ort2.ORT_POS_BREITE / 10000000, ort2.ORT_POS_LAENGE / 10000000
+                            );
+                            segmentDistances.set(segKey, haversine);
+                        }
+                    } else if (ort1 && ort2) {
+                        // Fallback Haversine if no DHID
+                        const haversine = calcDistance(
+                            ort1.ORT_POS_BREITE / 10000000, ort1.ORT_POS_LAENGE / 10000000,
+                            ort2.ORT_POS_BREITE / 10000000, ort2.ORT_POS_LAENGE / 10000000
+                        );
+                        segmentDistances.set(segKey, haversine);
+                    }
+                });
+
+                await Promise.all(promises);
+                reportProgress('Fetching EFA Distances', Math.min(i + BATCH_SIZE, segmentsToFetch.length), segmentsToFetch.length);
+            }
+        } else {
+            // Calculate Haversine for all if EFA disabled
+            for (const segKey of segmentDistances.keys()) {
+                const [from, to] = segKey.split('-').map(Number);
+                const ort1 = ortsToCreate.get(from);
+                const ort2 = ortsToCreate.get(to);
+                if (ort1 && ort2) {
+                    const dist = calcDistance(
+                        ort1.ORT_POS_BREITE / 10000000, ort1.ORT_POS_LAENGE / 10000000,
+                        ort2.ORT_POS_BREITE / 10000000, ort2.ORT_POS_LAENGE / 10000000
+                    );
+                    segmentDistances.set(segKey, dist);
+                }
+            }
         }
 
         const segmentsByKey = new Map<string, Map<number, Set<number>>>();
@@ -674,6 +1050,9 @@ const runImport = async () => {
             const [fromOrt, toOrt] = segmentKey.split('-').map(Number);
             const sortedFgrs = Array.from(fgrMap.keys()).sort((a, b) => a - b);
 
+            // Get calculated distance
+            const dist = segmentDistances.get(segmentKey) || 0;
+
             for (const fgrNr of sortedFgrs) {
                 const durations = fgrMap.get(fgrNr)!;
                 const avgDuration = Math.round(Array.from(durations).reduce((a, b) => a + b, 0) / durations.size);
@@ -686,7 +1065,7 @@ const runImport = async () => {
                         ORT_NR: fromOrt,
                         SEL_ZIEL: toOrt,
                         SEL_ZIEL_TYP: 1,
-                        SEL_LAENGE: 0,
+                        SEL_LAENGE: dist,
                         SEL_FZT: avgDuration,
                         FGR_NR: 1
                     });

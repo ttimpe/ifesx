@@ -58,6 +58,7 @@ export class CalendarOverviewComponent implements OnInit {
 
   // Modal Visibility Flags
   displayTagesartModal: boolean = false;
+  isEditingTagesart: boolean = false;
   displayBetriebstagModal: boolean = false;
 
   // Versions
@@ -253,6 +254,7 @@ export class CalendarOverviewComponent implements OnInit {
 
 
   openTagesartModal(dayType?: Tagesart): void {
+    this.isEditingTagesart = !!dayType;
     this.selectedDayType = dayType
       ? Object.assign(new Tagesart(), dayType)
       : new Tagesart();
@@ -262,7 +264,7 @@ export class CalendarOverviewComponent implements OnInit {
 
   saveTagesart(): void {
     if (this.selectedDayType) {
-      const isNew = this.selectedDayType.id == null;
+      const isNew = !this.isEditingTagesart;
       const obs = isNew
         ? this.calendarService.createTagesart(this.selectedDayType)
         : this.calendarService.updateTagesart(this.selectedDayType);

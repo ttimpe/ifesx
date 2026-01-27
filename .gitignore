@@ -19,6 +19,10 @@ backend/dist/
 backend/build/
 backend/tmp/
 
+# Backend Data
+backend/gtfs/*.txt
+backend/gtfs/*.zip
+
 # Database
 *.sqlite3
 *.db
@@ -61,3 +65,5 @@ data/
 coverage/
 *.lcov
 .nyc_output/
+
+tools/

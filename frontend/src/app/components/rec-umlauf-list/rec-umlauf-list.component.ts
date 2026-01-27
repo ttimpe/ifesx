@@ -62,7 +62,7 @@ export class RecUmlaufListComponent implements OnInit {
 
     deleteUmlauf(row: RecUmlauf): void {
         if (confirm('Wirklich löschen?')) {
-            this.service.delete(row.UM_UID).subscribe(() => {
+            this.service.delete(row.BASIS_VERSION, row.TAGESART_NR, row.UM_UID).subscribe(() => {
                 this.loadData();
             });
         }

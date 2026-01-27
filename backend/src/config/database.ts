@@ -24,15 +24,31 @@ import { MengeFahrtart } from '../models/VDV/MengeFahrtart';
 import { MengeBhof } from '../models/VDV/MengeBhof';
 import { RecSelFztFeld } from '../models/VDV/RecSelFztFeld';
 import { Einzelanschluss } from '../models/VDV/Einzelanschluss';
+import { MengeDienststueckart } from '../models/VDV/MengeDienststueckart';
+import { RecDienststueck } from '../models/VDV/RecDienststueck';
+import { RecEinzeldienst } from '../models/VDV/RecEinzeldienst';
+import { MengeDienstart } from '../models/VDV/MengeDienstart';
+
+import path from 'path';
+import fs from 'fs';
+
+const dbPath = process.env.DB_FILE || 'data/timetable.sqlite3';
+const dbDir = path.dirname(dbPath);
+
+if (!fs.existsSync(dbDir)) {
+    console.log(`[Database] Directory ${dbDir} does not exist. Creating...`);
+    fs.mkdirSync(dbDir, { recursive: true });
+}
 
 export const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: process.env.DB_FILE || 'timetable.sqlite3',
+    storage: dbPath,
     models: [
         RecLid, RecZnr, BasisVersion, Tagesart, Betriebstag,
         BasisVersionGueltigkeit, RecAnr, RecOrt, RecHp, LidVerlauf, RecUeb,
         UebFzt, RecUmlauf, RecFrt, RecUms, RecSel, MengeFzgTyp, Fahrzeug, RecOm,
-        MengeBereich, MengeFgr, MengeFahrtart, MengeBhof, RecSelFztFeld, Einzelanschluss
+        MengeBereich, MengeFgr, MengeFahrtart, MengeBhof, RecSelFztFeld, Einzelanschluss,
+        MengeDienststueckart, RecDienststueck, RecEinzeldienst, MengeDienstart
     ],
     logging: console.log
 });
