@@ -488,7 +488,7 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     this.map = L.map('map', {
       zoomControl: true,
       layers: [tileLayer],
-      center: [52.0236952, 8.5315316],
+      center: [52.022862, 8.532795], // Bielefeld Jahnplatz
       zoom: 13
     });
 

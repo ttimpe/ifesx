@@ -151,7 +151,7 @@ export class StopDetailComponent implements OnInit, AfterViewInit {
     if (!document.getElementById('map')) return;
     if (this.map) return;
 
-    this.map = L.map('map').setView([51.1657, 10.4515], 6); // Default Germany center
+    this.map = L.map('map').setView([52.022862, 8.532795], 13); // Bielefeld Jahnplatz
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -177,8 +177,8 @@ export class StopDetailComponent implements OnInit, AfterViewInit {
     // If virtual: No.
     // If real: Yes.
     // If no coords, try to use first child?
-    let lat = 51.5;
-    let lng = 7.5;
+    let lat = 52.022862; // Bielefeld Jahnplatz
+    let lng = 8.532795;
 
     if (this.recOrt.ORT_POS_BREITE && this.recOrt.ORT_POS_LAENGE) {
       lat = this.recOrt.ORT_POS_BREITE / 10000000;
@@ -256,8 +256,8 @@ export class StopDetailComponent implements OnInit, AfterViewInit {
   // Update decimal values from VDV format
   private syncDecimalFromVdv(): void {
     if (this.recOrt) {
-      this.latDecimal = this.recOrt.ORT_POS_BREITE ? this.recOrt.ORT_POS_BREITE / 10000000 : 51.5;
-      this.lonDecimal = this.recOrt.ORT_POS_LAENGE ? this.recOrt.ORT_POS_LAENGE / 10000000 : 7.5;
+      this.latDecimal = this.recOrt.ORT_POS_BREITE ? this.recOrt.ORT_POS_BREITE / 10000000 : 52.022862;
+      this.lonDecimal = this.recOrt.ORT_POS_LAENGE ? this.recOrt.ORT_POS_LAENGE / 10000000 : 8.532795;
     }
   }
 

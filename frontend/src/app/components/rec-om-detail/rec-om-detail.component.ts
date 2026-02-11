@@ -93,7 +93,7 @@ export class RecOmDetailComponent implements OnInit, AfterViewInit {
         const mapContainer = document.getElementById('map');
         if (!mapContainer) return;
 
-        this.map = L.map('map').setView([51.1657, 10.4515], 6); // Default Germany center
+        this.map = L.map('map').setView([52.022862, 8.532795], 13); // Bielefeld Jahnplatz
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
