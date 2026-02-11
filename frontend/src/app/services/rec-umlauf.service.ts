@@ -60,5 +60,14 @@ export class RecUmlaufService {
 
         return this.http.get<import('../models/rec-frt.model').RecFrt[]>('/api/vdv/rec-frt/orphans', { params });
     }
+
+    setKursNr(basisVersion: number, tagesartNr: number, umUid: number, kursNr: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/set-kurs`, {
+            BASIS_VERSION: basisVersion,
+            TAGESART_NR: tagesartNr,
+            UM_UID: umUid,
+            LI_KU_NR: kursNr
+        });
+    }
 }
 

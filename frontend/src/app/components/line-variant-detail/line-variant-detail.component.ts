@@ -40,7 +40,8 @@ export class LineVariantDetailComponent implements OnInit {
     variant?: RecLid;
     stops: LidVerlauf[] = [];
 
-    allStops: RecOrt[] = []; // For adding new stops
+    allStops: RecOrt[] = []; // Filtered list for dropdown
+    rawAllStops: RecOrt[] = []; // Complete list from backend
     allDestinations: RecZnr[] = []; // For ZNR dropdown
     allAnnouncements: Announcement[] = []; // For ANR dropdown
 
@@ -52,6 +53,7 @@ export class LineVariantDetailComponent implements OnInit {
 
     isNew = false;
     showAddStopDialog = false;
+    showAllStops = false; // Toggle state
     newStopData: any = { ORT_NR: null };
     isSubmittingStop = false; // Guard flag to prevent double submission
 
@@ -72,20 +74,11 @@ export class LineVariantDetailComponent implements OnInit {
             // Fetch Line context
             this.lineService.getLineById(this.lineId).subscribe(l => this.line = l);
 
-            // Load all stops for now (we'll add filtering UI later)
+            // Load all stops
             this.stopService.getAllRecOrts().subscribe(s => {
                 console.log('Total stops loaded:', s.length);
-                const subOrte = s.filter(ort => ort.ORT_REF_ORT && ort.ORT_REF_ORT > 0);
-                console.log('Sub-Orte (with ORT_REF_ORT):', subOrte.length);
-                console.log('Sample sub-ort:', subOrte[0]);
-
-                // Show only sub-orte (platforms/tracks)
-                this.allStops = subOrte;
-
-                if (subOrte.length === 0) {
-                    console.warn('No sub-orte found! Showing all stops as fallback.');
-                    this.allStops = s;
-                }
+                this.rawAllStops = s;
+                this.updateStopFilter();
             });
 
             // Load destinations and announcements for dropdowns
@@ -106,6 +99,24 @@ export class LineVariantDetailComponent implements OnInit {
                 this.loadVariant();
             }
         });
+    }
+
+    updateStopFilter() {
+        if (this.showAllStops) {
+            // Show everything
+            this.allStops = this.rawAllStops;
+        } else {
+            // Show only sub-orte (platforms) as before, but handle empty case
+            const subOrte = this.rawAllStops.filter(ort => ort.ORT_REF_ORT && ort.ORT_REF_ORT > 0);
+            if (subOrte.length === 0) {
+                // If no sub-stops exist at all, falling back to all stops might still be useful, 
+                // but typically we want to respect the filter. 
+                // Matches original fallback logic just in case data is weird.
+                this.allStops = this.rawAllStops;
+            } else {
+                this.allStops = subOrte;
+            }
+        }
     }
 
     loadVariant() {
@@ -182,11 +193,16 @@ export class LineVariantDetailComponent implements OnInit {
         this.isSubmittingStop = true;
         console.log('[addStop] Guard flag set, proceeding with API call');
 
+        // Find the full stop object to get the correct ONR_TYP_NR
+        // Use rawAllStops to be sure we find it even if filter state is weird
+        const selectedStop = this.rawAllStops.find(s => s.ORT_NR === this.newStopData.ORT_NR);
+        const onrTypNr = selectedStop?.ONR_TYP_NR || 1; // Fallback to 1 if not found
+
         const payload = {
             LI_NR: this.lineId,
             STR_LI_VAR: this.variant.STR_LI_VAR,
             ORT_NR: this.newStopData.ORT_NR,
-            ONR_TYP_NR: 1, // Default or fetch from Ort
+            ONR_TYP_NR: onrTypNr,
             HALTEPUNKT_NR: 0 // Optional
         };
 

@@ -16,9 +16,7 @@ class StopController {
     const query = req.params.query || req.query.query;
     const basisVersion = req.query.basisVersion || req.query.basis_version; // Support both cases
 
-    const whereClause: any = {
-      ONR_TYP_NR: 1
-    };
+    const whereClause: any = {};
 
     if (basisVersion) {
       whereClause.BASIS_VERSION = basisVersion;
@@ -63,8 +61,7 @@ class StopController {
     const basisVersion = req.query.basisVersion || req.query.basis_version;
 
     const whereClause: any = {
-      ORT_NR: ortNr,
-      ONR_TYP_NR: 1
+      ORT_NR: ortNr
     };
     if (basisVersion) {
       whereClause.BASIS_VERSION = basisVersion;
@@ -112,6 +109,36 @@ class StopController {
     const data = req.body;
 
     try {
+      const basisVersion = data.BASIS_VERSION || 1;
+      const onrTypNr = data.ONR_TYP_NR || 1;
+
+      // Logic Branch 1: Specific ID provided (> 0)
+      if (data.ORT_NR && data.ORT_NR > 0) {
+        const existing = await RecOrt.findOne({
+          where: {
+            ORT_NR: data.ORT_NR,
+            ONR_TYP_NR: onrTypNr,
+            BASIS_VERSION: basisVersion
+          }
+        });
+
+        if (existing) {
+          return res.status(409).json({
+            error: `Stop with ID ${data.ORT_NR} already exists`,
+            details: 'Duplicate Key'
+          });
+        }
+      } else {
+        // Logic Branch 2: No ID or 0 provided -> Auto Increment
+        const maxOrt = await RecOrt.findOne({
+          where: { BASIS_VERSION: basisVersion }, // Global max or per ONR_TYP? Usually global namespace for ORT_NR
+          order: [['ORT_NR', 'DESC']]
+        });
+
+        const nextId = maxOrt ? (maxOrt.ORT_NR + 1) : 1;
+        data.ORT_NR = nextId;
+      }
+
       // Create new RecOrt
       const newRecOrt = await RecOrt.create(data);
 
@@ -131,7 +158,7 @@ class StopController {
 
     try {
       const recOrt = await RecOrt.findOne({
-        where: { ORT_NR: ortNr, ONR_TYP_NR: 1 }
+        where: { ORT_NR: ortNr }
       });
 
       if (!recOrt) return res.status(404).json({ error: 'RecOrt not found' });
@@ -160,7 +187,7 @@ class StopController {
 
       // Delete the RecOrt itself
       const deleted = await RecOrt.destroy({
-        where: { ORT_NR: ortNr, ONR_TYP_NR: 1 }
+        where: { ORT_NR: ortNr }
       });
 
       if (deleted === 0) {
@@ -183,7 +210,7 @@ class StopController {
     try {
       // 1. Fetch all children belonging to this group
       const children = await RecOrt.findAll({
-        where: { ...whereVersion, ORT_REF_ORT: refId, ONR_TYP_NR: 1 },
+        where: { ...whereVersion, ORT_REF_ORT: refId },
         order: [['ORT_NAME', 'ASC']]
       });
 

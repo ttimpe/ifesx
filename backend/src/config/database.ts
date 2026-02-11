@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
 import { RecLid } from '../models/VDV/RecLid';
+import { RecSelZp } from '../models/VDV/RecSelZp';
 import { RecZnr } from '../models/VDV/RecZnr';
 import { BasisVersion } from '../models/VDV/BasisVersion';
 import { Tagesart } from '../models/VDV/Tagesart';
@@ -48,7 +49,7 @@ export const sequelize = new Sequelize({
         BasisVersionGueltigkeit, RecAnr, RecOrt, RecHp, LidVerlauf, RecUeb,
         UebFzt, RecUmlauf, RecFrt, RecUms, RecSel, MengeFzgTyp, Fahrzeug, RecOm,
         MengeBereich, MengeFgr, MengeFahrtart, MengeBhof, RecSelFztFeld, Einzelanschluss,
-        MengeDienststueckart, RecDienststueck, RecEinzeldienst, MengeDienstart
+        MengeDienststueckart, RecDienststueck, RecEinzeldienst, MengeDienstart, RecSelZp
     ],
     logging: console.log
 });

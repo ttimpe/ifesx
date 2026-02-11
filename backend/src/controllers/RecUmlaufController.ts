@@ -16,8 +16,43 @@ export class RecUmlaufController {
      */
     public getAll = async (req: Request, res: Response) => {
         try {
-            const list = await RecUmlauf.findAll({ limit: 100 });
-            res.json(list);
+            const list = await RecUmlauf.findAll({
+                limit: 100,
+                include: [{
+                    model: RecFrt,
+                    attributes: ['FRT_START', 'LI_NR', 'LI_KU_NR']
+                }],
+                order: [['UM_UID', 'ASC']]
+            });
+
+            // Calculate derived fields
+            const enhancedList = list.map((umlauf: any) => {
+                // Sequelize-Typescript uses the property name defined in the model if available
+                // In RecUmlauf model: @HasMany(() => RecFrt) trips?: RecFrt[];
+                // So it should be 'trips'.
+                const trips = (umlauf.trips || umlauf.REC_FRTs || []) as RecFrt[];
+
+                let ausfahrt = null;
+
+                if (trips.length > 0) {
+                    // Find earliest trip
+                    const firstTrip = trips.reduce((prev, curr) => (prev.FRT_START || 999999) < (curr.FRT_START || 999999) ? prev : curr);
+                    ausfahrt = {
+                        zeit: firstTrip.FRT_START,
+                        linie: firstTrip.LI_NR,
+                        kurs: firstTrip.LI_KU_NR
+                    };
+                } else {
+                    // console.log(`No trips found for Umlauf ${umlauf.UM_UID}`);
+                }
+
+                return {
+                    ...umlauf.toJSON(),
+                    ausfahrt // Attach to response
+                };
+            });
+
+            res.json(enhancedList);
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -96,6 +131,35 @@ export class RecUmlaufController {
             else res.status(404).json({ error: 'Not found' });
 
         } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    public setKursNr = async (req: Request, res: Response) => {
+        try {
+            const { BASIS_VERSION, TAGESART_NR, UM_UID, LI_KU_NR } = req.body;
+
+            // Validate inputs
+            if (!UM_UID) return res.status(400).json({ error: 'UM_UID is required' });
+            if (LI_KU_NR === undefined) return res.status(400).json({ error: 'LI_KU_NR is required' });
+
+            // Update all trips in this Umlauf
+            const [updatedCount] = await RecFrt.update(
+                { LI_KU_NR },
+                {
+                    where: {
+                        // If BASIS_VERSION and TAGESART_NR are provided, use them for stricter scope
+                        // Otherwise just UM_UID (Primary grouping)
+                        ...(BASIS_VERSION ? { BASIS_VERSION } : {}),
+                        ...(TAGESART_NR ? { TAGESART_NR } : {}),
+                        UM_UID
+                    }
+                }
+            );
+
+            res.json({ success: true, updatedCount });
+        } catch (error: any) {
+            console.error('Error setting KursNr:', error);
             res.status(500).json({ error: error.message });
         }
     }

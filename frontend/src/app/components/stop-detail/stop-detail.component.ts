@@ -12,6 +12,7 @@ import { Dialog } from 'primeng/dialog';
 import { InputNumber } from 'primeng/inputnumber';
 import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { RecOrt } from '../../models/rec-ort.model';
 import * as L from 'leaflet';
@@ -48,7 +49,8 @@ L.Marker.prototype.options.icon = iconDefault;
     InputText,
     Tooltip,
     InputNumber,
-    LeafletModule
+    LeafletModule,
+    DropdownModule
   ]
 })
 export class StopDetailComponent implements OnInit, AfterViewInit {
@@ -60,6 +62,13 @@ export class StopDetailComponent implements OnInit, AfterViewInit {
   isGroup: boolean = false;
   groupRefId: number = 0;
   groupChildren: any[] = [];
+
+  onrTypOptions = [
+    { label: 'Haltepunkt', value: 1 },
+    { label: 'Betriebshofpunkt', value: 2 },
+    { label: 'Ortsmarke', value: 3 },
+    { label: 'LSA-Punkt', value: 4 }
+  ];
 
   // Decimal degree display values
   latDecimal: number = 0;

@@ -24,6 +24,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { DropdownModule } from 'primeng/dropdown';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-calendar-overview',
@@ -47,7 +49,12 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     CardModule,
     FloatLabelModule,
     ConfirmDialogModule,
-    ToastModule
+    CardModule,
+    FloatLabelModule,
+    ConfirmDialogModule,
+    ToastModule,
+    DropdownModule,
+    CheckboxModule
   ]
 })
 export class CalendarOverviewComponent implements OnInit {
@@ -495,6 +502,61 @@ export class CalendarOverviewComponent implements OnInit {
               summary: 'Fehler',
               detail: 'Version konnte nicht gelöscht werden: ' + (err.error?.message || err.message)
             });
+          }
+        });
+      }
+    });
+  }
+
+  // ===== MERGE functionality =====
+  displayMergeModal: boolean = false;
+  mergeSource: Tagesart | undefined;
+  mergeTarget: Tagesart | undefined;
+  mergeDeleteSource: boolean = false;
+
+  // Multi-select for merge
+  selectedDayTypes: Tagesart[] = [];
+
+  openMergeModal(): void {
+    if (this.selectedDayTypes.length === 2) {
+      // Pre-fill if exactly 2 selected
+      this.mergeSource = this.selectedDayTypes[0];
+      this.mergeTarget = this.selectedDayTypes[1];
+    } else {
+      this.mergeSource = undefined;
+      this.mergeTarget = undefined;
+    }
+
+    this.displayMergeModal = true;
+    this.mergeDeleteSource = false;
+  }
+
+  executeMerge(): void {
+    if (!this.mergeSource || !this.mergeTarget || !this.selectedBasisVersion) return;
+    if (this.mergeSource.TAGESART_NR === this.mergeTarget.TAGESART_NR) {
+      this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Quelle und Ziel müssen unterschiedlich sein.' });
+      return;
+    }
+
+    this.confirmationService.confirm({
+      message: `Tagesart "${this.mergeSource.TAGESART_TEXT}" in "${this.mergeTarget.TAGESART_TEXT}" mergen? ${this.mergeDeleteSource ? 'Quelle wird gelöscht.' : ''}`,
+      header: 'Merge bestätigen',
+      icon: 'pi pi-exclamation-circle',
+      accept: () => {
+        this.calendarService.mergeTagesart(
+          this.mergeSource!.TAGESART_NR,
+          this.mergeTarget!.TAGESART_NR,
+          this.selectedBasisVersion!.BASIS_VERSION,
+          this.mergeDeleteSource
+        ).subscribe({
+          next: (res) => {
+            this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: `Merge erfolgreich. ${res.moved} verschoben, ${res.deleted} gelöscht.` });
+            this.displayMergeModal = false;
+            this.loadDayTypes();
+          },
+          error: (err) => {
+            console.error(err);
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Merge fehlgeschlagen.' });
           }
         });
       }

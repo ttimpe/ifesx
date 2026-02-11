@@ -312,7 +312,10 @@ export class RecFrtController {
 
             const where: any = {
                 BASIS_VERSION: basisVersion,
-                UM_UID: null
+                [Op.or]: [
+                    { UM_UID: null },
+                    { UM_UID: 0 }
+                ]
             };
 
             if (req.query.liNr) where.LI_NR = parseInt(req.query.liNr as string);

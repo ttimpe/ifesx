@@ -25,7 +25,6 @@ const fonts = {
         bolditalics: require.resolve('pdfmake/build/vfs_fonts').replace('vfs_fonts.js', '../fonts/Roboto/Roboto-MediumItalic.ttf')
     }
 };
-
 // Helper for Roman Numerals
 function toRoman(num: number): string {
     if (num < 1) return "";
@@ -111,6 +110,32 @@ export class KursblattController {
             };
             const ausfahrzeit = formatTime(minStart); // Only shown on first page
 
+            // Pre-fetch Route IDs for Mapping
+            const routeMap = new Map<string, string>();
+            const variantKeys = new Set<string>();
+            trips.forEach(t => {
+                if (t.LI_NR && t.STR_LI_VAR) {
+                    variantKeys.add(`${t.LI_NR}-${t.STR_LI_VAR}`);
+                }
+            });
+
+            for (const key of variantKeys) {
+                const [liNrStr, varStr] = key.split('-');
+                const liNr = parseInt(liNrStr);
+                const lid = await RecLid.findOne({
+                    where: {
+                        LI_NR: liNr,
+                        STR_LI_VAR: varStr,
+                        BASIS_VERSION: umlauf.BASIS_VERSION
+                    }
+                });
+                if (lid && lid.ROUTEN_NR) {
+                    routeMap.set(key, lid.ROUTEN_NR.toString());
+                } else {
+                    routeMap.set(key, varStr);
+                }
+            }
+
             // Grouping Logic (Ported)
             const groups: RecFrt[][] = [];
             let currentGroup: RecFrt[] = [];
@@ -152,18 +177,25 @@ export class KursblattController {
 
             // Constants for Layout
             const PAGE_HEIGHT = 841.89; // A4 Portrait
-            const MARGINS = 40;
-            const USABLE_HEIGHT = PAGE_HEIGHT - MARGINS;
-            const HEADER_HEIGHT = 220; // Increased safety margin (was 160)
-            const ROW_HEIGHT = 18;     // Increased per-row estimate (was 14)
+            // Margins: [Left, Top, Right, Bottom] -> [14, 8, 160, 20]
+            // Usable Height = Page Height - Top - Bottom
+            const TOP_MARGIN = 8;
+            const BOTTOM_MARGIN = 20; // Assumed bottom margin
+            const USABLE_HEIGHT = PAGE_HEIGHT - TOP_MARGIN - BOTTOM_MARGIN;
+
+            const FIRST_PAGE_HEADER_HEIGHT = 340;
+            const HEADER_HEIGHT = 240;
+
+            const ROW_HEIGHT = 20;     // Increased for 12pt table font
             const SEPARATOR_HEIGHT = 25;
-            const FOOTER_BASE_HEIGHT = 20; // Base spacing for footer
-            const FOOTER_LINE_HEIGHT = 12; // Per variant line
+            const FOOTER_BASE_HEIGHT = 20;
+            const FOOTER_LINE_HEIGHT = 14; // Increased for 10pt footer font
 
             // Page Builder Loop
             while (taskQueue.length > 0) {
                 const pageTasks: PdfTask[] = [];
-                let currentHeight = HEADER_HEIGHT;
+                // Determine start height based on page number
+                let currentHeight = (sheetCounter === 1) ? FIRST_PAGE_HEADER_HEIGHT : HEADER_HEIGHT;
 
                 // 1. Fill Page
                 for (let i = 0; i < taskQueue.length; i++) {
@@ -228,15 +260,15 @@ export class KursblattController {
                                 body: [
                                     [
                                         { text: ausfahrzeitDisplay, style: 'headerTime', rowSpan: 2, alignment: 'center', margin: [0, 15, 0, 15] },
-                                        { text: basisVersionText, fontSize: 10, margin: [0, 18, 0, 0] },
-                                        { text: [{ text: 'Kurs:  ', fontSize: 10 }, { text: `${lineNr}/${kursNr}`, style: 'headerLine' }] },
+                                        { text: basisVersionText, fontSize: 12, margin: [0, 18, 0, 0] },
+                                        { text: [{ text: 'Kurs:  ', fontSize: 12 }, { text: `${lineNr}/${kursNr}`, style: 'headerLine' }] },
                                         { text: '' }
                                     ],
                                     [
                                         {},
-                                        { text: 'Bhf: Betriebshof Sieker', fontSize: 10, margin: [0, 0, 0, 5] },
+                                        { text: 'Bhf: Betriebshof Sieker', fontSize: 12, margin: [0, 0, 0, 5] },
                                         { text: dayText, style: 'headerDayType' },
-                                        { text: umlaufText, fontSize: 24, bold: true }
+                                        { text: umlaufText, fontSize: 30, bold: true }
                                     ]
                                 ]
                             },
@@ -422,11 +454,14 @@ export class KursblattController {
                         }
                         lastTripEndSeconds = endSeconds;
 
+                        const routeKey = `${trip.LI_NR}-${trip.STR_LI_VAR}`;
+                        const routeLabel = routeMap.get(routeKey) || trip.STR_LI_VAR || '';
+
                         tableBody.push([
                             { text: wzA, style: 'wzCell' },
-                            { text: direction === 1 ? trip.STR_LI_VAR : '', style: 'tableCell', bold: true },
+                            { text: direction === 1 ? routeLabel : '', style: 'tableCell', bold: true },
                             ...rowData.map(d => ({ text: d ? d.text : '-', style: 'tableCell', decoration: d?.decoration })),
-                            { text: direction !== 1 ? trip.STR_LI_VAR : '', style: 'tableCell', bold: true },
+                            { text: direction !== 1 ? routeLabel : '', style: 'tableCell', bold: true },
                             { text: wzE, style: 'wzCell' }
                         ]);
                     }
@@ -492,7 +527,10 @@ export class KursblattController {
                         where: { LI_NR: vLineNr, STR_LI_VAR: v, BASIS_VERSION: umlauf.BASIS_VERSION }
                     });
 
-                    let desc = `R${v}`;
+
+                    const routeKey = `${vLineNr}-${v}`;
+                    const routeNr = routeMap.get(routeKey) || v;
+                    let desc = `R${routeNr}`;
                     if (lid && lid.LIDNAME) desc += `: ${lid.LIDNAME}`;
                     else {
                         const stops = await this.getVariantStops(vLineNr, v);
@@ -509,7 +547,7 @@ export class KursblattController {
                             {
                                 width: '90%',
                                 text: variantsInfo.join('\n'),
-                                fontSize: 8,
+                                fontSize: 10,
                                 margin: [0, 10, 0, 0],
                                 color: '#555',
                                 alignment: 'left'
@@ -525,15 +563,15 @@ export class KursblattController {
                 content: content,
                 styles: {
                     headerTime: { fontSize: 35, bold: true },
-                    headerLine: { fontSize: 26, bold: true },
-                    headerDayType: { fontSize: 26, bold: true },
-                    tableCell: { fontSize: 9, alignment: 'center' },
-                    wzCell: { fontSize: 9, bold: true, alignment: 'center' }
+                    headerLine: { fontSize: 30, bold: true },
+                    headerDayType: { fontSize: 30, bold: true },
+                    tableCell: { fontSize: 12, alignment: 'center' },
+                    wzCell: { fontSize: 12, bold: true, alignment: 'center' }
                 },
-                defaultStyle: { font: 'Roboto', fontSize: 10 },
+                defaultStyle: { font: 'Roboto', fontSize: 12 },
                 pageOrientation: 'portrait',
                 pageSize: 'A4',
-                pageMargins: [20, 20, 20, 20]
+                pageMargins: [14, 8, 160, 20]
             };
 
             const pdfDoc = await printer.createPdfKitDocument(docDefinition);

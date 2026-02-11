@@ -121,6 +121,8 @@ vdvRouter.delete('/transfers', recUebController.delete);
 vdvRouter.get('/blocks', recUmlaufController.getAll);
 vdvRouter.get('/blocks/detail', recUmlaufController.getOne);
 vdvRouter.post('/blocks', recUmlaufController.create);
+vdvRouter.put('/blocks', recUmlaufController.update);
+vdvRouter.post('/blocks/set-kurs', recUmlaufController.setKursNr);
 vdvRouter.delete('/blocks', recUmlaufController.delete);
 
 // RecUms Routes
@@ -147,6 +149,15 @@ vdvRouter.delete('/rec-sel/:ortNr/:selZiel', recSelController.deleteByCompositeK
 // Travel Time Matrix (RecSelFztFeld)
 vdvRouter.get('/rec-sel-fzt-feld/by-bereich/:bereichNr', recSelController.getFztByBereich);
 vdvRouter.post('/rec-sel-fzt-feld', recSelController.updateFzt);
+
+// Intermediate Points (RecSelZp)
+import { RecSelZpController } from './controllers/RecSelZpController';
+const recSelZpController = new RecSelZpController();
+vdvRouter.get('/rec-sel-zp', recSelZpController.getAll);
+vdvRouter.get('/rec-sel-zp/:ortNr/:selZiel', recSelZpController.getBySection);
+vdvRouter.post('/rec-sel-zp', recSelZpController.create);
+vdvRouter.put('/rec-sel-zp', recSelZpController.update);
+vdvRouter.delete('/rec-sel-zp', recSelZpController.delete);
 
 // Vehicles
 vdvRouter.get('/rec-fzg-typ', vehicleController.getAllTypes);
@@ -187,6 +198,7 @@ import { TagesartController } from './controllers/TagesartController';
 const tagesartController = new TagesartController();
 vdvRouter.get('/tagesart', tagesartController.getAll);
 vdvRouter.get('/tagesart/:id', tagesartController.getById);
+vdvRouter.post('/tagesart/merge', tagesartController.mergeTagesart);
 
 // MengeFgr (Fahrzeitgruppen)
 import { MengeFgrController } from './controllers/MengeFgrController';

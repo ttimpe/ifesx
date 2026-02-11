@@ -57,8 +57,8 @@
                   {{ isGroup ? 'Gruppen-Badge (LangNr)' : 'Typ (ONR_TYP_NR)' }}
                 </label>
                 <div *ngIf="!isGroup">
-                  <p-inputNumber [(ngModel)]="recOrt.ONR_TYP_NR" [disabled]="true" styleClass="w-full"
-                    class="p-input-filled w-full"></p-inputNumber>
+                  <p-dropdown [options]="onrTypOptions" [(ngModel)]="recOrt.ONR_TYP_NR" optionLabel="label"
+                    optionValue="value" styleClass="w-full" appendTo="body" placeholder="Typ wählen"></p-dropdown>
                 </div>
                 <div *ngIf="isGroup">
                   <p-inputNumber [(ngModel)]="recOrt.ORT_REF_ORT_LangNr" [useGrouping]="false" styleClass="w-full"

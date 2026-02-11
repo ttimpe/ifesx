@@ -21,7 +21,6 @@ export class Betriebstag extends Model {
     @Column(DataType.STRING)
     BETRIEBSTAG_TEXT!: string
 
-    @PrimaryKey
     @Column(DataType.INTEGER)
     TAGESART_NR!: number
 

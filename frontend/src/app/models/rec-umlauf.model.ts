@@ -11,4 +11,11 @@ export class RecUmlauf {
     FZG_TYP_NR?: number;
 
     trips?: RecFrt[];
+
+    // Virtual field from backend
+    ausfahrt?: {
+        zeit: number;
+        linie: number;
+        kurs: number;
+    };
 }

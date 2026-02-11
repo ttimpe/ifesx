@@ -15,6 +15,11 @@
         <div class="flex gap-2">
             <button *ngIf="!isNew && item.UM_UID"
                 class="btn btn-outline-secondary me-2 flex gap-2 items-center px-4 py-2 border rounded hover:bg-slate-100"
+                (click)="openKursNrDialog()">
+                <i class="pi pi-pencil"></i> Kursnummern setzen
+            </button>
+            <button *ngIf="!isNew && item.UM_UID"
+                class="btn btn-outline-secondary me-2 flex gap-2 items-center px-4 py-2 border rounded hover:bg-slate-100"
                 [routerLink]="['/kursblatt', item.UM_UID]" target="_blank">
                 <i class="pi pi-print"></i> Kursblatt
             </button>
@@ -229,15 +234,39 @@
     <div class="p-4">
         <div class="flex flex-col h-[70vh]">
             <!-- Controls -->
-            <div class="flex gap-4 mb-4 items-center">
-                <span class="p-input-icon-left flex-1">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" [(ngModel)]="filterText" placeholder="Suche (Linie, Start, Ziel...)"
-                        class="w-full" />
-                </span>
-                <div class="flex items-center gap-2">
+            <div class="flex gap-4 mb-4 items-end flex-wrap">
+                <!-- Text Filter (Client-side) -->
+                <div class="flex-1">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Textsuche (Client)</label>
+                    <span class="p-input-icon-left w-full">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text" [(ngModel)]="filterText" placeholder="Suche in Ergebnissen..."
+                            class="w-full" />
+                    </span>
+                </div>
+
+                <!-- Line Filter (Server-side) -->
+                <div class="w-24">
+                    <label class="block text-xs font-bold text-slate-500 mb-1">Linie (Server)</label>
+                    <input pInputText type="number" [(ngModel)]="filterLiNr" placeholder="Alle" class="w-full"
+                        (keydown.enter)="loadOrphans()" />
+                </div>
+
+                <!-- Day Type Filter (Server-side) -->
+                <div class="flex items-center gap-2 h-10 pb-1">
+                    <p-checkbox [(ngModel)]="filterTagesartAll" [binary]="true" inputId="allDays"></p-checkbox>
+                    <label for="allDays" class="cursor-pointer select-none text-sm">Alle Tagesarten</label>
+                </div>
+
+                <!-- Search Trigger -->
+                <div class="h-10 pb-0.5">
+                    <p-button icon="pi pi-refresh" (onClick)="loadOrphans()" pTooltip="Neu laden"
+                        tooltipPosition="top"></p-button>
+                </div>
+
+                <div class="flex items-center gap-2 h-10 pb-1 ml-4 border-l pl-4 border-slate-200">
                     <p-checkbox [(ngModel)]="showOnlyConnections" [binary]="true" inputId="connOnly"></p-checkbox>
-                    <label for="connOnly" class="cursor-pointer select-none">Nur Anschlüsse</label>
+                    <label for="connOnly" class="cursor-pointer select-none text-sm">Nur Anschlüsse</label>
                 </div>
             </div>
 
@@ -294,6 +323,26 @@
                     </ng-template>
                 </p-table>
             </div>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- KursNr Bulk Update Dialog -->
+<p-dialog header="Kursnummer setzen" [(visible)]="showKursNrDialog" [modal]="true" [style]="{width: '30vw'}"
+    [draggable]="false" [resizable]="false">
+    <div class="p-4 flex flex-col gap-4">
+        <p class="text-sm text-slate-600">Setze die Kursnummer für alle Fahrten in diesem Umlauf.</p>
+
+        <div class="flex flex-col gap-2">
+            <label class="font-bold text-sm">Neue Kursnummer</label>
+            <p-inputNumber [(ngModel)]="kursNrToSet" [useGrouping]="false" styleClass="w-full"
+                class="w-full block"></p-inputNumber>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-4">
+            <p-button label="Abbrechen" icon="pi pi-times" severity="secondary"
+                (onClick)="showKursNrDialog = false"></p-button>
+            <p-button label="Anwenden" icon="pi pi-check" severity="success" (onClick)="applyKursNr()"></p-button>
         </div>
     </div>
 </p-dialog>

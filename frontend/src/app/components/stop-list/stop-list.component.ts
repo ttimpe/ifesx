@@ -81,6 +81,7 @@ export class StopListComponent implements OnInit {
           nr: child.ORT_NR,
           code: child.ORT_REF_ORT_KUERZEL,
           type: 'stop',
+          onrTyp: child.ONR_TYP_NR, // Add to data
           raw: child,
           originalId: child.ORT_REF_ORT_LangNr // Add original ID to child data too if needed
         },
@@ -116,6 +117,7 @@ export class StopListComponent implements OnInit {
         nr: child.ORT_NR,
         code: child.ORT_REF_ORT_KUERZEL,
         type: 'stop',
+        onrTyp: child.ONR_TYP_NR, // Add to data
         raw: child
       },
       leaf: true,
@@ -187,5 +189,15 @@ export class StopListComponent implements OnInit {
       return acc + node.children.length;
     }
     return acc + (node.leaf ? 1 : 0);
+  }
+
+  getOnrTypeLabel(typ?: number): string {
+    switch (typ) {
+      case 1: return 'Haltepunkt';
+      case 2: return 'Betriebshofpunkt';
+      case 3: return 'Ortsmarke';
+      case 4: return 'LSA-Punkt';
+      default: return typ ? String(typ) : '-';
+    }
   }
 }

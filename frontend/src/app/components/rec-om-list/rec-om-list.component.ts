@@ -62,7 +62,13 @@ export class RecOmListComponent implements OnInit {
     }
 
     deleteRecOm(om: RecOm) {
-        // TODO: Implement delete logic
-        console.log('Delete logic to be implemented', om);
+        if (confirm(`Möchten Sie die Ortsmarke ${om.ORM_TEXT || om.ORT_NR} wirklich löschen?`)) {
+            this.omService.delete(om.ORT_NR).subscribe({
+                next: () => {
+                    this.loadData();
+                },
+                error: (err) => console.error('Error deleting OM', err)
+            });
+        }
     }
 }

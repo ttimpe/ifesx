@@ -270,7 +270,11 @@ export class RecUmlaufDetailComponent implements OnInit {
     showOrphanDialog = false;
     allOrphanTrips: RecFrt[] = [];
     showOnlyConnections = true;
-    filterText = ''; // New filter text
+    filterText = '';
+
+    // Server-side Filters
+    filterLiNr: number | null = null;
+    filterTagesartAll: boolean = false;
 
     get displayedOrphanTrips(): RecFrt[] {
         let list = this.allOrphanTrips;
@@ -290,13 +294,13 @@ export class RecUmlaufDetailComponent implements OnInit {
         }
 
         // 1. Filter valid time (must be after last trip start)
-        // Ideally after End Time, but we use Start as proxy if End unknown
-        if (this.trips.length > 0) {
+        // Disabled to allow inserting trips before/between or viewing other day types
+        /* if (this.trips.length > 0) {
             const lastTrip = this.trips[this.trips.length - 1];
             if (lastTrip.FRT_START) {
                 list = list.filter(o => (o.FRT_START || 0) > (lastTrip.FRT_START || 0));
             }
-        }
+        } */
 
         // 2. Filter connections if enabled
         if (this.showOnlyConnections && this.trips.length > 0) {
@@ -339,7 +343,10 @@ export class RecUmlaufDetailComponent implements OnInit {
     }
 
     loadOrphans(): void {
-        this.service.getOrphanTrips(this.item.BASIS_VERSION, this.item.TAGESART_NR).subscribe(res => {
+        const tagesartNr = this.filterTagesartAll ? undefined : this.item.TAGESART_NR;
+        const liNr = this.filterLiNr || undefined;
+
+        this.service.getOrphanTrips(this.item.BASIS_VERSION, tagesartNr, liNr).subscribe(res => {
             this.allOrphanTrips = res;
         });
     }
@@ -349,6 +356,27 @@ export class RecUmlaufDetailComponent implements OnInit {
         this.recFrtService.update(update).subscribe(() => {
             this.loadTrips();
             this.loadOrphans(); // Refresh list
+        });
+    }
+
+    // --- BULK KURS NUMBER UPDATE ---
+    showKursNrDialog = false;
+    kursNrToSet: number | null = null;
+
+    openKursNrDialog(): void {
+        this.kursNrToSet = null;
+        this.showKursNrDialog = true;
+    }
+
+    applyKursNr(): void {
+        if (this.kursNrToSet === null || this.kursNrToSet === undefined) return;
+
+        this.service.setKursNr(this.item.BASIS_VERSION, this.item.TAGESART_NR, this.item.UM_UID!, this.kursNrToSet).subscribe({
+            next: (res) => {
+                this.loadTrips();
+                this.showKursNrDialog = false;
+            },
+            error: (err) => console.error(err)
         });
     }
 }
