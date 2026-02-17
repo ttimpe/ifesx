@@ -35,6 +35,7 @@ import { MessageService } from 'primeng/api';
 export class DestinationDetailComponent implements OnInit {
   destination: RecZnr = {} as RecZnr;
   isNew: boolean = true;
+  seitenTextLines: string[] = ['', '', '', ''];
 
   constructor(
     private route: ActivatedRoute,
@@ -54,6 +55,17 @@ export class DestinationDetailComponent implements OnInit {
       this.destinationService.getDestinationById(Number(id)).subscribe({
         next: (destination) => {
           this.destination = destination;
+          if (this.destination.SEITENTEXT) {
+            const lines = this.destination.SEITENTEXT.split('\n');
+            this.seitenTextLines = [
+              lines[0] || '',
+              lines[1] || '',
+              lines[2] || '',
+              lines[3] || ''
+            ];
+          } else {
+            this.seitenTextLines = ['', '', '', ''];
+          }
         },
         error: (error) => {
           console.error('Error fetching destination:', error);
@@ -65,6 +77,9 @@ export class DestinationDetailComponent implements OnInit {
 
   saveDestination() {
     if (this.destination && this.destination.ZNR_NR) {
+      // Join seitenTextLines with \n
+      this.destination.SEITENTEXT = this.seitenTextLines.join('\n');
+
       if (!this.isNew) {
         // Update
         this.destinationService.updateDestination(this.destination).subscribe({

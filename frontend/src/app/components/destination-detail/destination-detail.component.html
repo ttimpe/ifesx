@@ -51,10 +51,36 @@
           <small class="text-slate-500">Für das Fahrerdisplay</small>
         </div>
 
-        <div class="flex flex-col gap-2 md:col-span-2">
-          <label class="font-bold text-slate-700">Seitentext (SEITENTEXT)</label>
-          <input pInputText [(ngModel)]="destination.SEITENTEXT" class="w-full" maxlength="160" />
-          <small class="text-slate-500">Text für die seitliche Anzeige</small>
+        <div class="flex flex-col gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100">
+          <label class="font-bold text-slate-700 flex items-center gap-2">
+            <i class="pi pi-desktop text-slate-400"></i>
+            Seitentext (SEITENTEXT)
+          </label>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 1 - Zeile 1</span>
+              <input pInputText [(ngModel)]="seitenTextLines[0]" class="w-full" maxlength="40"
+                placeholder="Erste Zeile, Erster Takt" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 2 - Zeile 1</span>
+              <input pInputText [(ngModel)]="seitenTextLines[2]" class="w-full" maxlength="40"
+                placeholder="Erste Zeile, Zweiter Takt" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 1 - Zeile 2</span>
+              <input pInputText [(ngModel)]="seitenTextLines[1]" class="w-full" maxlength="40"
+                placeholder="Zweite Zeile, Erster Takt" />
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 2 - Zeile 2</span>
+              <input pInputText [(ngModel)]="seitenTextLines[3]" class="w-full" maxlength="40"
+                placeholder="Zweite Zeile, Zweiter Takt" />
+            </div>
+          </div>
+          <small class="text-slate-500 italic mt-1">Geben Sie bis zu 40 Zeichen pro Zeile ein. Takt 1 und 2 werden
+            abwechselnd angezeigt.</small>
         </div>
 
         <div class="flex flex-col gap-2 md:col-span-2">
