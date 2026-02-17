@@ -52,35 +52,51 @@
         </div>
 
         <div class="flex flex-col gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100">
-          <label class="font-bold text-slate-700 flex items-center gap-2">
-            <i class="pi pi-desktop text-slate-400"></i>
-            Seitentext (SEITENTEXT)
-          </label>
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-700 flex items-center gap-2">
+              <i class="pi pi-desktop text-slate-400"></i>
+              Seitentext (SEITENTEXT)
+            </label>
+            <p-button label="Takt hinzufügen" icon="pi pi-plus" size="small" [text]="true"
+              (onClick)="addTakt()"></p-button>
+          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="flex flex-col gap-1.5">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 1 - Zeile 1</span>
-              <input pInputText [(ngModel)]="seitenTextLines[0]" class="w-full" maxlength="40"
-                placeholder="Erste Zeile, Erster Takt" />
-            </div>
-            <div class="flex flex-col gap-1.5">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 2 - Zeile 1</span>
-              <input pInputText [(ngModel)]="seitenTextLines[2]" class="w-full" maxlength="40"
-                placeholder="Erste Zeile, Zweiter Takt" />
-            </div>
-            <div class="flex flex-col gap-1.5">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 1 - Zeile 2</span>
-              <input pInputText [(ngModel)]="seitenTextLines[1]" class="w-full" maxlength="40"
-                placeholder="Zweite Zeile, Erster Takt" />
-            </div>
-            <div class="flex flex-col gap-1.5">
-              <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Takt 2 - Zeile 2</span>
-              <input pInputText [(ngModel)]="seitenTextLines[3]" class="w-full" maxlength="40"
-                placeholder="Zweite Zeile, Zweiter Takt" />
+          <div class="flex flex-col gap-6">
+            <div *ngFor="let block of seitenTextBlocks; let i = index"
+              class="relative p-4 bg-white rounded-lg border border-slate-200 shadow-sm animate-fade-in">
+
+              <!-- Block Header with controls -->
+              <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-50">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Intervall #{{ i + 1 }}</span>
+                <div class="flex items-center gap-1">
+                  <p-button icon="pi pi-chevron-up" [disabled]="i === 0" severity="secondary" size="small" [text]="true"
+                    (onClick)="moveTaktUp(i)" pTooltip="Nach oben"></p-button>
+                  <p-button icon="pi pi-chevron-down" [disabled]="i === seitenTextBlocks.length - 1"
+                    severity="secondary" size="small" [text]="true" (onClick)="moveTaktDown(i)"
+                    pTooltip="Nach unten"></p-button>
+                  <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true" (onClick)="removeTakt(i)"
+                    pTooltip="Entfernen"></p-button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Zeile 1</span>
+                  <input pInputText [(ngModel)]="block.line1" class="w-full" maxlength="40"
+                    placeholder="Erste Zeile..." />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Zeile 2</span>
+                  <input pInputText [(ngModel)]="block.line2" class="w-full" maxlength="40"
+                    placeholder="Zweite Zeile..." />
+                </div>
+              </div>
             </div>
           </div>
-          <small class="text-slate-500 italic mt-1">Geben Sie bis zu 40 Zeichen pro Zeile ein. Takt 1 und 2 werden
-            abwechselnd angezeigt.</small>
+
+          <small class="text-slate-500 italic mt-1">
+            Geben Sie zwei Zeilen pro Intervall ein. Intervalle werden abwechselnd auf dem Display angezeigt.
+          </small>
         </div>
 
         <div class="flex flex-col gap-2 md:col-span-2">

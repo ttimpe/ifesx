@@ -19,7 +19,7 @@ export class RecZnr extends Model {
     @Column(DataType.STRING(44))
     FAHRERKURZTEXT?: string;
 
-    @Column(DataType.STRING(160))
+    @Column(DataType.TEXT)
     SEITENTEXT?: string;
 
     @Column(DataType.STRING(68))

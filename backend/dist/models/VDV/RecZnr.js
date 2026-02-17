@@ -37,7 +37,7 @@ __decorate([
     __metadata("design:type", String)
 ], RecZnr.prototype, "FAHRERKURZTEXT", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(160)),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.TEXT),
     __metadata("design:type", String)
 ], RecZnr.prototype, "SEITENTEXT", void 0);
 __decorate([

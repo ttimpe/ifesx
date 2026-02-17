@@ -35,7 +35,7 @@ import { MessageService } from 'primeng/api';
 export class DestinationDetailComponent implements OnInit {
   destination: RecZnr = {} as RecZnr;
   isNew: boolean = true;
-  seitenTextLines: string[] = ['', '', '', ''];
+  seitenTextBlocks: { line1: string, line2: string }[] = [{ line1: '', line2: '' }];
 
   constructor(
     private route: ActivatedRoute,
@@ -57,14 +57,16 @@ export class DestinationDetailComponent implements OnInit {
           this.destination = destination;
           if (this.destination.SEITENTEXT) {
             const lines = this.destination.SEITENTEXT.split('\n');
-            this.seitenTextLines = [
-              lines[0] || '',
-              lines[1] || '',
-              lines[2] || '',
-              lines[3] || ''
-            ];
+            this.seitenTextBlocks = [];
+            // Parse lines in pairs
+            for (let i = 0; i < lines.length; i += 2) {
+              this.seitenTextBlocks.push({
+                line1: lines[i] || '',
+                line2: lines[i + 1] || ''
+              });
+            }
           } else {
-            this.seitenTextLines = ['', '', '', ''];
+            this.seitenTextBlocks = [{ line1: '', line2: '' }];
           }
         },
         error: (error) => {
@@ -75,10 +77,43 @@ export class DestinationDetailComponent implements OnInit {
     }
   }
 
+  addTakt() {
+    this.seitenTextBlocks.push({ line1: '', line2: '' });
+  }
+
+  removeTakt(index: number) {
+    if (this.seitenTextBlocks.length > 1) {
+      this.seitenTextBlocks.splice(index, 1);
+    } else {
+      this.seitenTextBlocks[0] = { line1: '', line2: '' };
+    }
+  }
+
+  moveTaktUp(index: number) {
+    if (index > 0) {
+      const temp = this.seitenTextBlocks[index];
+      this.seitenTextBlocks[index] = this.seitenTextBlocks[index - 1];
+      this.seitenTextBlocks[index - 1] = temp;
+    }
+  }
+
+  moveTaktDown(index: number) {
+    if (index < this.seitenTextBlocks.length - 1) {
+      const temp = this.seitenTextBlocks[index];
+      this.seitenTextBlocks[index] = this.seitenTextBlocks[index + 1];
+      this.seitenTextBlocks[index + 1] = temp;
+    }
+  }
+
   saveDestination() {
     if (this.destination && this.destination.ZNR_NR) {
-      // Join seitenTextLines with \n
-      this.destination.SEITENTEXT = this.seitenTextLines.join('\n');
+      // Join seitenTextBlocks into a single string with \n
+      const lines: string[] = [];
+      this.seitenTextBlocks.forEach(block => {
+        lines.push(block.line1);
+        lines.push(block.line2);
+      });
+      this.destination.SEITENTEXT = lines.join('\n');
 
       if (!this.isNew) {
         // Update
