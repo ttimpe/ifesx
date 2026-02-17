@@ -24,11 +24,14 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
 
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+
 @Component({
     selector: 'app-rec-umlauf-detail',
     standalone: true,
     imports: [CommonModule, FormsModule, RouterModule,
-        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule],
+        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule, DialogModule, CheckboxModule],
     templateUrl: './rec-umlauf-detail.component.html',
     styleUrls: ['./rec-umlauf-detail.component.css']
 })
@@ -48,9 +51,10 @@ export class RecUmlaufDetailComponent implements OnInit {
         { label: 'Zufahrt', value: 4 }
     ];
 
-    // New trip form
-    newTrip: RecFrt = new RecFrt();
+    // Trip form (Create/Edit)
+    currentTrip: RecFrt = new RecFrt();
     showTripForm = false;
+    isTripEdit = false;
 
     // Cascading selects: Line -> Variant
     selectedLineNr?: number;
@@ -78,17 +82,17 @@ export class RecUmlaufDetailComponent implements OnInit {
         if (!this.selectedLineNr) return [];
         return this.lineVariants.filter(v => v.LI_NR === this.selectedLineNr);
     }
-    // ...
+
     constructor(
         private service: RecUmlaufService,
         private vehicleService: VehicleService,
         private calendarService: CalendarService,
-        private recFrtService: RecFrtService,
+        public recFrtService: RecFrtService, // Made public for template if needed, or strictly private but lint errors suggested access issues? No, just missing methods.
 
         private lineService: LineService,
         private bereichService: MengeBereichService,
         private route: ActivatedRoute,
-        private router: Router
+        public router: Router // Used in save()
     ) { }
 
     ngOnInit(): void {
@@ -127,34 +131,34 @@ export class RecUmlaufDetailComponent implements OnInit {
 
     onLineChange(): void {
         this.selectedLineVariant = undefined;
-        this.newTrip.LI_NR = undefined;
-        this.newTrip.STR_LI_VAR = undefined;
+        this.currentTrip.LI_NR = undefined;
+        this.currentTrip.STR_LI_VAR = undefined;
     }
 
     onLineVariantChange(): void {
         if (this.selectedLineVariant) {
-            this.newTrip.LI_NR = this.selectedLineVariant.LI_NR;
-            this.newTrip.STR_LI_VAR = this.selectedLineVariant.STR_LI_VAR;
+            this.currentTrip.LI_NR = this.selectedLineVariant.LI_NR;
+            this.currentTrip.STR_LI_VAR = this.selectedLineVariant.STR_LI_VAR;
         }
     }
 
     // Extended time picker (supports hours > 23 for VDV night service)
-    get newTripHours(): number {
-        if (!this.newTrip.FRT_START) return 0;
-        return Math.floor(this.newTrip.FRT_START / 3600);
+    get tripHours(): number {
+        if (!this.currentTrip.FRT_START) return 0;
+        return Math.floor(this.currentTrip.FRT_START / 3600);
     }
-    set newTripHours(value: number) {
-        const minutes = this.newTripMinutes;
-        this.newTrip.FRT_START = (value * 3600) + (minutes * 60);
+    set tripHours(value: number) {
+        const minutes = this.tripMinutes;
+        this.currentTrip.FRT_START = (value * 3600) + (minutes * 60);
     }
 
-    get newTripMinutes(): number {
-        if (!this.newTrip.FRT_START) return 0;
-        return Math.floor((this.newTrip.FRT_START % 3600) / 60);
+    get tripMinutes(): number {
+        if (!this.currentTrip.FRT_START) return 0;
+        return Math.floor((this.currentTrip.FRT_START % 3600) / 60);
     }
-    set newTripMinutes(value: number) {
-        const hours = this.newTripHours;
-        this.newTrip.FRT_START = (hours * 3600) + (value * 60);
+    set tripMinutes(value: number) {
+        const hours = this.tripHours;
+        this.currentTrip.FRT_START = (hours * 3600) + (value * 60);
     }
 
     loadTrips(): void {
@@ -166,26 +170,57 @@ export class RecUmlaufDetailComponent implements OnInit {
     }
 
     toggleTripForm(): void {
-        this.showTripForm = !this.showTripForm;
-        if (this.showTripForm) {
-            this.newTrip = new RecFrt();
-            this.newTrip.BASIS_VERSION = this.item.BASIS_VERSION;
-            this.newTrip.UM_UID = this.item.UM_UID;
+        this.isTripEdit = false;
+        this.currentTrip = new RecFrt();
+        this.currentTrip.BASIS_VERSION = this.item.BASIS_VERSION;
+        this.currentTrip.UM_UID = this.item.UM_UID;
+        this.currentTrip.TAGESART_NR = this.item.TAGESART_NR;
+        this.currentTrip.BEREICH_NR = 1; // Default
+        this.currentTrip.FAHRTART_NR = 1; // Default
 
-            this.newTrip.TAGESART_NR = this.item.TAGESART_NR;
-            this.newTrip.BEREICH_NR = 1; // Default to Standard
-            this.newTrip.FAHRTART_NR = 1; // Default to Normalfahrt
-        }
+        // Reset selections
+        this.selectedLineNr = undefined;
+        this.selectedLineVariant = undefined;
+
+        this.showTripForm = true;
     }
 
-    addTrip(): void {
-        this.recFrtService.getNextFrtFid(this.item.BASIS_VERSION).subscribe(res => {
-            this.newTrip.FRT_FID = res.nextFrtFid;
-            this.recFrtService.create(this.newTrip).subscribe(() => {
+    editTrip(trip: RecFrt): void {
+        this.isTripEdit = true;
+        this.currentTrip = { ...trip }; // Clone
+
+        // Set selections for dropdowns
+        this.selectedLineNr = this.currentTrip.LI_NR;
+        // Wait for variants to load? They are loaded in OnInit.
+        // We need to set selectedLineVariant to match.
+        if (this.selectedLineNr && this.currentTrip.STR_LI_VAR) {
+            this.selectedLineVariant = this.lineVariants.find(v => v.LI_NR === this.selectedLineNr && v.STR_LI_VAR === this.currentTrip.STR_LI_VAR);
+        }
+
+        this.showTripForm = true;
+    }
+
+    cancelTripEdit(): void {
+        this.showTripForm = false;
+    }
+
+    saveTrip(): void {
+        if (this.isTripEdit) {
+            // Update
+            this.recFrtService.update(this.currentTrip).subscribe(() => {
                 this.loadTrips();
                 this.showTripForm = false;
             });
-        });
+        } else {
+            // Create
+            this.recFrtService.getNextFrtFid(this.item.BASIS_VERSION).subscribe(res => {
+                this.currentTrip.FRT_FID = res.nextFrtFid;
+                this.recFrtService.create(this.currentTrip).subscribe(() => {
+                    this.loadTrips();
+                    this.showTripForm = false;
+                });
+            });
+        }
     }
 
     deleteTrip(trip: RecFrt): void {
@@ -229,6 +264,120 @@ export class RecUmlaufDetailComponent implements OnInit {
         } else {
             this.router.navigate(['/rec-umlauf']);
         }
+    }
+
+    // --- ORPHAN TRIPS HANDLING ---
+    showOrphanDialog = false;
+    allOrphanTrips: RecFrt[] = [];
+    showOnlyConnections = true;
+    filterText = '';
+
+    // Server-side Filters
+    filterLiNr: number | null = null;
+    filterTagesartAll: boolean = false;
+
+    get displayedOrphanTrips(): RecFrt[] {
+        let list = this.allOrphanTrips;
+
+        // 0. Text Filter
+        if (this.filterText && this.filterText.trim().length > 0) {
+            const term = this.filterText.toLowerCase().trim();
+            list = list.filter(t => {
+                const line = (t.LIN_NAME || '').toLowerCase();
+                const start = (t.START_STOP_NAME || '').toLowerCase();
+                const dest = (t.DEST_STOP_NAME || '').toLowerCase();
+                const displayDest = (t.DISPLAY_DEST_STOP_NAME || '').toLowerCase();
+                const variant = (t.LI_NR + '-' + t.STR_LI_VAR).toLowerCase();
+
+                return line.includes(term) || start.includes(term) || dest.includes(term) || displayDest.includes(term) || variant.includes(term);
+            });
+        }
+
+        // 1. Filter valid time (must be after last trip start)
+        // Disabled to allow inserting trips before/between or viewing other day types
+        /* if (this.trips.length > 0) {
+            const lastTrip = this.trips[this.trips.length - 1];
+            if (lastTrip.FRT_START) {
+                list = list.filter(o => (o.FRT_START || 0) > (lastTrip.FRT_START || 0));
+            }
+        } */
+
+        // 2. Filter connections if enabled
+        if (this.showOnlyConnections && this.trips.length > 0) {
+            const lastTrip = this.trips[this.trips.length - 1];
+            const lastDestNr = lastTrip.DEST_ORT_NR;
+            const lastDestRefNr = lastTrip.DEST_REF_ORT_NR;
+
+            // Match Logic:
+            // - Exact: Last Dest == Orphan Start
+            // - Parent: Last Dest Ref == Orphan Start Ref (or combinations)
+
+            // STRICT MODE: Filter by Bereich (Area) to prevent mixing Tram (1) and Bus (2)
+            // A vehicle typically stays in its domain.
+            if (lastTrip.BEREICH_NR) {
+                list = list.filter(o => o.BEREICH_NR === lastTrip.BEREICH_NR);
+            }
+
+            // Resolve effective parent for last trip (uses RefOrt if available, else OrtNr)
+            const lastEffectiveParent = lastDestRefNr || lastDestNr;
+
+            if (lastEffectiveParent) {
+                list = list.filter(o => {
+                    const startEffectiveParent = o.START_REF_ORT_NR || o.START_ORT_NR;
+                    // Loose matching: If any ID matches
+                    const matchExact = lastDestNr && o.START_ORT_NR && lastDestNr === o.START_ORT_NR;
+                    const matchParent = startEffectiveParent === lastEffectiveParent;
+
+                    return matchExact || matchParent;
+                });
+            }
+        }
+
+        // Sort by time
+        return list.sort((a, b) => (a.FRT_START || 0) - (b.FRT_START || 0));
+    }
+
+    openOrphanDialog(): void {
+        this.showOrphanDialog = true;
+        this.loadOrphans();
+    }
+
+    loadOrphans(): void {
+        const tagesartNr = this.filterTagesartAll ? undefined : this.item.TAGESART_NR;
+        const liNr = this.filterLiNr || undefined;
+
+        this.service.getOrphanTrips(this.item.BASIS_VERSION, tagesartNr, liNr).subscribe(res => {
+            this.allOrphanTrips = res;
+        });
+    }
+
+    assignOrphan(trip: RecFrt): void {
+        const update = { ...trip, UM_UID: this.item.UM_UID };
+        this.recFrtService.update(update).subscribe(() => {
+            this.loadTrips();
+            this.loadOrphans(); // Refresh list
+        });
+    }
+
+    // --- BULK KURS NUMBER UPDATE ---
+    showKursNrDialog = false;
+    kursNrToSet: number | null = null;
+
+    openKursNrDialog(): void {
+        this.kursNrToSet = null;
+        this.showKursNrDialog = true;
+    }
+
+    applyKursNr(): void {
+        if (this.kursNrToSet === null || this.kursNrToSet === undefined) return;
+
+        this.service.setKursNr(this.item.BASIS_VERSION, this.item.TAGESART_NR, this.item.UM_UID!, this.kursNrToSet).subscribe({
+            next: (res) => {
+                this.loadTrips();
+                this.showKursNrDialog = false;
+            },
+            error: (err) => console.error(err)
+        });
     }
 }
 

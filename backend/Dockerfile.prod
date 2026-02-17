@@ -39,7 +39,7 @@ COPY --from=backend-builder /app/backend/dist ./dist
 COPY --from=frontend-builder /app/frontend/dist/ifesx-frontend ./public
 
 # Copy other necessary backend files
-COPY routes.json ./routes.json
+
 RUN mkdir -p uploads
 
 ENV NODE_ENV=production

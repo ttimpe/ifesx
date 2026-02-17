@@ -81,6 +81,7 @@ export class StopListComponent implements OnInit {
           nr: child.ORT_NR,
           code: child.ORT_REF_ORT_KUERZEL,
           type: 'stop',
+          onrTyp: child.ONR_TYP_NR, // Add to data
           raw: child,
           originalId: child.ORT_REF_ORT_LangNr // Add original ID to child data too if needed
         },
@@ -89,7 +90,7 @@ export class StopListComponent implements OnInit {
       }));
 
       // Sort children by name (natural sort)
-      childrenNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
+      childrenNodes.sort((a, b) => (a.data.name || '').localeCompare(b.data.name || '', undefined, { numeric: true }));
 
       rootNodes.push({
         data: {
@@ -107,7 +108,7 @@ export class StopListComponent implements OnInit {
     });
 
     // Sort Groups by Name (natural sort)
-    rootNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
+    rootNodes.sort((a, b) => (a.data.name || '').localeCompare(b.data.name || '', undefined, { numeric: true }));
 
     // Add orphans at the bottom or top?
     const orphanNodes: TreeNode[] = orphans.map(child => ({
@@ -116,12 +117,13 @@ export class StopListComponent implements OnInit {
         nr: child.ORT_NR,
         code: child.ORT_REF_ORT_KUERZEL,
         type: 'stop',
+        onrTyp: child.ONR_TYP_NR, // Add to data
         raw: child
       },
       leaf: true,
       key: String(child.ORT_NR)
     }));
-    orphanNodes.sort((a, b) => a.data.name.localeCompare(b.data.name, undefined, { numeric: true }));
+    orphanNodes.sort((a, b) => (a.data.name || '').localeCompare(b.data.name || '', undefined, { numeric: true }));
 
     return [...rootNodes, ...orphanNodes];
   }
@@ -187,5 +189,15 @@ export class StopListComponent implements OnInit {
       return acc + node.children.length;
     }
     return acc + (node.leaf ? 1 : 0);
+  }
+
+  getOnrTypeLabel(typ?: number): string {
+    switch (typ) {
+      case 1: return 'Haltepunkt';
+      case 2: return 'Betriebshofpunkt';
+      case 3: return 'Ortsmarke';
+      case 4: return 'LSA-Punkt';
+      default: return typ ? String(typ) : '-';
+    }
   }
 }

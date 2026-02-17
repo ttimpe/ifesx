@@ -13,6 +13,7 @@ exports.LidVerlauf = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const RecLid_1 = require("./RecLid");
 const RecHp_1 = require("./RecHp");
+const RecOrt_1 = require("./RecOrt");
 const BasisVersion_1 = require("./BasisVersion");
 let LidVerlauf = class LidVerlauf extends sequelize_typescript_1.Model {
 };
@@ -52,11 +53,6 @@ __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], LidVerlauf.prototype, "ORT_NR", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => RecHp_1.RecHp),
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
-    __metadata("design:type", Number)
-], LidVerlauf.prototype, "HALTEPUNKT_NR", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
@@ -98,14 +94,13 @@ __decorate([
     __metadata("design:type", BasisVersion_1.BasisVersion)
 ], LidVerlauf.prototype, "basisVersion", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => RecLid_1.RecLid, { foreignKey: 'LI_NR', targetKey: 'LID_NR' }) // RecLid still uses LID_NR? Check RecLid.
-    ,
+    (0, sequelize_typescript_1.BelongsTo)(() => RecLid_1.RecLid, { foreignKey: 'LI_NR', targetKey: 'LI_NR' }),
     __metadata("design:type", RecLid_1.RecLid)
 ], LidVerlauf.prototype, "line", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => RecHp_1.RecHp, { foreignKey: 'HALTEPUNKT_NR', targetKey: 'HALTEPUNKT_NR' }),
-    __metadata("design:type", RecHp_1.RecHp)
-], LidVerlauf.prototype, "stop", void 0);
+    (0, sequelize_typescript_1.BelongsTo)(() => RecOrt_1.RecOrt, { foreignKey: 'ORT_NR', targetKey: 'ORT_NR', as: 'ort' }),
+    __metadata("design:type", RecOrt_1.RecOrt)
+], LidVerlauf.prototype, "ort", void 0);
 exports.LidVerlauf = LidVerlauf = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: 'LID_VERLAUF',

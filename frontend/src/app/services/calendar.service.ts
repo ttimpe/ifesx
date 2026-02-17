@@ -49,12 +49,16 @@ export class CalendarService {
     return this.http.post<Tagesart>(`${this.apiUrl}/tagesarten`, tagesart)
   }
 
-  deleteTagesart(tagesart: Tagesart): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/tagesarten/${tagesart.id}`)
+  deleteTagesart(item: Tagesart): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/tagesarten/${item.TAGESART_NR}`);
+  }
+
+  mergeTagesart(sourceId: number, targetId: number, basisVersion: number, deleteSource: boolean): Observable<any> {
+    return this.http.post(`/api/vdv/tagesart/merge`, { sourceId, targetId, basisVersion, deleteSource });
   }
 
   updateTagesart(tagesart: Tagesart): Observable<Tagesart> {
-    return this.http.put<Tagesart>(`${this.apiUrl}/tagesarten/${tagesart.id}`, tagesart)
+    return this.http.put<Tagesart>(`${this.apiUrl}/tagesarten/${tagesart.TAGESART_NR}`, tagesart)
   }
 
   // Kalendertage/Betriebstage (20241231) Zuordnung zu Tagesarten

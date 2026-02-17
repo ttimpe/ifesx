@@ -11,8 +11,8 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/uploads:/app/uploads
-      - ./timetable.sqlite3:/app/timetable.sqlite3
-      - ./backend/routes.json:/app/routes.json
+      - ./data:/app/data
+
       # Use an anonymous volume for node_modules to prevent local host modules from overriding container modules
       - /app/node_modules
       - ./public:/app/public # Helper to serve static files
@@ -33,5 +33,6 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - POLLING_INTERVAL=2000
     restart: unless-stopped
+    command: npm run watch
     depends_on:
       - backend

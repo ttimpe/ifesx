@@ -10,7 +10,7 @@ services:
       - "3000"
     volumes:
       # Persistent Database Volume
-      - ifesx_data:/app/data
+      - ./data:/app/data
       - ./uploads:/app/uploads
     restart: always
     environment:
@@ -25,10 +25,6 @@ services:
       - CLIENT_MAX_BODY_SIZE=50M
     networks:
       - proxy-nw
-
-volumes:
-  ifesx_data:
-
 
 networks:
   proxy-nw:

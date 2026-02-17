@@ -36,17 +36,38 @@ export class RecUmlaufService {
     }
 
     update(item: RecUmlauf): Observable<RecUmlauf> {
-        // VDV usually updates by deleting/re-creating or using composite key. 
-        // For now, assuming UM_UID is unique enough for update if backend supports it.
-        // Or pass full obj.
-        return this.http.put<RecUmlauf>(`${this.apiUrl}/${item.UM_UID}`, item);
+        return this.http.put<RecUmlauf>(this.apiUrl, item);
     }
 
-    delete(umUid: number): Observable<void> {
-        return this.http.delete<void>(`${this.apiUrl}/${umUid}`);
+    delete(basisVersion: number, tagesartNr: number, umUid: number): Observable<void> {
+        return this.http.delete<void>(this.apiUrl, {
+            params: {
+                BASIS_VERSION: basisVersion.toString(),
+                TAGESART_NR: tagesartNr.toString(),
+                UM_UID: umUid.toString()
+            }
+        });
     }
 
     getAllUms(): Observable<RecUms[]> {
         return this.http.get<RecUms[]>(this.piecesUrl);
     }
+
+    getOrphanTrips(basisVersion: number, tagesartNr?: number, liNr?: number): Observable<import('../models/rec-frt.model').RecFrt[]> {
+        let params = new HttpParams().set('basisVersion', basisVersion.toString());
+        if (tagesartNr) params = params.set('tagesartNr', tagesartNr.toString());
+        if (liNr) params = params.set('liNr', liNr.toString());
+
+        return this.http.get<import('../models/rec-frt.model').RecFrt[]>('/api/vdv/rec-frt/orphans', { params });
+    }
+
+    setKursNr(basisVersion: number, tagesartNr: number, umUid: number, kursNr: number): Observable<any> {
+        return this.http.post(`${this.apiUrl}/set-kurs`, {
+            BASIS_VERSION: basisVersion,
+            TAGESART_NR: tagesartNr,
+            UM_UID: umUid,
+            LI_KU_NR: kursNr
+        });
+    }
 }
+

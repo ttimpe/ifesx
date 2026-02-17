@@ -51,14 +51,16 @@ class DestinationController {
   }
 
   public async createDestination(req: Request, res: Response) {
-    // Frontend sends: { ZNR_NR, ZNR_TEXT }
-    const { ZNR_NR, ZNR_TEXT, number, name, short_name, sign_text } = req.body;
+    const {
+      ZNR_NR, ZNR_TEXT, ZNR_KUERZEL, FAHRERKURZTEXT, SEITENTEXT, ZNR_CODE, BASIS_VERSION,
+      number, name, short_name, sign_text
+    } = req.body;
 
-    // Use VDV fields if present, else fall back to legacy
-    const nr = ZNR_NR || number;
+    // Use VDV fields if present, else fall back to legacy mappings
+    const nr = ZNR_NR !== undefined ? ZNR_NR : number;
     const text = ZNR_TEXT || name || sign_text || short_name;
 
-    if (!nr || !text) {
+    if (nr === undefined || !text) {
       return res.status(400).json({ message: 'ZNR_NR and ZNR_TEXT are required' });
     }
 
@@ -66,7 +68,11 @@ class DestinationController {
       const newDestination = await RecZnr.create({
         ZNR_NR: nr,
         ZNR_TEXT: text,
-        BASIS_VERSION: 1 // Default or from body
+        ZNR_KUERZEL: ZNR_KUERZEL || short_name,
+        FAHRERKURZTEXT: FAHRERKURZTEXT,
+        SEITENTEXT: SEITENTEXT,
+        ZNR_CODE: ZNR_CODE,
+        BASIS_VERSION: BASIS_VERSION || 1
       });
       return res.status(201).json(newDestination);
     } catch (error) {
@@ -77,7 +83,10 @@ class DestinationController {
 
   public async updateDestination(req: Request, res: Response) {
     const destinationId = req.params.id;
-    const { number, name, short_name, sign_text } = req.body;
+    const {
+      ZNR_NR, ZNR_TEXT, ZNR_KUERZEL, FAHRERKURZTEXT, SEITENTEXT, ZNR_CODE, BASIS_VERSION,
+      number, name, short_name, sign_text
+    } = req.body;
 
     try {
       const destination = await RecZnr.findByPk(destinationId);
@@ -85,17 +94,31 @@ class DestinationController {
         return res.status(404).json({ message: 'Destination not found' });
       }
 
-      // Update destination properties
-      if (number) destination.ZNR_NR = number;
-      if (name || sign_text) destination.ZNR_TEXT = name || sign_text || '';
+      // Update destination properties - prioritize VDV fields
+      if (ZNR_NR !== undefined) destination.ZNR_NR = ZNR_NR;
+      else if (number !== undefined) destination.ZNR_NR = number;
+
+      if (ZNR_TEXT !== undefined) destination.ZNR_TEXT = ZNR_TEXT;
+      else if (name !== undefined) destination.ZNR_TEXT = name;
+      else if (sign_text !== undefined) destination.ZNR_TEXT = sign_text;
+
+      if (ZNR_KUERZEL !== undefined) destination.ZNR_KUERZEL = ZNR_KUERZEL;
+      else if (short_name !== undefined) destination.ZNR_KUERZEL = short_name;
+
+      if (FAHRERKURZTEXT !== undefined) destination.FAHRERKURZTEXT = FAHRERKURZTEXT;
+      if (SEITENTEXT !== undefined) destination.SEITENTEXT = SEITENTEXT;
+      if (ZNR_CODE !== undefined) destination.ZNR_CODE = ZNR_CODE;
+      if (BASIS_VERSION !== undefined) destination.BASIS_VERSION = BASIS_VERSION;
 
       await destination.save();
+
+      const result = destination.toJSON();
       return res.status(200).json({
-        ...destination.toJSON(),
-        id: destination.ZNR_NR,
-        number: destination.ZNR_NR,
-        name: destination.ZNR_TEXT,
-        sign_text: destination.ZNR_TEXT
+        ...result,
+        id: result.ZNR_NR,
+        number: result.ZNR_NR,
+        name: result.ZNR_TEXT,
+        sign_text: result.ZNR_TEXT
       });
     } catch (error) {
       console.error('Error updating destination:', error);

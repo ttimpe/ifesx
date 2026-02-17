@@ -1,13 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DestinationController = void 0;
-const Destination_1 = require("../models/Destination"); // Legacy
 const RecZnr_1 = require("../models/VDV/RecZnr");
 class DestinationController {
     // Get all destinations
     async getAllDestinations(req, res) {
         try {
-            const destinations = await RecZnr_1.RecZnr.findAll();
+            const basisVersion = req.query.basis_version || req.query.basisVersion;
+            const whereClause = {};
+            if (basisVersion) {
+                whereClause.BASIS_VERSION = basisVersion;
+            }
+            const destinations = await RecZnr_1.RecZnr.findAll({
+                where: whereClause
+            });
             const mappedDestinations = destinations.map(d => ({
                 ...d.toJSON(),
                 id: d.ZNR_NR,
@@ -43,19 +49,22 @@ class DestinationController {
         }
     }
     async createDestination(req, res) {
-        // Frontend sends: { ZNR_NR, ZNR_TEXT }
-        const { ZNR_NR, ZNR_TEXT, number, name, short_name, sign_text } = req.body;
-        // Use VDV fields if present, else fall back to legacy
-        const nr = ZNR_NR || number;
+        const { ZNR_NR, ZNR_TEXT, ZNR_KUERZEL, FAHRERKURZTEXT, SEITENTEXT, ZNR_CODE, BASIS_VERSION, number, name, short_name, sign_text } = req.body;
+        // Use VDV fields if present, else fall back to legacy mappings
+        const nr = ZNR_NR !== undefined ? ZNR_NR : number;
         const text = ZNR_TEXT || name || sign_text || short_name;
-        if (!nr || !text) {
+        if (nr === undefined || !text) {
             return res.status(400).json({ message: 'ZNR_NR and ZNR_TEXT are required' });
         }
         try {
             const newDestination = await RecZnr_1.RecZnr.create({
                 ZNR_NR: nr,
                 ZNR_TEXT: text,
-                BASIS_VERSION: 1 // Default or from body
+                ZNR_KUERZEL: ZNR_KUERZEL || short_name,
+                FAHRERKURZTEXT: FAHRERKURZTEXT,
+                SEITENTEXT: SEITENTEXT,
+                ZNR_CODE: ZNR_CODE,
+                BASIS_VERSION: BASIS_VERSION || 1
             });
             return res.status(201).json(newDestination);
         }
@@ -66,24 +75,43 @@ class DestinationController {
     }
     async updateDestination(req, res) {
         const destinationId = req.params.id;
-        const { number, name, short_name, sign_text } = req.body;
+        const { ZNR_NR, ZNR_TEXT, ZNR_KUERZEL, FAHRERKURZTEXT, SEITENTEXT, ZNR_CODE, BASIS_VERSION, number, name, short_name, sign_text } = req.body;
         try {
             const destination = await RecZnr_1.RecZnr.findByPk(destinationId);
             if (!destination) {
                 return res.status(404).json({ message: 'Destination not found' });
             }
-            // Update destination properties
-            if (number)
+            // Update destination properties - prioritize VDV fields
+            if (ZNR_NR !== undefined)
+                destination.ZNR_NR = ZNR_NR;
+            else if (number !== undefined)
                 destination.ZNR_NR = number;
-            if (name || sign_text)
-                destination.ZNR_TEXT = name || sign_text || '';
+            if (ZNR_TEXT !== undefined)
+                destination.ZNR_TEXT = ZNR_TEXT;
+            else if (name !== undefined)
+                destination.ZNR_TEXT = name;
+            else if (sign_text !== undefined)
+                destination.ZNR_TEXT = sign_text;
+            if (ZNR_KUERZEL !== undefined)
+                destination.ZNR_KUERZEL = ZNR_KUERZEL;
+            else if (short_name !== undefined)
+                destination.ZNR_KUERZEL = short_name;
+            if (FAHRERKURZTEXT !== undefined)
+                destination.FAHRERKURZTEXT = FAHRERKURZTEXT;
+            if (SEITENTEXT !== undefined)
+                destination.SEITENTEXT = SEITENTEXT;
+            if (ZNR_CODE !== undefined)
+                destination.ZNR_CODE = ZNR_CODE;
+            if (BASIS_VERSION !== undefined)
+                destination.BASIS_VERSION = BASIS_VERSION;
             await destination.save();
+            const result = destination.toJSON();
             return res.status(200).json({
-                ...destination.toJSON(),
-                id: destination.ZNR_NR,
-                number: destination.ZNR_NR,
-                name: destination.ZNR_TEXT,
-                sign_text: destination.ZNR_TEXT
+                ...result,
+                id: result.ZNR_NR,
+                number: result.ZNR_NR,
+                name: result.ZNR_TEXT,
+                sign_text: result.ZNR_TEXT
             });
         }
         catch (error) {
@@ -92,42 +120,8 @@ class DestinationController {
         }
     }
     async migrateDestinations(req, res) {
-        try {
-            const legacyDestinations = await Destination_1.Destination.findAll();
-            // Try to find a valid BasisVersion number
-            // We need to import BasisVersion model here or in the file header
-            // Dynamically import or assume it's available via RecZnr relation types if tricky in this file context without import
-            // Better: Add import at top. But for now, let's query it or default to 1 safe-ish as constraint is gone.
-            // Actually, let's default to the *first* one found if possible since we removed strict FK.
-            // But we can't query BasisVersion if not imported.
-            // Let's rely on the Model import if I add it, or just use 1.
-            // Since I can't easily add import via replace_file specific lines without context, I will stick to 1 for now
-            // BUT: Better approach is to allow passing basis_version in query param?
-            // "Migriere doch bitte..." implies simple action.
-            // NOTE: The previous failure was due to Constraint. Now strict constraint is gone. 
-            // So '1' will work even if no version '1' exists. 
-            // The user can fix data later or we update logic.
-            // Let's assume 1 is default standard plan.
-            const defaultVersion = 1;
-            let count = 0;
-            for (const leg of legacyDestinations) {
-                // Check if exists
-                const exists = await RecZnr_1.RecZnr.findByPk(leg.number);
-                if (!exists) {
-                    await RecZnr_1.RecZnr.create({
-                        ZNR_NR: leg.number,
-                        ZNR_TEXT: leg.sign_text || leg.name || '',
-                        BASIS_VERSION: defaultVersion
-                    });
-                    count++;
-                }
-            }
-            return res.status(200).json({ message: `Migrated ${count} destinations` });
-        }
-        catch (error) {
-            console.error('Migration error:', error);
-            return res.status(500).json({ message: 'Migration failed', error });
-        }
+        // Migration from legacy model disabled
+        return res.status(501).json({ message: 'Migration not available' });
     }
 }
 exports.DestinationController = DestinationController;

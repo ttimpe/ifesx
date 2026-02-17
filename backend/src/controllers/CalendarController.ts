@@ -68,8 +68,8 @@ export class CalendarController {
             }
 
             // Update fields
-            if (req.body.tagesart_text !== undefined) {
-                tagesart.TAGESART_TEXT = req.body.tagesart_text
+            if (req.body.TAGESART_TEXT !== undefined || req.body.tagesart_text !== undefined) {
+                tagesart.TAGESART_TEXT = req.body.TAGESART_TEXT || req.body.tagesart_text;
             }
 
             await tagesart.save()
@@ -160,9 +160,9 @@ export class CalendarController {
             }
 
             // Verify that the Tagesart exists
-            const tagesart = await Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr } })
+            const tagesart = await Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr, BASIS_VERSION: basis_version } })
             if (!tagesart) {
-                return res.status(400).json({ message: 'Invalid TAGESART_NR: Tagesart does not exist' })
+                return res.status(400).json({ message: `Invalid TAGESART_NR: Tagesart ${tagesart_nr} does not exist for Basis Version ${basis_version}` })
             }
 
             // Check if Betriebstag already exists for this BasisVersion and Date
@@ -231,9 +231,9 @@ export class CalendarController {
             if (req.body.TAGESART_NR !== undefined || req.body.tagesart_nr !== undefined) {
                 const tagesart_nr = parseInt(req.body.TAGESART_NR || req.body.tagesart_nr)
                 // Verify that the Tagesart exists
-                const tagesart = await Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr } })
+                const tagesart = await Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr, BASIS_VERSION: basisVersion } })
                 if (!tagesart) {
-                    return res.status(400).json({ message: 'Invalid TAGESART_NR: Tagesart does not exist' })
+                    return res.status(400).json({ message: `Invalid TAGESART_NR: Tagesart ${tagesart_nr} does not exist for Basis Version ${basisVersion}` })
                 }
                 betriebstag.TAGESART_NR = tagesart_nr
             }

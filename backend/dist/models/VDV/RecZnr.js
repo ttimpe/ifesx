@@ -25,9 +25,25 @@ __decorate([
     __metadata("design:type", Number)
 ], RecZnr.prototype, "ZNR_NR", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(40)),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(160)),
     __metadata("design:type", String)
 ], RecZnr.prototype, "ZNR_TEXT", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(10)),
+    __metadata("design:type", String)
+], RecZnr.prototype, "ZNR_KUERZEL", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(44)),
+    __metadata("design:type", String)
+], RecZnr.prototype, "FAHRERKURZTEXT", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(160)),
+    __metadata("design:type", String)
+], RecZnr.prototype, "SEITENTEXT", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(68)),
+    __metadata("design:type", String)
+], RecZnr.prototype, "ZNR_CODE", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,

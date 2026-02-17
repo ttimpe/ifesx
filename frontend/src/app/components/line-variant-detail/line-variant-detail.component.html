@@ -80,7 +80,7 @@
                             <th style="width: 7%">Aktionen</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-stop>
+                    <ng-template pTemplate="body" let-stop let-i="rowIndex">
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="font-mono text-slate-500">{{ stop.LI_LFD_NR }}</td>
                             <td>
@@ -125,8 +125,16 @@
                                     (onChange)="updateStop(stop)"></p-checkbox>
                             </td>
                             <td>
-                                <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
-                                    (onClick)="removeStop(stop)"></p-button>
+                                <div class="flex gap-1">
+                                    <p-button icon="pi pi-arrow-up" [text]="true" severity="secondary" size="small"
+                                        [disabled]="i === 0" (onClick)="moveStop(stop, 'up')"></p-button>
+                                    <p-button icon="pi pi-arrow-down" [text]="true" severity="secondary" size="small"
+                                        [disabled]="i === stops.length - 1"
+                                        (onClick)="moveStop(stop, 'down')"></p-button>
+                                    <div class="w-px bg-slate-200 mx-1"></div>
+                                    <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
+                                        (onClick)="removeStop(stop)"></p-button>
+                                </div>
                             </td>
                         </tr>
                     </ng-template>
@@ -151,7 +159,15 @@
 <p-dialog header="Halt hinzufügen" [(visible)]="showAddStopDialog" [modal]="true" [style]="{ width: '400px' }">
     <div class="flex flex-col gap-4 pt-4">
         <div class="flex flex-col gap-2">
-            <label>Haltestelle auswählen</label>
+            <div class="flex items-center justify-between">
+                <label>Haltestelle auswählen</label>
+                <div class="flex items-center gap-2">
+                    <p-checkbox [(ngModel)]="showAllStops" [binary]="true" inputId="showAllParams"
+                        (onChange)="updateStopFilter()"></p-checkbox>
+                    <label for="showAllParams" class="text-xs text-slate-500 cursor-pointer">Alle Orte anzeigen (inkl.
+                        Betriebshof)</label>
+                </div>
+            </div>
             <p-dropdown [options]="allStops" [(ngModel)]="newStopData.ORT_NR" optionLabel="ORT_NAME"
                 optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR,ORT_REF_ORT_NAME" [virtualScroll]="true"
                 [itemSize]="30" placeholder="Suche nach Haltestelle..." styleClass="w-full" appendTo="body">

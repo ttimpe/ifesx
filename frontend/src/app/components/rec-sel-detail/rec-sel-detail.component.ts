@@ -20,6 +20,7 @@ import { InputNumber } from 'primeng/inputnumber';
 import { AutoComplete } from 'primeng/autocomplete';
 import { Card } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 
 // ... Leaflet fix code ...
@@ -39,7 +40,9 @@ import { MessageService } from 'primeng/api';
         Button,
         InputNumber,
         AutoComplete,
-        ToastModule
+        AutoComplete,
+        ToastModule,
+        DialogModule,
     ]
 })
 export class RecSelDetailComponent implements OnInit, AfterViewInit {
@@ -50,6 +53,7 @@ export class RecSelDetailComponent implements OnInit, AfterViewInit {
     // AutoComplete
     filteredStartOrte: RecOrt[] = [];
     filteredDestOrte: RecOrt[] = [];
+
     selectedStartOrt: RecOrt | null = null;
     selectedDestOrt: RecOrt | null = null;
 
@@ -112,20 +116,6 @@ export class RecSelDetailComponent implements OnInit, AfterViewInit {
         }
     }
 
-    filterOrte(event: any, type: 'start' | 'dest') {
-        const query = event.query.toLowerCase();
-        const filtered = this.orte.filter(o =>
-            o.ORT_NAME?.toLowerCase().includes(query) ||
-            o.ORT_NR?.toString().includes(query)
-        ).slice(0, 15);
-
-        if (type === 'start') {
-            this.filteredStartOrte = filtered;
-        } else {
-            this.filteredDestOrte = filtered;
-        }
-    }
-
     onStartSelect(event: any) {
         const ort = event.value ? event.value : event;
         this.sel.ORT_NR = ort.ORT_NR;
@@ -140,6 +130,22 @@ export class RecSelDetailComponent implements OnInit, AfterViewInit {
         this.sel.SEL_ZIEL_TYP = ort.ONR_TYP_NR;
         this.sel.SEL_ZIEL_NAME = ort.ORT_NAME;
         this.updateMap();
+    }
+
+
+
+    filterOrte(event: any, type: 'start' | 'dest' | 'zp') {
+        const query = event.query.toLowerCase();
+        const filtered = this.orte.filter(o =>
+            o.ORT_NAME?.toLowerCase().includes(query) ||
+            o.ORT_NR?.toString().includes(query)
+        ).slice(0, 15);
+
+        if (type === 'start') {
+            this.filteredStartOrte = filtered;
+        } else if (type === 'dest') {
+            this.filteredDestOrte = filtered;
+        }
     }
 
     ngAfterViewInit(): void {

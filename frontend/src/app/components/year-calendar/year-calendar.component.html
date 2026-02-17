@@ -30,6 +30,8 @@
               [ngClass]="getDayClasses(day)"
               [title]="day.betriebstag ? (day.tagesart?.TAGESART_TEXT || 'Betriebstag') : ''"
               (click)="onDayClick($event, day)"
+              [style.borderTop]="day.betriebstag ? '3px solid ' + getColor(day.betriebstag.TAGESART_NR).border : '3px solid transparent'"
+              [style.backgroundColor]="day.betriebstag ? getColor(day.betriebstag.TAGESART_NR).bg : ''"
               [style.cursor]="isMultiSelectMode && !day.isOutOfRange ? 'pointer' : 'default'">
 
               <!-- Selection layer -->

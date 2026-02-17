@@ -37,6 +37,8 @@
                     <th pSortableColumn="FZG_TYP_NR" class="font-semibold text-sm text-slate-700">Fahrzeugtyp
                         <p-sortIcon field="FZG_TYP_NR"></p-sortIcon>
                     </th>
+                    <th class="font-semibold text-sm text-slate-700">Ausfahrt um</th>
+                    <th class="font-semibold text-sm text-slate-700">Ausfahrt als</th>
                     <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
                 </tr>
             </ng-template>
@@ -48,8 +50,19 @@
                             {{ row.UM_UID }}
                         </a>
                     </td>
-                    <td>{{ row.TAGESART_NR }}</td>
+                    <td>{{ getTagesartText(row.TAGESART_NR) }}</td>
                     <td>{{ row.FZG_TYP_NR }}</td>
+
+                    <!-- New Columns -->
+                    <td class="font-mono">{{ formatTime(row.ausfahrt?.zeit) }}</td>
+                    <td>
+                        <div *ngIf="row.ausfahrt" class="flex flex-col text-xs">
+                            <span class="font-bold">L {{ row.ausfahrt.linie }}</span>
+                            <span class="text-slate-500">K {{ row.ausfahrt.kurs || '-' }}</span>
+                        </div>
+                        <span *ngIf="!row.ausfahrt" class="text-slate-400">-</span>
+                    </td>
+
                     <td>
                         <div class="flex gap-1">
                             <p-button icon="pi pi-file-pdf" [text]="true" severity="info" size="small"

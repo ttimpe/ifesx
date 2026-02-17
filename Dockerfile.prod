@@ -30,7 +30,7 @@ COPY --from=backend-build /app/dist ./dist
 # Copy routes.json if exists and needed (check if it's in src or root)
 # The docker-compose.yml mapped ./backend/routes.json:/app/routes.json
 # Assuming it's a static file in backend root
-COPY backend/routes.json ./
+
 
 # Create uploads directory
 RUN mkdir -p uploads

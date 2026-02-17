@@ -94,24 +94,44 @@ class RecUebController {
             }
         };
         this.update = async (req, res) => {
+            var _a;
+            const transaction = await ((_a = RecUeb_1.RecUeb.sequelize) === null || _a === void 0 ? void 0 : _a.transaction());
             try {
-                // Complex update logic... simplified to creating/overwriting for now or handled via body keys
-                // Ensuring we find the right record
-                const { BASIS_VERSION, BEREICH_NR, ONR_TYP_NR, ORT_NR, UEB_ZIEL_TYP, UEB_ZIEL } = req.body;
-                const [updated] = await RecUeb_1.RecUeb.update(req.body, {
-                    where: {
-                        BASIS_VERSION,
-                        BEREICH_NR,
-                        ONR_TYP_NR,
-                        ORT_NR,
-                        UEB_ZIEL_TYP,
-                        UEB_ZIEL
-                    }
+                const { BASIS_VERSION, BEREICH_NR, ONR_TYP_NR, ORT_NR, UEB_ZIEL_TYP, UEB_ZIEL, uebFzts } = req.body;
+                const whereClause = {
+                    BASIS_VERSION,
+                    BEREICH_NR,
+                    ONR_TYP_NR,
+                    ORT_NR,
+                    UEB_ZIEL_TYP,
+                    UEB_ZIEL
+                };
+                await RecUeb_1.RecUeb.update(req.body, {
+                    where: whereClause,
+                    transaction
                 });
-                // Also update children (UebFzt) would be needed here, simplified for brevity.
+                // Sync UebFzt children
+                if (uebFzts) {
+                    // Delete existing ones
+                    await UebFzt_1.UebFzt.destroy({
+                        where: {
+                            BASIS_VERSION, BEREICH_NR, ONR_TYP_NR, ORT_NR, UEB_ZIEL_TYP, UEB_ZIEL
+                        },
+                        transaction
+                    });
+                    // Create new ones
+                    if (uebFzts.length > 0) {
+                        await UebFzt_1.UebFzt.bulkCreate(uebFzts.map((fzt) => ({
+                            ...fzt,
+                            BASIS_VERSION, BEREICH_NR, ONR_TYP_NR, ORT_NR, UEB_ZIEL_TYP, UEB_ZIEL
+                        })), { transaction });
+                    }
+                }
+                await (transaction === null || transaction === void 0 ? void 0 : transaction.commit());
                 res.json({ success: true });
             }
             catch (error) {
+                await (transaction === null || transaction === void 0 ? void 0 : transaction.rollback());
                 res.status(500).json({ error: error.message });
             }
         };

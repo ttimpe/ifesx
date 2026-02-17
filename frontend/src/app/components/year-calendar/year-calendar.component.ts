@@ -181,6 +181,35 @@ export class YearCalendarComponent {
     this.syncSelectionUI();
   }
 
+  // Dynamic Color Palette (Tailwind-ish friendly colors)
+  private colors = [
+    { border: '#3b82f6', bg: '#eff6ff' }, // Blue
+    { border: '#10b981', bg: '#ecfdf5' }, // Green
+    { border: '#f59e0b', bg: '#fffbeb' }, // Amber
+    { border: '#ef4444', bg: '#fef2f2' }, // Red
+    { border: '#8b5cf6', bg: '#f5f3ff' }, // Violet
+    { border: '#ec4899', bg: '#fdf2f8' }, // Pink
+    { border: '#06b6d4', bg: '#ecfeff' }, // Cyan
+    { border: '#f97316', bg: '#fff7ed' }, // Orange
+    { border: '#6366f1', bg: '#eef2ff' }, // Indigo
+    { border: '#a855f7', bg: '#faf5ff' }, // Purple
+    { border: '#14b8a6', bg: '#f0fdfa' }, // Teal
+    { border: '#84cc16', bg: '#f7fee7' }, // Lime
+    { border: '#eab308', bg: '#fefce8' }, // Yellow
+    { border: '#f43f5e', bg: '#fff1f2' }, // Rose
+    { border: '#d946ef', bg: '#fdf4ff' }, // Fuchsia
+    { border: '#64748b', bg: '#f8fafc' }, // Slate
+    { border: '#78716c', bg: '#fafaf9' }, // Stone
+    { border: '#0ea5e9', bg: '#f0f9ff' }, // Sky
+  ];
+
+  getColor(id: number): { border: string, bg: string } {
+    if (!id) return { border: 'transparent', bg: 'transparent' };
+    const index = (id - 1) % this.colors.length;
+    // Handle negative modulo if needed, though IDs are usually pos
+    return this.colors[Math.abs(index)];
+  }
+
   getDayClasses(day: any): any {
     const classes: any = {
       'outside-month': !day.isCurrentMonth,
@@ -189,9 +218,8 @@ export class YearCalendarComponent {
       'selectable': this.isMultiSelectMode && !day.isOutOfRange
     };
 
-    if (day.specialClass) {
-      classes[day.specialClass] = true;
-    }
+    // Remove old class logic to rely on inline styles
+    // if (day.specialClass) { classes[day.specialClass] = true; }
 
     return classes;
   }

@@ -157,6 +157,14 @@
                 </a>
             </li>
             <li>
+                <a routerLink="/rec-frt" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faBus"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Fahrten</span>
+                </a>
+            </li>
+            <li>
                 <a routerLink="/rec-ueb" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
                     class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
                     <fa-icon [icon]="faRoute"
@@ -201,6 +209,35 @@
             </li>
 
             <!-- Divider -->
+            <li class="pt-4 pb-2">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-3">Dienstplanung</span>
+            </li>
+
+            <li>
+                <a routerLink="/planning/piece-types"
+                    routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faLayerGroup"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Dienststückarten</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/planning/pieces" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faPuzzlePiece"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Dienststücke</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/planning/duties" routerLinkActive="bg-blue-600 text-white shadow-md shadow-blue-900/20"
+                    class="flex items-center px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-200 group">
+                    <fa-icon [icon]="faUserClock"
+                        class="w-5 h-5 mr-3 text-slate-400 group-hover:text-white transition-colors"></fa-icon>
+                    <span>Dienste</span>
+                </a>
+            </li>
             <li class="pt-4 pb-2">
                 <span class="text-xs font-bold text-slate-500 uppercase tracking-widest pl-3">System</span>
             </li>

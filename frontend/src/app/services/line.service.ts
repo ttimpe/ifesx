@@ -108,4 +108,15 @@ export class LineService {
     const params = { liNr: liNr.toString(), strLiVar: strLiVar, liLfdNr: liLfdNr.toString() };
     return this.http.put<LidVerlauf>(`${this.apiUrl}/variant-stops`, stop, { params });
   }
+
+  swapVariantStops(liNr: number, strLiVar: string, index1: number, index2: number, basisVersion?: number): Observable<any> {
+    const payload = {
+      LI_NR: liNr,
+      STR_LI_VAR: strLiVar,
+      INDEX_1: index1,
+      INDEX_2: index2,
+      BASIS_VERSION: basisVersion
+    };
+    return this.http.post(`${this.apiUrl}/variant-stops/swap`, payload);
+  }
 }

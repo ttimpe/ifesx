@@ -13,6 +13,9 @@ import { RecSelService } from '../../services/rec-sel.service';
 import { RecOmService } from '../../services/rec-om.service';
 import { CalendarService } from '../../services/calendar.service';
 
+import { RecSelZp } from '../../models/rec-sel-zp.model';
+import { RecSelZpService } from '../../services/rec-sel-zp.service';
+
 @Component({
   selector: 'app-network-map-editor',
   templateUrl: './network-map-editor.component.html',
@@ -25,9 +28,10 @@ export class NetworkMapEditorComponent implements AfterViewInit {
   stops: RecOrt[] = []
   stop_distances: RecSel[] = []
   ortsmarken: RecOm[] = []
+  lsas: RecSelZp[] = [] // Intermediate Points / LSAs
 
   // Editor Mode
-  editorMode: 'distance' | 'ortsmarke' = 'distance';
+  editorMode: 'distance' | 'ortsmarke' | 'lsa' = 'distance';
 
   // Selection (for distance mode)
   selectedOriginStop?: RecOrt
@@ -38,6 +42,10 @@ export class NetworkMapEditorComponent implements AfterViewInit {
   newOrtsmarke: RecOm = new RecOm();
   newOrtsmarkePosition?: L.LatLng;
   newOrtsmarkeMarker?: L.Marker;
+
+  // New LSA (for lsa mode)
+  newLsa: RecSelZp = new RecSelZp();
+  newLsaMarker?: L.Marker;
 
   // Editor Values
   distance: number = 0 // SEL_LAENGE
@@ -51,6 +59,7 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     private stopService: StopService,
     private recSelService: RecSelService,
     private recOmService: RecOmService,
+    private recSelZpService: RecSelZpService,
     private calendarService: CalendarService
   ) { }
 
@@ -77,10 +86,11 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     });
   }
 
-  setEditorMode(mode: 'distance' | 'ortsmarke') {
+  setEditorMode(mode: 'distance' | 'ortsmarke' | 'lsa') {
     this.editorMode = mode;
     this.clearSelection();
     this.clearNewOrtsmarke();
+    this.clearNewLsa();
   }
 
   loadStops() {
@@ -93,6 +103,8 @@ export class NetworkMapEditorComponent implements AfterViewInit {
       this.loadNetworkRelations();
       // Load ortsmarken
       this.loadOrtsmarken();
+      // Load LSAs
+      this.loadLsas();
     });
   }
 
@@ -107,6 +119,13 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     this.recOmService.getAll(this.selectedBasisVersion).subscribe(ortsmarken => {
       this.ortsmarken = ortsmarken;
       this.createOrtsmarkenMarkers();
+    });
+  }
+
+  loadLsas() {
+    this.recSelZpService.getAll(this.selectedBasisVersion).subscribe(lsas => {
+      this.lsas = lsas;
+      this.createLsaMarkers();
     });
   }
 
@@ -140,7 +159,8 @@ export class NetworkMapEditorComponent implements AfterViewInit {
   saveOrtsmarke() {
     if (this.newOrtsmarkePosition && this.newOrtsmarke.ORT_NR) {
       this.newOrtsmarke.BASIS_VERSION = this.selectedBasisVersion || 1;
-      this.newOrtsmarke.ONR_TYP_NR = 1;
+      // Use existing or default to 1 (Ortsmarke)
+      this.newOrtsmarke.ONR_TYP_NR = this.newOrtsmarke.ONR_TYP_NR || 1;
 
       console.log('Saving Ortsmarke:', this.newOrtsmarke);
 
@@ -149,6 +169,62 @@ export class NetworkMapEditorComponent implements AfterViewInit {
         this.clearNewOrtsmarke();
         this.loadOrtsmarken(); // Refresh markers
       });
+    }
+  }
+
+  saveLsa() {
+    // Only if we have valid input
+    if (this.newLsa.ORT_NR && this.newLsa.SEL_ZIEL && this.newLsa.ZP_LFD_NR && this.newLsa.ZP_TYP && (this.newLsa as any)._tempPosition) {
+      this.newLsa.BASIS_VERSION = this.selectedBasisVersion || 1;
+
+      // 1. Calculate distance from Start Ort to Click Position projected on the line
+      // We need coordinates of Start and End Ort
+      const startOrt = this.stops.find(s => s.ORT_NR === this.newLsa.ORT_NR);
+      const endOrt = this.stops.find(s => s.ORT_NR === this.newLsa.SEL_ZIEL);
+
+      if (startOrt?.ORT_POS_BREITE && startOrt?.ORT_POS_LAENGE && endOrt?.ORT_POS_BREITE && endOrt?.ORT_POS_LAENGE) {
+        const startLat = this.vdvToDecimal(startOrt.ORT_POS_BREITE);
+        const startLng = this.vdvToDecimal(startOrt.ORT_POS_LAENGE);
+
+        // Calculate distance from Start to Click (Projected? Or just straight line distance from Start?)
+        // VDV 452 usually means "Distance from Start Node along the path". 
+        // Since we don't have the path geometry, we assume straight line for now or project onto S-D line.
+        // Let's project onto S-D line for better accuracy if user clicked slightly off.
+
+        const clickPos = (this.newLsa as any)._tempPosition as L.LatLng;
+        const startPos = new L.LatLng(startLat, startLng);
+
+        // Simple distance for now: Start -> Click
+        // This is robust enough for simple straight connections.
+        const dist = startPos.distanceTo(clickPos);
+
+        this.newLsa.SEL_ZP_LAENGE = Math.round(dist);
+      } else {
+        // Fallback if no coordinates
+        this.newLsa.SEL_ZP_LAENGE = 0;
+      }
+
+      // 2. Set ZP_ONR to 0 (Dummy / No specific Ort) as requested
+      this.newLsa.ZP_ONR = 0;
+
+      console.log('Saving LSA with Distance:', this.newLsa.SEL_ZP_LAENGE);
+      this.recSelZpService.create(this.newLsa).subscribe(createdZp => {
+        console.log('Created LSA:', createdZp);
+        this.clearNewLsa();
+        this.loadLsas();
+      });
+    }
+  }
+
+  private decimalToVdv(decimal: number): number {
+    return Math.round(decimal * 10000000);
+  }
+
+  clearNewLsa() {
+    this.newLsa = new RecSelZp();
+    if (this.newLsaMarker) {
+      this.newLsaMarker.removeFrom(this.map);
+      this.newLsaMarker = undefined;
     }
   }
 
@@ -217,6 +293,43 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     }
   }
 
+  createLsaMarkers() {
+    // Clear existing LSA markers if any? 
+    // Actually clearMapLayers clears everything, so we are good if called from loadStops
+    // But if called independently, we might duplicate.
+    // For now assume full redraw or we track them. 
+    // Let's rely on clearMapLayers being called before loadStops.
+
+    for (const lsa of this.lsas) {
+      let lat = 0;
+      let lng = 0;
+
+      // 1. Try to use linked Ort coordinates
+      if (lsa.zpOrt && lsa.zpOrt.ORT_POS_BREITE && lsa.zpOrt.ORT_POS_LAENGE) {
+        lat = this.vdvToDecimal(lsa.zpOrt.ORT_POS_BREITE);
+        lng = this.vdvToDecimal(lsa.zpOrt.ORT_POS_LAENGE);
+      }
+      // 2. Fallback: Interpolate on line if we have distance and relations loaded?
+      // Too complex for now, mostly LSAs have an Ort location.
+
+      if (lat === 0 || lng === 0) continue;
+
+      const location = new L.LatLng(lat, lng);
+
+      const marker = new L.CircleMarker(location, {
+        radius: 4,
+        color: "#dc2626", // Red for Traffic Light/LSA
+        fillColor: "#fca5a5",
+        fillOpacity: 1,
+        weight: 1
+      });
+
+      const tooltipText = `LSA #${lsa.ZP_LFD_NR} (Ort ${lsa.ZP_ONR})`;
+      marker.bindTooltip(tooltipText);
+      marker.addTo(this.map);
+    }
+  }
+
   onStopClick(e: any) {
     if (this.editorMode !== 'distance') return;
 
@@ -233,24 +346,45 @@ export class NetworkMapEditorComponent implements AfterViewInit {
   }
 
   onMapClick(e: L.LeafletMouseEvent) {
-    if (this.editorMode !== 'ortsmarke') return;
+    if (this.editorMode === 'ortsmarke') {
+      this.newOrtsmarkePosition = e.latlng;
 
-    this.newOrtsmarkePosition = e.latlng;
+      // Remove old marker if exists
+      if (this.newOrtsmarkeMarker) {
+        this.newOrtsmarkeMarker.removeFrom(this.map);
+      }
 
-    // Remove old marker if exists
-    if (this.newOrtsmarkeMarker) {
-      this.newOrtsmarkeMarker.removeFrom(this.map);
+      // Add new temporary marker
+      this.newOrtsmarkeMarker = L.marker(e.latlng, {
+        icon: L.divIcon({
+          className: 'new-ortsmarke-icon',
+          html: '<div style="background: orange; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>',
+          iconSize: [20, 20],
+          iconAnchor: [10, 10]
+        })
+      }).addTo(this.map);
+    } else if (this.editorMode === 'lsa') {
+      // Handle LSA creation click
+      // We probably want to find the nearest RecSel line to autofill ORT_NR / SEL_ZIEL?
+      // For now just place the marker. logic to find line can be added later or user selects manually.
+
+      this.clearNewLsa();
+
+      // Add temporary LSA marker
+      this.newLsaMarker = L.marker(e.latlng, {
+        icon: L.divIcon({
+          className: 'new-lsa-icon',
+          html: '<div style="background: red; width: 16px; height: 16px; border: 2px solid white; transform: rotate(45deg);"></div>', // Diamond shape
+          iconSize: [16, 16],
+          iconAnchor: [8, 8]
+        })
+      }).addTo(this.map);
+
+      // We could define a new RecOrt position here?
+      // Store visual position for save
+      // We need a way to pass this position to the saving logic to creating the intermediate Ort if needed.
+      (this.newLsa as any)._tempPosition = e.latlng;
     }
-
-    // Add new temporary marker
-    this.newOrtsmarkeMarker = L.marker(e.latlng, {
-      icon: L.divIcon({
-        className: 'new-ortsmarke-icon',
-        html: '<div style="background: orange; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-      })
-    }).addTo(this.map);
   }
 
   drawSelectionLine() {
@@ -354,7 +488,7 @@ export class NetworkMapEditorComponent implements AfterViewInit {
     this.map = L.map('map', {
       zoomControl: true,
       layers: [tileLayer],
-      center: [52.0236952, 8.5315316],
+      center: [52.022862, 8.532795], // Bielefeld Jahnplatz
       zoom: 13
     });
 

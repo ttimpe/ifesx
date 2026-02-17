@@ -11,22 +11,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BasisVersionGueltigkeit = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const BasisVersion_1 = require("./BasisVersion");
 let BasisVersionGueltigkeit = class BasisVersionGueltigkeit extends sequelize_typescript_1.Model {
 };
 exports.BasisVersionGueltigkeit = BasisVersionGueltigkeit;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.UUID),
-    __metadata("design:type", String)
-], BasisVersionGueltigkeit.prototype, "id", void 0);
-__decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], BasisVersionGueltigkeit.prototype, "VER_GUELTIGKEIT", void 0);
 __decorate([
+    sequelize_typescript_1.PrimaryKey,
+    (0, sequelize_typescript_1.ForeignKey)(() => BasisVersion_1.BasisVersion),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], BasisVersionGueltigkeit.prototype, "BASIS_VERSION", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => BasisVersion_1.BasisVersion),
+    __metadata("design:type", BasisVersion_1.BasisVersion)
+], BasisVersionGueltigkeit.prototype, "basisVersion", void 0);
 exports.BasisVersionGueltigkeit = BasisVersionGueltigkeit = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,

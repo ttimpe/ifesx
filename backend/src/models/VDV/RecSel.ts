@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, ForeignKey, PrimaryKey } from 'sequelize-typescript';
+import { Model, Table, Column, DataType, ForeignKey, PrimaryKey, HasMany } from 'sequelize-typescript';
 import { BasisVersion } from './BasisVersion';
 
 @Table({

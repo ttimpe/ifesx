@@ -13,7 +13,7 @@ exports.RecHp = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const BasisVersion_1 = require("./BasisVersion");
 const RecOrt_1 = require("./RecOrt");
-const Stop_1 = require("../Stop");
+// import { Stop } from "../Stop";
 let RecHp = class RecHp extends sequelize_typescript_1.Model {
 };
 exports.RecHp = RecHp;
@@ -67,10 +67,6 @@ __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => BasisVersion_1.BasisVersion, { foreignKey: 'BASIS_VERSION', targetKey: 'BASIS_VERSION', constraints: false }),
     __metadata("design:type", BasisVersion_1.BasisVersion)
 ], RecHp.prototype, "basisVersion", void 0);
-__decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => Stop_1.Stop, { foreignKey: 'DHID', targetKey: 'id' }),
-    __metadata("design:type", Stop_1.Stop)
-], RecHp.prototype, "stop", void 0);
 exports.RecHp = RecHp = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,

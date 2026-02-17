@@ -18,19 +18,15 @@ let Betriebstag = class Betriebstag extends sequelize_typescript_1.Model {
 exports.Betriebstag = Betriebstag;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.UUID),
-    __metadata("design:type", String)
-], Betriebstag.prototype, "id", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => BasisVersion_1.BasisVersion),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], Betriebstag.prototype, "BASIS_VERSION", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => BasisVersion_1.BasisVersion),
+    (0, sequelize_typescript_1.BelongsTo)(() => BasisVersion_1.BasisVersion, { foreignKey: 'BASIS_VERSION', targetKey: 'BASIS_VERSION' }),
     __metadata("design:type", BasisVersion_1.BasisVersion)
 ], Betriebstag.prototype, "basisVersion", void 0);
 __decorate([
+    sequelize_typescript_1.PrimaryKey,
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], Betriebstag.prototype, "BETRIEBSTAG", void 0);
@@ -39,12 +35,11 @@ __decorate([
     __metadata("design:type", String)
 ], Betriebstag.prototype, "BETRIEBSTAG_TEXT", void 0);
 __decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => Tagesart_1.Tagesart),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], Betriebstag.prototype, "TAGESART_NR", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => Tagesart_1.Tagesart),
+    (0, sequelize_typescript_1.BelongsTo)(() => Tagesart_1.Tagesart, { foreignKey: 'TAGESART_NR', targetKey: 'TAGESART_NR' }),
     __metadata("design:type", Tagesart_1.Tagesart)
 ], Betriebstag.prototype, "tagesart", void 0);
 exports.Betriebstag = Betriebstag = __decorate([

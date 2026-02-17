@@ -31,10 +31,11 @@
 
       <ng-template pTemplate="header">
         <tr>
-          <th style="width: 40%">Name</th>
+          <th style="width: 35%">Name</th>
+          <th style="width: 10%">Typ</th>
           <th style="width: 15%">Nr. / ID</th>
           <th style="width: 15%">Kürzel</th>
-          <th style="width: 30%">Aktionen</th>
+          <th style="width: 25%">Aktionen</th>
         </tr>
       </ng-template>
 
@@ -56,6 +57,15 @@
                 {{ rowData.name }}
               </span>
             </ng-container>
+          </td>
+
+          <td>
+            <span *ngIf="rowData.type === 'stop'" class="px-2 py-0.5 rounded text-xs font-medium border"
+              [class.bg-blue-50]="rowData.onrTyp === 1" [class.text-blue-700]="rowData.onrTyp === 1"
+              [class.border-blue-200]="rowData.onrTyp === 1" [class.bg-slate-100]="rowData.onrTyp !== 1"
+              [class.text-slate-600]="rowData.onrTyp !== 1" [class.border-slate-200]="rowData.onrTyp !== 1">
+              {{ getOnrTypeLabel(rowData.onrTyp) }}
+            </span>
           </td>
 
           <td class="font-mono text-xs text-slate-500">{{ rowData.nr }}</td>

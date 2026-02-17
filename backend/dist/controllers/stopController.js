@@ -1,217 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StopController = void 0;
-const Stop_1 = require("../models/Stop");
-const StopInformation_1 = require("../models/StopInformation");
+// import { Stop } from '../models/Stop';
+// import { StopInformation } from '../models/StopInformation';
 const RecOrt_1 = require("../models/VDV/RecOrt");
 const RecHp_1 = require("../models/VDV/RecHp");
 const sequelize_1 = require("sequelize");
 class StopController {
     constructor() {
-        // Migration Endpoint
-        this.migrateStops = async (req, res) => {
-            try {
-                const stops = await Stop_1.Stop.findAll({
-                    include: [StopInformation_1.StopInformation] // Include detailed info
-                });
-                console.log(`Found ${stops.length} stops to migrate.`);
-                let migratedCount = 0;
-                // GKZ to City Map (Simple hardcoded for now, or could use external service/DB)
-                const gkzMap = {
-                    '03251': 'Lemförde',
-                    '05711': 'Bielefeld',
-                    '03252': 'Stemwede' // Derived from data
-                };
-                for (const stop of stops) {
-                    try {
-                        if (!stop.id)
-                            continue;
-                        // Parse DHID for IDs
-                        // VDV 432: de:GKZ:OrtNr:HpNr
-                        const dhidParts = stop.id.split(':');
-                        if (dhidParts.length < 3) {
-                            // console.warn(`Skipping invalid DHID: ${stop.id}`);
-                            continue;
-                        }
-                        const country = dhidParts[0];
-                        const gkz = dhidParts[1];
-                        const stopId = parseInt(dhidParts[2]);
-                        // Parsing HP_NR
-                        let hpId = 0;
-                        if (dhidParts.length >= 4) {
-                            // Use the last part as HP_NR (Quay ID)
-                            const lastPart = dhidParts[dhidParts.length - 1];
-                            const parsedHp = parseInt(lastPart);
-                            if (!isNaN(parsedHp))
-                                hpId = parsedHp;
-                        }
-                        if (isNaN(stopId))
-                            continue; // Must have OrtNr
-                        // Determine Name
-                        let stopName = "Unbekannt";
-                        if (stop.stopInformation && stop.stopInformation.shortName) {
-                            stopName = stop.stopInformation.shortName;
-                        }
-                        else if (stop.name) {
-                            if (stop.name.includes(',')) {
-                                const parts = stop.name.split(',');
-                                const cityName = parts[0].trim();
-                                stopName = parts.slice(1).join(',').trim();
-                            }
-                            else {
-                                stopName = stop.name;
-                            }
-                        }
-                        // 2. Manage Place (Ort) - Table 253/911
-                        let existingOrt = await RecOrt_1.RecOrt.findOne({ where: { ORT_NR: stopId, ONR_TYP_NR: 1 } });
-                        // Prepare VDV Coordinates
-                        const vdvLaenge = this.toVdvCoordinate(stop.longitude);
-                        const vdvBreite = this.toVdvCoordinate(stop.latitude);
-                        if (!existingOrt) {
-                            // Create New Ort
-                            await RecOrt_1.RecOrt.create({
-                                ORT_NR: stopId,
-                                ORT_NAME: stopName,
-                                ONR_TYP_NR: 1,
-                                ORT_REF_ORT_KUERZEL: (stop.stopInformation && stop.stopInformation.code) ? stop.stopInformation.code : '',
-                                ORT_REF_ORT: 0,
-                                ORT_POS_LAENGE: vdvLaenge,
-                                ORT_POS_BREITE: vdvBreite,
-                                HAST_NR_LOKAL: stopId,
-                                // HST_NR_NATIONAL: 0, // Cannot hold DHID string
-                                HST_NR_INTERNATIONAL: stop.id,
-                                BASIS_VERSION: 1
-                            });
-                        }
-                        else {
-                            let changed = false;
-                            if (existingOrt.ORT_NAME === 'Unbekannt' && stopName !== 'Unbekannt') {
-                                existingOrt.ORT_NAME = stopName;
-                                changed = true;
-                            }
-                            // Update Coordinates
-                            // Check if different to avoid redundant saves (approximate check)
-                            if (vdvLaenge !== 0 && existingOrt.ORT_POS_LAENGE !== vdvLaenge) {
-                                existingOrt.ORT_POS_LAENGE = vdvLaenge;
-                                changed = true;
-                            }
-                            if (vdvBreite !== 0 && existingOrt.ORT_POS_BREITE !== vdvBreite) {
-                                existingOrt.ORT_POS_BREITE = vdvBreite;
-                                changed = true;
-                            }
-                            // Update IDs if missing
-                            if (!existingOrt.HAST_NR_LOKAL) {
-                                existingOrt.HAST_NR_LOKAL = stopId;
-                                changed = true;
-                            }
-                            if (!existingOrt.HST_NR_INTERNATIONAL) {
-                                existingOrt.HST_NR_INTERNATIONAL = stop.id;
-                                changed = true;
-                            }
-                            // Ensure Code is updated if missing or different (and available)
-                            if (stop.stopInformation && stop.stopInformation.code && existingOrt.ORT_REF_ORT_KUERZEL !== stop.stopInformation.code) {
-                                existingOrt.ORT_REF_ORT_KUERZEL = stop.stopInformation.code;
-                                changed = true;
-                            }
-                            if (changed)
-                                await existingOrt.save();
-                        }
-                        // 3. Create Stop Point (Haltepunkt) - Table 912
-                        const exists = await RecHp_1.RecHp.findOne({ where: { ORT_NR: stopId, HALTEPUNKT_NR: hpId, ONR_TYP_NR: 1 } });
-                        if (!exists) {
-                            await RecHp_1.RecHp.create({
-                                ORT_NR: stopId,
-                                HALTEPUNKT_NR: hpId,
-                                ONR_TYP_NR: 1, // Haltestelle
-                                DHID: stop.id, // Keep DHID for reference
-                                ZUSATZ_INFO: '',
-                                BASIS_VERSION: 1
-                            });
-                            migratedCount++;
-                        }
-                    }
-                    catch (innerError) {
-                        console.error(`Failed to migrate stop ${stop.id}:`, innerError);
-                    }
-                }
-                return res.status(200).json({ message: `Successfully migrated ${migratedCount} stops/points.` });
-            }
-            catch (error) {
-                console.error('Stop migration error:', error);
-                return res.status(500).json({ message: 'Migration failed', error });
-            }
-        };
         // VDV 452 - RecOrt Endpoints
         this.getAllRecOrts = async (req, res) => {
             const query = req.params.query || req.query.query;
-            const basisVersion = req.query.basisVersion;
-            const whereClause = {
-                ONR_TYP_NR: 1
-            };
+            const basisVersion = req.query.basisVersion || req.query.basis_version; // Support both cases
+            const whereClause = {};
             if (basisVersion) {
                 whereClause.BASIS_VERSION = basisVersion;
             }
             if (query) {
-                // If query is present, we might miss sub-places if we only filter by name here?
-                // But usually sub-places have same name diff?
-                // Safest: Fetch all to count, OR filter parents by name and fetch their subs?
-                // Let's stick to memory method but apply name filter only to Parents later?
-                // No, DB filter is better for performance if list is huge.
                 whereClause.ORT_NAME = { [sequelize_1.Op.like]: `%${query}%` };
             }
             try {
-                // Fetch ALL stops (Parents and SubPlaces) to count accurately
-                // But if query is present, we only want matching Parents?
-                // If we filter by Name in DB, we might lose SubPlaces if they don't match or if we only fetch match.
-                // OPTIMIZED STRATEGY:
-                // 1. Fetch only Parents (with Name filter).
-                // 2. Fetch specific SubPlaces for those parents? Or simply count separately?
-                //   -> SELECT ORT_REF_ORT, COUNT(*) FROM REC_ORT WHERE ORT_REF_ORT IN (...) GROUP BY ORT_REF_ORT
-                // Step A: Fetch Parents
-                const parentWhere = { ...whereClause, [sequelize_1.Op.or]: [{ ORT_REF_ORT: null }, { ORT_REF_ORT: 0 }] };
-                const parents = await RecOrt_1.RecOrt.findAll({
-                    where: parentWhere,
+                // If no specific filtering, return ALL REC_ORTs (including sub-orte)
+                const allOrte = await RecOrt_1.RecOrt.findAll({
+                    where: whereClause,
+                    include: [{
+                            model: RecOrt_1.RecOrt,
+                            as: 'parentOrt',
+                            required: false,
+                            attributes: ['ORT_NR', 'ORT_NAME']
+                        }],
                     order: [['ORT_NAME', 'ASC']]
                 });
-                // Step B: Fetch Counts for these parents
-                if (parents.length > 0) {
-                    const parentIds = parents.map(p => p.ORT_NR);
-                    const counts = await RecOrt_1.RecOrt.findAll({
-                        attributes: ['ORT_REF_ORT', [(0, sequelize_1.fn)('COUNT', (0, sequelize_1.col)('ORT_NR')), 'count']],
-                        where: {
-                            ORT_REF_ORT: { [sequelize_1.Op.in]: parentIds }
-                        },
-                        group: ['ORT_REF_ORT'],
-                        raw: true
-                    });
-                    // Map counts
-                    const countMap = new Map();
-                    counts.forEach((c) => {
-                        countMap.set(c.ORT_REF_ORT, c.count);
-                    });
-                    // Attach to parents
-                    const result = parents.map(p => {
-                        const json = p.toJSON();
-                        json.subOrtCount = countMap.get(p.ORT_NR) || 0;
-                        return json;
-                    });
-                    res.json(result);
-                }
-                else {
-                    res.json([]);
-                }
+                // Enrich with parent information for sub-orte
+                const result = allOrte.map(ort => {
+                    const json = ort.toJSON();
+                    if (json.parentOrt) {
+                        json.ORT_REF_ORT_NAME = json.parentOrt.ORT_NAME;
+                    }
+                    return json;
+                });
+                return res.json(result);
             }
             catch (e) {
                 console.error("Error fetching RecOrts:", e);
-                res.status(500).json({ error: 'Failed to fetch RecOrts' });
+                return res.status(500).json({ error: 'Failed to fetch RecOrts' });
             }
         };
         this.getRecOrtById = async (req, res) => {
             const ortNr = req.params.ortNr;
-            const basisVersion = req.query.basisVersion;
+            const basisVersion = req.query.basisVersion || req.query.basis_version;
             const whereClause = {
-                ORT_NR: ortNr,
-                ONR_TYP_NR: 1
+                ORT_NR: ortNr
             };
             if (basisVersion) {
                 whereClause.BASIS_VERSION = basisVersion;
@@ -220,11 +59,23 @@ class StopController {
                 const recOrt = await RecOrt_1.RecOrt.findOne({
                     where: whereClause,
                     include: [
-                        { model: RecHp_1.RecHp, as: 'recHps' },
+                        {
+                            model: RecHp_1.RecHp,
+                            as: 'recHps',
+                            required: false, // Left join to allow parents without children (though unusual if requested)
+                            where: basisVersion ? { BASIS_VERSION: basisVersion } : {}
+                        },
                         {
                             model: RecOrt_1.RecOrt,
                             as: 'subOrts',
-                            include: [{ model: RecHp_1.RecHp, as: 'recHps' }]
+                            required: false,
+                            where: basisVersion ? { BASIS_VERSION: basisVersion } : {},
+                            include: [{
+                                    model: RecHp_1.RecHp,
+                                    as: 'recHps',
+                                    required: false,
+                                    where: basisVersion ? { BASIS_VERSION: basisVersion } : {}
+                                }]
                         }
                     ],
                     order: [
@@ -235,11 +86,52 @@ class StopController {
                 });
                 if (!recOrt)
                     return res.status(404).json({ error: 'RecOrt not found' });
-                res.json(recOrt);
+                return res.json(recOrt);
             }
             catch (e) {
                 console.error("Error fetching RecOrt:", e);
-                res.status(500).json({ error: 'Failed to fetch RecOrt' });
+                return res.status(500).json({ error: 'Failed to fetch RecOrt' });
+            }
+        };
+        this.createRecOrt = async (req, res) => {
+            const data = req.body;
+            try {
+                const basisVersion = data.BASIS_VERSION || 1;
+                const onrTypNr = data.ONR_TYP_NR || 1;
+                // Logic Branch 1: Specific ID provided (> 0)
+                if (data.ORT_NR && data.ORT_NR > 0) {
+                    const existing = await RecOrt_1.RecOrt.findOne({
+                        where: {
+                            ORT_NR: data.ORT_NR,
+                            ONR_TYP_NR: onrTypNr,
+                            BASIS_VERSION: basisVersion
+                        }
+                    });
+                    if (existing) {
+                        return res.status(409).json({
+                            error: `Stop with ID ${data.ORT_NR} already exists`,
+                            details: 'Duplicate Key'
+                        });
+                    }
+                }
+                else {
+                    // Logic Branch 2: No ID or 0 provided -> Auto Increment
+                    const maxOrt = await RecOrt_1.RecOrt.findOne({
+                        where: { BASIS_VERSION: basisVersion }, // Global max or per ONR_TYP? Usually global namespace for ORT_NR
+                        order: [['ORT_NR', 'DESC']]
+                    });
+                    const nextId = maxOrt ? (maxOrt.ORT_NR + 1) : 1;
+                    data.ORT_NR = nextId;
+                }
+                // Create new RecOrt
+                const newRecOrt = await RecOrt_1.RecOrt.create(data);
+                // Reload to include any default values and relations
+                await newRecOrt.reload({ include: [{ model: RecHp_1.RecHp, as: 'recHps' }] });
+                res.status(201).json(newRecOrt);
+            }
+            catch (e) {
+                console.error("Error creating RecOrt:", e);
+                res.status(500).json({ error: 'Failed to create RecOrt', details: e.message });
             }
         };
         this.updateRecOrt = async (req, res) => {
@@ -247,7 +139,7 @@ class StopController {
             const data = req.body;
             try {
                 const recOrt = await RecOrt_1.RecOrt.findOne({
-                    where: { ORT_NR: ortNr, ONR_TYP_NR: 1 }
+                    where: { ORT_NR: ortNr }
                 });
                 if (!recOrt)
                     return res.status(404).json({ error: 'RecOrt not found' });
@@ -261,157 +153,119 @@ class StopController {
                 res.status(500).json({ error: 'Failed to update RecOrt' });
             }
         };
-    }
-    // Helper to convert Decimal Degrees to VDV gggmmssnnn
-    toVdvCoordinate(decimal) {
-        if (!decimal)
-            return 0;
-        const sign = decimal >= 0 ? 1 : -1;
-        const absVal = Math.abs(decimal);
-        const deg = Math.floor(absVal);
-        const minDec = (absVal - deg) * 60;
-        const min = Math.floor(minDec);
-        const secDec = (minDec - min) * 60;
-        const sec = Math.floor(secDec);
-        const millis = Math.round((secDec - sec) * 1000);
-        // Format: gggmmssnnn
-        // ggg * 10000000 + mm * 100000 + ss * 1000 + nnn
-        const vdvVal = (deg * 10000000) + (min * 100000) + (sec * 1000) + millis;
-        return sign * vdvVal;
-    }
-    // Update a stop
-    async updateStop(req, res) {
-        const stopId = req.params.id;
-        const updatedStopData = req.body;
-        const updatedInformationData = req.body.information;
-        try {
-            // Find the stop and include related StopInformation
-            const updatedStop = await Stop_1.Stop.findByPk(stopId, {
-                include: [StopInformation_1.StopInformation],
-            });
-            if (!updatedStop) {
-                return res.status(404).json({ message: 'Stop not found' });
+        this.deleteRecOrt = async (req, res) => {
+            const ortNr = req.params.ortNr;
+            try {
+                // First delete all associated RecHps
+                await RecHp_1.RecHp.destroy({ where: { ORT_NR: ortNr } });
+                // Delete all sub-orte (if any)
+                await RecOrt_1.RecOrt.destroy({ where: { ORT_REF_ORT: ortNr } });
+                // Delete the RecOrt itself
+                const deleted = await RecOrt_1.RecOrt.destroy({
+                    where: { ORT_NR: ortNr }
+                });
+                if (deleted === 0) {
+                    return res.status(404).json({ error: 'RecOrt not found' });
+                }
+                res.status(204).send(); // No content
             }
-            // Check if related StopInformation exists
-            let updatedInformation = updatedStop.stopInformation;
-            if (!updatedInformation) {
-                // If it doesn't exist, create a new instance
-                updatedInformation = await StopInformation_1.StopInformation.create(updatedInformationData);
-                updatedInformation.stop_id = updatedStop.id;
-                await updatedInformation.save();
-                // Associate the newly created StopInformation with the Stop
-                updatedStop.stopInformation = updatedInformation;
-                await updatedStop.save();
+            catch (e) {
+                console.error("Error deleting RecOrt:", e);
+                res.status(500).json({ error: 'Failed to delete RecOrt', details: e.message });
             }
-            else {
-                // Update related StopInformation properties
-                await updatedInformation.update(updatedInformationData);
-            }
-            // Update main Stop properties
-            await updatedStop.update(updatedStopData);
-            // Handle VDV Stop Data (RecHp/RecOrt)
-            const recHpData = req.body.recHp;
-            if (recHpData) {
-                // Find existing RecHp via DHID (updatedStop.id)
-                // Note: RecHp table uses ORT_NR, HALTEPUNKT_NR, ONR_TYP_NR, BASIS_VERSION as PKs usually.
-                // But here we rely on DHID which is unique.
-                let recHp = await RecHp_1.RecHp.findOne({ where: { DHID: updatedStop.id } });
-                if (recHp) {
-                    await recHp.update(recHpData);
-                    // Handle nested RecOrt
-                    if (recHpData.recOrt) {
-                        // Determine existing RecOrt
-                        const recOrt = await RecOrt_1.RecOrt.findOne({
-                            where: { ORT_NR: recHp.ORT_NR, ONR_TYP_NR: recHp.ONR_TYP_NR }
+        };
+        // Group Management Endpoints
+        this.getGroupDetails = async (req, res) => {
+            const refId = parseInt(req.params.refId, 10);
+            const basisVersion = req.query.basisVersion || req.query.basis_version;
+            const whereVersion = basisVersion ? { BASIS_VERSION: basisVersion } : {};
+            try {
+                // 1. Fetch all children belonging to this group
+                const children = await RecOrt_1.RecOrt.findAll({
+                    where: { ...whereVersion, ORT_REF_ORT: refId },
+                    order: [['ORT_NAME', 'ASC']]
+                });
+                if (children.length === 0) {
+                    // Check if it's a "Real" parent that currently has no children? 
+                    // Or just doesn't exist.
+                    // Try to find if RecOrt with such ID exists
+                    const parentOrt = await RecOrt_1.RecOrt.findOne({ where: { ...whereVersion, ORT_NR: refId } });
+                    if (parentOrt) {
+                        return res.json({
+                            parent: parentOrt,
+                            children: []
                         });
-                        if (recOrt) {
-                            await recOrt.update(recHpData.recOrt);
-                        }
                     }
+                    return res.status(404).json({ error: 'Group not found' });
                 }
+                // 2. Identify Parent Info from children (assuming consistency)
+                // Pick first child's info
+                const first = children[0];
+                // 3. Try to find if a Real Parent RecOrt exists matching the RefId
+                // (This handles cases where Parent is also imported as a Stop)
+                // BUT current logic separates them (Parent ID range 100000+ vs RecOrt range).
+                // If RefId is > 100000, it's likely virtual.
+                let parentOrt = await RecOrt_1.RecOrt.findOne({ where: { ...whereVersion, ORT_NR: refId } });
+                // Build "Virtual" parent object if not real
+                if (!parentOrt) {
+                    parentOrt = {
+                        ORT_NR: refId,
+                        ORT_NAME: first.ORT_REF_ORT_NAME || 'Unknown Group',
+                        ORT_REF_ORT_LangNr: first.ORT_REF_ORT_LangNr || 0,
+                        ORT_REF_ORT_KUERZEL: first.ORT_REF_ORT_KUERZEL,
+                        BASIS_VERSION: first.BASIS_VERSION,
+                        virtual: true
+                    };
+                }
+                else {
+                    parentOrt.setDataValue('virtual', false);
+                }
+                return res.json({
+                    parent: parentOrt,
+                    children: children
+                });
             }
-            // Reload the stop to include the updated related information in the response
-            await updatedStop.reload();
-            return res.status(200).json(updatedStop);
-        }
-        catch (error) {
-            console.error('Error updating stop:', error);
-            return res.status(500).json({ message: 'Internal server error' });
-        }
-    }
-    // Get all tram stops
-    async getStops(req, res) {
-        const stops = await Stop_1.Stop.findAll({
-            include: [
-                {
-                    model: StopInformation_1.StopInformation,
-                    as: 'stopInformation' // Correct alias matching the model association
-                },
-                {
-                    model: RecHp_1.RecHp,
-                    include: [{ model: RecOrt_1.RecOrt, as: 'recOrt' }]
+            catch (e) {
+                console.error("Error fetching group:", e);
+                res.status(500).json({ error: 'Failed to fetch group' });
+            }
+        };
+        this.updateGroup = async (req, res) => {
+            const refId = parseInt(req.params.refId, 10);
+            const data = req.body; // Expect { ORT_REF_ORT_NAME, ORT_REF_ORT_LangNr, ... }
+            const basisVersion = req.query.basisVersion || req.query.basis_version;
+            const whereVersion = basisVersion ? { BASIS_VERSION: basisVersion } : {};
+            try {
+                // 1. Update ALL children
+                await RecOrt_1.RecOrt.update({
+                    ORT_REF_ORT_NAME: data.ORT_REF_ORT_NAME,
+                    ORT_REF_ORT_LangNr: data.ORT_REF_ORT_LangNr,
+                    ORT_REF_ORT_KUERZEL: data.ORT_REF_ORT_KUERZEL
+                }, {
+                    where: { ...whereVersion, ORT_REF_ORT: refId }
+                });
+                // 2. If a Real Parent exists, update it too?
+                // Only if user explicitly wants to sync them.
+                // For now, if RecOrt exists at ID refId, we update its OWN name/langNr too?
+                // Usually ORT_NAME = ORT_REF_ORT_NAME of children.
+                // But RecOrt table has ORT_NAME.
+                const parentOrt = await RecOrt_1.RecOrt.findOne({ where: { ...whereVersion, ORT_NR: refId } });
+                if (parentOrt) {
+                    await parentOrt.update({
+                        ORT_NAME: data.ORT_REF_ORT_NAME,
+                        // Do we update ORT_REF_ORT fields of the PARENT itself?
+                        // Usually Parent's parent is something else (Grandparent).
+                        // So we strictly update ORT_NAME of the parent row.
+                        // And maybe its code if mapping exists?
+                    });
                 }
-            ]
-        });
-        res.json(stops);
-    }
-    async getStopById(req, res) {
-        console.log('get stop by id called');
-        const stop = await Stop_1.Stop.findOne({
-            where: {
-                id: req.params.id
-            },
-            include: [
-                StopInformation_1.StopInformation,
-                {
-                    model: RecHp_1.RecHp,
-                    include: [{ model: RecOrt_1.RecOrt, as: 'recOrt' }]
-                }
-            ]
-        });
-        res.json(stop);
-    }
-    async getStopsByCode(req, res) {
-        console.log('Stops by code');
-        const stopInfos = await Stop_1.Stop.findAll({
-            where: {
-                '$information.code$': req.params.query
-            },
-            include: [{
-                    model: StopInformation_1.StopInformation,
-                    as: 'stopInformation'
-                }
-            ]
-        });
-        res.json(stopInfos);
-    }
-    async searchStopsByName(req, res) {
-        const query = req.params.query;
-        try {
-            const stops = await Stop_1.Stop.findAll({
-                where: {
-                    name: {
-                        [sequelize_1.Op.like]: `%${query}%`
-                    }
-                },
-                limit: 50,
-                include: [
-                    {
-                        model: StopInformation_1.StopInformation,
-                        as: 'stopInformation'
-                    },
-                    {
-                        model: RecHp_1.RecHp,
-                        include: [{ model: RecOrt_1.RecOrt, as: 'recOrt' }]
-                    }
-                ]
-            });
-            res.json(stops);
-        }
-        catch (error) {
-            console.error('Error searching stops:', error);
-            res.status(500).json({ message: 'Internal error' });
-        }
+                res.json({ success: true });
+            }
+            catch (e) {
+                console.error("Error updating group:", e);
+                res.status(500).json({ error: 'Failed to update group' });
+            }
+        };
     }
 }
 exports.StopController = StopController;

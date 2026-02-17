@@ -38,6 +38,11 @@ __decorate([
 ], UebFzt.prototype, "FGR_NR", void 0);
 __decorate([
     sequelize_typescript_1.PrimaryKey,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], UebFzt.prototype, "TAGESART_NR", void 0);
+__decorate([
+    sequelize_typescript_1.PrimaryKey,
     (0, sequelize_typescript_1.ForeignKey)(() => RecUeb_1.RecUeb),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
@@ -63,7 +68,7 @@ __decorate([
 __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
-], UebFzt.prototype, "UEB_FZT", void 0);
+], UebFzt.prototype, "UEB_FAHRZEIT", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => RecUeb_1.RecUeb, {
         foreignKey: 'BASIS_VERSION', // Simplification, composite key logic in Sequelize is tricky, usually handled by matching all PKs manually

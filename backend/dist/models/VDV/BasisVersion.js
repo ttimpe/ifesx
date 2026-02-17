@@ -16,10 +16,6 @@ let BasisVersion = class BasisVersion extends sequelize_typescript_1.Model {
 exports.BasisVersion = BasisVersion;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.UUID),
-    __metadata("design:type", String)
-], BasisVersion.prototype, "id", void 0);
-__decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], BasisVersion.prototype, "BASIS_VERSION", void 0);
@@ -27,6 +23,10 @@ __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING),
     __metadata("design:type", String)
 ], BasisVersion.prototype, "BASIS_VERSION_TEXT", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
+    __metadata("design:type", Date)
+], BasisVersion.prototype, "GUELTIG_AB", void 0);
 exports.BasisVersion = BasisVersion = __decorate([
     (0, sequelize_typescript_1.Table)({
         timestamps: false,

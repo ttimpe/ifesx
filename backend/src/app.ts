@@ -121,6 +121,9 @@ vdvRouter.delete('/transfers', recUebController.delete);
 vdvRouter.get('/blocks', recUmlaufController.getAll);
 vdvRouter.get('/blocks/detail', recUmlaufController.getOne);
 vdvRouter.post('/blocks', recUmlaufController.create);
+vdvRouter.put('/blocks', recUmlaufController.update);
+vdvRouter.post('/blocks/set-kurs', recUmlaufController.setKursNr);
+vdvRouter.delete('/blocks', recUmlaufController.delete);
 
 // RecUms Routes
 vdvRouter.get('/block-pieces', recUmlaufController.getAllUms);
@@ -129,6 +132,7 @@ vdvRouter.get('/block-pieces', recUmlaufController.getAllUms);
 vdvRouter.get('/rec-frt', recFrtController.getAll);
 vdvRouter.get('/rec-frt/by-umlauf/:umUid', recFrtController.getByUmlauf);
 vdvRouter.get('/rec-frt/next-fid/:basisVersion', recFrtController.getNextFrtFid);
+vdvRouter.get('/rec-frt/orphans', (req, res) => recFrtController.getOrphanTrips(req, res));
 vdvRouter.get('/rec-frt/:basisVersion/:frtFid', recFrtController.getByCompositeKey);
 vdvRouter.post('/rec-frt', recFrtController.create);
 vdvRouter.put('/rec-frt/:basisVersion/:frtFid', recFrtController.update);
@@ -145,6 +149,15 @@ vdvRouter.delete('/rec-sel/:ortNr/:selZiel', recSelController.deleteByCompositeK
 // Travel Time Matrix (RecSelFztFeld)
 vdvRouter.get('/rec-sel-fzt-feld/by-bereich/:bereichNr', recSelController.getFztByBereich);
 vdvRouter.post('/rec-sel-fzt-feld', recSelController.updateFzt);
+
+// Intermediate Points (RecSelZp)
+import { RecSelZpController } from './controllers/RecSelZpController';
+const recSelZpController = new RecSelZpController();
+vdvRouter.get('/rec-sel-zp', recSelZpController.getAll);
+vdvRouter.get('/rec-sel-zp/:ortNr/:selZiel', recSelZpController.getBySection);
+vdvRouter.post('/rec-sel-zp', recSelZpController.create);
+vdvRouter.put('/rec-sel-zp', recSelZpController.update);
+vdvRouter.delete('/rec-sel-zp', recSelZpController.delete);
 
 // Vehicles
 vdvRouter.get('/rec-fzg-typ', vehicleController.getAllTypes);
@@ -185,6 +198,7 @@ import { TagesartController } from './controllers/TagesartController';
 const tagesartController = new TagesartController();
 vdvRouter.get('/tagesart', tagesartController.getAll);
 vdvRouter.get('/tagesart/:id', tagesartController.getById);
+vdvRouter.post('/tagesart/merge', tagesartController.mergeTagesart);
 
 // MengeFgr (Fahrzeitgruppen)
 import { MengeFgrController } from './controllers/MengeFgrController';
@@ -204,7 +218,6 @@ vdvRouter.post('/menge-fahrtart', mengeFahrtartController.create);
 vdvRouter.put('/menge-fahrtart/:id', mengeFahrtartController.update);
 vdvRouter.delete('/menge-fahrtart/:id', mengeFahrtartController.delete);
 
-// Connections (Einzelanschluss & RecUms)
 const connectionController = new ConnectionController();
 vdvRouter.get('/connections', connectionController.getAll);
 vdvRouter.post('/connections', connectionController.create);
@@ -213,6 +226,33 @@ vdvRouter.put('/connections/:einanNr', connectionController.update);
 vdvRouter.delete('/connections/:einanNr', connectionController.delete);
 vdvRouter.post('/connections/ums', connectionController.addUms);
 vdvRouter.delete('/connections/:einanNr/ums/:tagesartNr/:beginn/:ende', connectionController.deleteUms);
+
+// Duty Roster (VDV 455)
+import { DutyRosterController } from './controllers/DutyRosterController';
+const dutyRosterController = new DutyRosterController();
+
+// Piece Types
+vdvRouter.get('/planning/piece-types', dutyRosterController.getAllPieceTypes);
+vdvRouter.post('/planning/piece-types', dutyRosterController.createPieceType);
+vdvRouter.put('/planning/piece-types/:basisVersion/:id', dutyRosterController.updatePieceType);
+vdvRouter.delete('/planning/piece-types/:basisVersion/:id', dutyRosterController.deletePieceType);
+
+// Duties
+vdvRouter.get('/planning/duties', dutyRosterController.getAllDuties);
+vdvRouter.post('/planning/duties', dutyRosterController.createDuty);
+
+// Pieces
+vdvRouter.get('/planning/pieces', dutyRosterController.getAllPieces);
+vdvRouter.post('/planning/pieces', dutyRosterController.createPiece);
+
+// MengeDienstart (Service Types)
+import { MengeDienstartController } from './controllers/MengeDienstartController';
+const mengeDienstartController = new MengeDienstartController();
+vdvRouter.get('/planning/dienstart', mengeDienstartController.getAll);
+vdvRouter.get('/planning/dienstart/:basisVersion/:id', mengeDienstartController.getById);
+vdvRouter.post('/planning/dienstart', mengeDienstartController.create);
+vdvRouter.put('/planning/dienstart/:basisVersion/:id', mengeDienstartController.update);
+vdvRouter.delete('/planning/dienstart/:basisVersion/:id', mengeDienstartController.delete);
 
 apiRouter.use('/vdv', vdvRouter);
 
@@ -240,6 +280,7 @@ lineRouter.get('/variant-stops', lineController.getVariantStops)
 lineRouter.post('/variant-stops', lineController.addVariantStop)
 lineRouter.put('/variant-stops', lineController.updateVariantStop)
 lineRouter.delete('/variant-stops', lineController.removeVariantStop)
+lineRouter.post('/variant-stops/swap', lineController.swapVariantStops)
 lineRouter.post('/variants', lineController.createVariant)
 lineRouter.put('/variants', lineController.updateVariant)
 lineRouter.delete('/variants', lineController.deleteVariant)
@@ -326,7 +367,7 @@ async function open() {
 */
 }
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on http://0.0.0.0:${port}`);
   open()
 });

@@ -40,6 +40,8 @@ export class RecUmlaufListComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.calendarService.getTagesarten().subscribe(t => this.tagesarten = t);
+
         this.calendarService.selectedVersion$.subscribe(version => {
             this.selectedBasisVersion = version || undefined;
             this.loadData();
@@ -62,9 +64,23 @@ export class RecUmlaufListComponent implements OnInit {
 
     deleteUmlauf(row: RecUmlauf): void {
         if (confirm('Wirklich löschen?')) {
-            this.service.delete(row.UM_UID).subscribe(() => {
+            this.service.delete(row.BASIS_VERSION, row.TAGESART_NR, row.UM_UID).subscribe(() => {
                 this.loadData();
             });
         }
+    }
+
+    formatTime(seconds?: number): string {
+        if (seconds === undefined || seconds === null) return '-';
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    }
+
+    tagesarten: import('../../models/tagesart.model').Tagesart[] = [];
+
+    getTagesartText(nr: number): string {
+        const t = this.tagesarten.find(x => x.TAGESART_NR === nr);
+        return t ? `${t.TAGESART_TEXT} (${nr})` : `${nr}`;
     }
 }

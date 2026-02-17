@@ -19,10 +19,15 @@ backend/dist/
 backend/build/
 backend/tmp/
 
+# Backend Data
+backend/gtfs/*.txt
+backend/gtfs/*.zip
+
 # Database
 *.sqlite3
 *.db
 *.sqlite
+timetable.sqlite3
 
 # Environment variables
 .env
@@ -60,3 +65,5 @@ data/
 coverage/
 *.lcov
 .nyc_output/
+
+tools/
