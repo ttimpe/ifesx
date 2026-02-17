@@ -54,13 +54,13 @@ __decorate([
     (0, sequelize_typescript_1.HasMany)(() => RecFrt_1.RecFrt, {
         foreignKey: 'UM_UID',
         sourceKey: 'UM_UID',
-        constraints: false // Composite keys make loose constraints easier in legacy VDV
+        constraints: false
     }),
     __metadata("design:type", Array)
 ], RecUmlauf.prototype, "trips", void 0);
 exports.RecUmlauf = RecUmlauf = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: 'rec_umlauf',
+        tableName: 'REC_UMLAUF',
         timestamps: false
     })
 ], RecUmlauf);

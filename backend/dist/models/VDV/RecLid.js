@@ -12,51 +12,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecLid = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const BasisVersion_1 = require("./BasisVersion");
-const RecZnr_1 = require("./RecZnr");
 let RecLid = class RecLid extends sequelize_typescript_1.Model {
 };
 exports.RecLid = RecLid;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
-    __metadata("design:type", Number)
-], RecLid.prototype, "LID_NR", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => RecZnr_1.RecZnr),
-    (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.INTEGER,
-        allowNull: true
-    }),
-    __metadata("design:type", Number)
-], RecLid.prototype, "ZNR_NR", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(10)),
-    __metadata("design:type", String)
-], RecLid.prototype, "STR_LID", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(40)),
-    __metadata("design:type", String)
-], RecLid.prototype, "LIN_NAME", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING) // Legacy ID
-    ,
-    __metadata("design:type", String)
-], RecLid.prototype, "DLID", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(10)),
-    __metadata("design:type", String)
-], RecLid.prototype, "LIN_FARBE", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(10)),
-    __metadata("design:type", String)
-], RecLid.prototype, "LIN_TEXT_FARBE", void 0);
-__decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.INTEGER,
         defaultValue: 1
     }),
     __metadata("design:type", Number)
 ], RecLid.prototype, "BASIS_VERSION", void 0);
+__decorate([
+    sequelize_typescript_1.PrimaryKey,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "LI_NR", void 0);
+__decorate([
+    sequelize_typescript_1.PrimaryKey,
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(6)),
+    __metadata("design:type", String)
+], RecLid.prototype, "STR_LI_VAR", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "ROUTEN_NR", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "LI_RI_NR", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "BEREICH_NR", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(6)),
+    __metadata("design:type", String)
+], RecLid.prototype, "LI_KUERZEL", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(100)),
+    __metadata("design:type", String)
+], RecLid.prototype, "LIDNAME", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "ROUTEN_ART", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecLid.prototype, "LINIEN_CODE", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(128)),
+    __metadata("design:type", String)
+], RecLid.prototype, "LinienID", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => BasisVersion_1.BasisVersion, { foreignKey: 'BASIS_VERSION', targetKey: 'BASIS_VERSION', constraints: false }),
     __metadata("design:type", BasisVersion_1.BasisVersion)

@@ -1,11 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecSelController = void 0;
-const RecHp_1 = require("../models/VDV/RecHp");
 const RecSel_1 = require("../models/VDV/RecSel");
 const RecOrt_1 = require("../models/VDV/RecOrt");
-const StopDistance_1 = require("../models/StopDistance");
-const MengeBereich_1 = require("../models/VDV/MengeBereich");
 const RecSelFztFeld_1 = require("../models/VDV/RecSelFztFeld");
 /**
  * Controller for RecSel (Netzrelationen)
@@ -15,7 +12,11 @@ class RecSelController {
     constructor() {
         this.getAll = async (req, res) => {
             try {
-                const list = await RecSel_1.RecSel.findAll({ raw: true });
+                const basisVersion = req.query.basisVersion ? Number(req.query.basisVersion) : 1;
+                const list = await RecSel_1.RecSel.findAll({
+                    where: { BASIS_VERSION: basisVersion },
+                    raw: true
+                });
                 // Fetch all Orte for name lookup
                 const orte = await RecOrt_1.RecOrt.findAll({
                     attributes: ['ORT_NR', 'ORT_NAME'],
@@ -38,8 +39,9 @@ class RecSelController {
             try {
                 const ortNr = parseInt(req.params.ortNr);
                 const selZiel = parseInt(req.params.selZiel);
+                const basisVersion = req.query.basisVersion ? Number(req.query.basisVersion) : 1;
                 const sel = await RecSel_1.RecSel.findOne({
-                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel },
+                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel, BASIS_VERSION: basisVersion },
                     raw: true
                 });
                 if (!sel) {
@@ -67,8 +69,10 @@ class RecSelController {
             try {
                 const ortNr = parseInt(req.params.ortNr);
                 const selZiel = parseInt(req.params.selZiel);
+                // Ideally basisVersion comes from query or body to identify the row to update
+                const basisVersion = req.body.BASIS_VERSION || (req.query.basisVersion ? Number(req.query.basisVersion) : 1);
                 const [updated] = await RecSel_1.RecSel.update(req.body, {
-                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel }
+                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel, BASIS_VERSION: basisVersion }
                 });
                 if (!updated) {
                     return res.status(404).json({ error: 'RecSel not found' });
@@ -83,8 +87,9 @@ class RecSelController {
             try {
                 const ortNr = parseInt(req.params.ortNr);
                 const selZiel = parseInt(req.params.selZiel);
+                const basisVersion = req.query.basisVersion ? Number(req.query.basisVersion) : 1;
                 const deleted = await RecSel_1.RecSel.destroy({
-                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel }
+                    where: { ORT_NR: ortNr, SEL_ZIEL: selZiel, BASIS_VERSION: basisVersion }
                 });
                 if (!deleted) {
                     return res.status(404).json({ error: 'RecSel not found' });
@@ -97,127 +102,25 @@ class RecSelController {
         };
         this.create = async (req, res) => {
             try {
-                const newItem = await RecSel_1.RecSel.create(req.body);
+                // Ensure BASIS_VERSION is set, default to 1 if missing in body
+                const data = { ...req.body, BASIS_VERSION: req.body.BASIS_VERSION || 1 };
+                const newItem = await RecSel_1.RecSel.create(data);
                 res.json(newItem);
             }
             catch (e) {
                 res.status(500).json({ error: e });
             }
         };
-        /**
-         * Migrates StopDistance (Legacy) to RecSel (VDV) and RecSelFztFeld (Travel Times)
-         * Mapping Key: DHID -> ORT_NR
-         */
-        this.migrateStopDistances = async (req, res) => {
-            try {
-                console.log('Starting Migration: StopDistances -> RecSel + FztFeld');
-                // Ensure default MengeBereich exists
-                let defaultBereich = await MengeBereich_1.MengeBereich.findByPk(1);
-                if (!defaultBereich) {
-                    await MengeBereich_1.MengeBereich.create({
-                        BASIS_VERSION: 1,
-                        BEREICH_NR: 1,
-                        STR_BEREICH: 'STD',
-                        BEREICH_TEXT: 'Standard'
-                    });
-                }
-                const distances = await StopDistance_1.StopDistance.findAll();
-                let count = 0;
-                let fztCount = 0;
-                let skipped = 0;
-                for (const dist of distances) {
-                    // 1. Resolve Origin DHID -> ORT_NR
-                    const originHp = await RecHp_1.RecHp.findOne({ where: { DHID: dist.origin_stop_id } });
-                    // 2. Resolve Dest DHID -> ORT_NR
-                    const destHp = await RecHp_1.RecHp.findOne({ where: { DHID: dist.destination_stop_id } });
-                    if (originHp && destHp) {
-                        // Check if RecSel exists
-                        const exists = await RecSel_1.RecSel.findOne({
-                            where: {
-                                ORT_NR: originHp.ORT_NR,
-                                SEL_ZIEL: destHp.ORT_NR,
-                                ONR_TYP_NR: originHp.ONR_TYP_NR,
-                                SEL_ZIEL_TYP: destHp.ONR_TYP_NR,
-                                BASIS_VERSION: 1
-                            }
-                        });
-                        if (!exists) {
-                            await RecSel_1.RecSel.create({
-                                BASIS_VERSION: 1,
-                                BEREICH_NR: 1, // Default Area
-                                ONR_TYP_NR: originHp.ONR_TYP_NR,
-                                ORT_NR: originHp.ORT_NR,
-                                SEL_ZIEL: destHp.ORT_NR,
-                                SEL_ZIEL_TYP: destHp.ONR_TYP_NR,
-                                SEL_LAENGE: Math.round(dist.distance),
-                                SEL_FZT: dist.time || 0,
-                                FGR_NR: 1 // Default Group
-                            });
-                            count++;
-                        }
-                        else {
-                            // Update
-                            exists.SEL_LAENGE = Math.round(dist.distance);
-                            if (dist.time)
-                                exists.SEL_FZT = dist.time;
-                            await exists.save();
-                            count++;
-                        }
-                        // Populate RecSelFztFeld (Travel Time Field) for Standard Area (1)
-                        if (dist.time) {
-                            const fztExists = await RecSelFztFeld_1.RecSelFztFeld.findOne({
-                                where: {
-                                    ORT_NR: originHp.ORT_NR,
-                                    SEL_ZIEL: destHp.ORT_NR,
-                                    ONR_TYP_NR: originHp.ONR_TYP_NR,
-                                    SEL_ZIEL_TYP: destHp.ONR_TYP_NR,
-                                    BEREICH_NR: 1,
-                                    FGR_NR: 1,
-                                    BASIS_VERSION: 1
-                                }
-                            });
-                            if (!fztExists) {
-                                await RecSelFztFeld_1.RecSelFztFeld.create({
-                                    BASIS_VERSION: 1,
-                                    BEREICH_NR: 1,
-                                    FGR_NR: 1,
-                                    ONR_TYP_NR: originHp.ONR_TYP_NR,
-                                    ORT_NR: originHp.ORT_NR,
-                                    SEL_ZIEL: destHp.ORT_NR,
-                                    SEL_ZIEL_TYP: destHp.ONR_TYP_NR,
-                                    SEL_FZT: dist.time
-                                });
-                                fztCount++;
-                            }
-                            else {
-                                fztExists.SEL_FZT = dist.time;
-                                await fztExists.save();
-                                fztCount++;
-                            }
-                        }
-                    }
-                    else {
-                        console.warn(`Skipping distance ${dist.origin_stop_id} -> ${dist.destination_stop_id}: DHID not found in RecHp`);
-                        skipped++;
-                    }
-                }
-                res.json({
-                    message: 'Migration completed',
-                    recSelProcessed: count,
-                    recSelFztFeldProcessed: fztCount,
-                    skipped: skipped
-                });
-            }
-            catch (e) {
-                console.error('Migration Error:', e);
-                res.status(500).json({ error: 'Migration failed', details: e });
-            }
-        };
+        // migrateStopDistances method removed (Legacy StopDistance model deleted)
         this.getFztByBereich = async (req, res) => {
             try {
                 const bereichNr = parseInt(req.params.bereichNr);
+                const basisVersion = req.query.basisVersion ? Number(req.query.basisVersion) : 1;
                 const list = await RecSelFztFeld_1.RecSelFztFeld.findAll({
-                    where: { BEREICH_NR: bereichNr },
+                    where: {
+                        BEREICH_NR: bereichNr,
+                        BASIS_VERSION: basisVersion
+                    },
                     raw: true
                 });
                 // Enrich with ORT names
@@ -239,11 +142,14 @@ class RecSelController {
         };
         this.updateFzt = async (req, res) => {
             try {
-                const { BASIS_VERSION, BEREICH_NR, FGR_NR, ONR_TYP_NR, ORT_NR, SEL_ZIEL, SEL_ZIEL_TYP, SEL_FZT } = req.body;
+                const { BEREICH_NR, FGR_NR, ONR_TYP_NR, ORT_NR, SEL_ZIEL, SEL_ZIEL_TYP, SEL_FZT } = req.body;
+                // Use BASIS_VERSION from body, or default to 1. 
+                // Warning: if the client doesn't send it, it might default to 1 which could be wrong if editing version 2.
+                const BASIS_VERSION = req.body.BASIS_VERSION || 1;
                 // Upsert
                 const [item, created] = await RecSelFztFeld_1.RecSelFztFeld.findOrCreate({
                     where: {
-                        BASIS_VERSION: 1, // Default
+                        BASIS_VERSION,
                         BEREICH_NR,
                         FGR_NR,
                         ONR_TYP_NR,
@@ -254,6 +160,7 @@ class RecSelController {
                     defaults: { SEL_FZT }
                 });
                 if (!created) {
+                    // If it exists, update the time
                     item.SEL_FZT = SEL_FZT;
                     await item.save();
                 }

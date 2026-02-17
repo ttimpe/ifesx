@@ -17,10 +17,6 @@ let Tagesart = class Tagesart extends sequelize_typescript_1.Model {
 exports.Tagesart = Tagesart;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.UUID),
-    __metadata("design:type", String)
-], Tagesart.prototype, "id", void 0);
-__decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => BasisVersion_1.BasisVersion),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
@@ -30,6 +26,7 @@ __decorate([
     __metadata("design:type", BasisVersion_1.BasisVersion)
 ], Tagesart.prototype, "basisVersion", void 0);
 __decorate([
+    sequelize_typescript_1.PrimaryKey,
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], Tagesart.prototype, "TAGESART_NR", void 0);

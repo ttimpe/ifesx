@@ -21,18 +21,20 @@ class CalendarController {
             if (!req.body) {
                 return res.status(400).json({ message: 'Request body is required' });
             }
-            const tagesart_nr = parseInt(req.body['tagesart_nr']);
-            const tagesart_text = req.body['tagesart_text'];
+            const tagesart_nr = parseInt(req.body['tagesart_nr'] || req.body['TAGESART_NR']);
+            const tagesart_text = req.body['tagesart_text'] || req.body['TAGESART_TEXT'];
+            const basis_version = parseInt(req.body['basis_version'] || req.body['BASIS_VERSION'] || 1);
             // Validate required fields
             if (!tagesart_nr) {
                 return res.status(400).json({ message: 'TAGESART_NR is required' });
             }
-            // Check for duplicate TAGESART_NR
-            const existing = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr } });
+            // Check for duplicate TAGESART_NR (per Basis Version)
+            const existing = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr, BASIS_VERSION: basis_version } });
             if (existing) {
                 return res.status(400).json({ message: 'TAGESART_NR already exists' });
             }
             const tagesart = await Tagesart_1.Tagesart.create({
+                BASIS_VERSION: basis_version || 1, // Default or required? VDV implies required.
                 TAGESART_NR: tagesart_nr,
                 TAGESART_TEXT: tagesart_text
             });
@@ -45,20 +47,18 @@ class CalendarController {
     }
     async editTagesart(req, res) {
         try {
-            const id = req.params.id;
-            if (!id) {
-                return res.status(400).json({ message: 'ID parameter is required' });
+            const basisVersion = parseInt(req.body.BASIS_VERSION || req.body.basis_version || 1);
+            const tagesartNr = parseInt(req.body.TAGESART_NR || req.body.tagesart_nr || req.params.id);
+            if (!tagesartNr) {
+                return res.status(400).json({ message: 'TAGESART_NR is required' });
             }
-            const tagesart = await Tagesart_1.Tagesart.findByPk(id);
+            const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesartNr, BASIS_VERSION: basisVersion } });
             if (!tagesart) {
                 return res.status(404).json({ message: 'Tagesart not found' });
             }
             // Update fields
-            if (req.body.tagesart_nr !== undefined) {
-                tagesart.TAGESART_NR = parseInt(req.body.tagesart_nr);
-            }
-            if (req.body.tagesart_text !== undefined) {
-                tagesart.TAGESART_TEXT = req.body.tagesart_text;
+            if (req.body.TAGESART_TEXT !== undefined || req.body.tagesart_text !== undefined) {
+                tagesart.TAGESART_TEXT = req.body.TAGESART_TEXT || req.body.tagesart_text;
             }
             await tagesart.save();
             return res.status(200).json(tagesart);
@@ -70,17 +70,18 @@ class CalendarController {
     }
     async deleteTagesart(req, res) {
         try {
-            const id = req.params.id;
-            if (!id) {
-                return res.status(400).json({ message: 'ID parameter is required' });
+            const basisVersion = parseInt(req.body.BASIS_VERSION || req.body.basis_version || 1);
+            const tagesartNr = parseInt(req.body.TAGESART_NR || req.body.tagesart_nr || req.params.id);
+            if (!tagesartNr) {
+                return res.status(400).json({ message: 'TAGESART_NR is required' });
             }
-            const tagesart = await Tagesart_1.Tagesart.findByPk(id);
+            const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesartNr, BASIS_VERSION: basisVersion } });
             if (!tagesart) {
                 return res.status(404).json({ message: 'Tagesart not found' });
             }
             // Check for dependencies in Betriebstage
             const dependentBetriebstage = await Betriebstag_1.Betriebstag.count({
-                where: { TAGESART_NR: tagesart.TAGESART_NR }
+                where: { TAGESART_NR: tagesart.TAGESART_NR, BASIS_VERSION: tagesart.BASIS_VERSION }
             });
             if (dependentBetriebstage > 0) {
                 return res.status(400).json({
@@ -99,7 +100,10 @@ class CalendarController {
     // Betriebstage / FIRMENKALENDER
     async getBetriebstage(req, res) {
         try {
+            const hasBasisVersion = req.query.basis_version || req.query.BASIS_VERSION;
+            const whereClause = hasBasisVersion ? { BASIS_VERSION: parseInt(hasBasisVersion) } : {};
             const betriebstage = await Betriebstag_1.Betriebstag.findAll({
+                where: whereClause,
                 include: [{
                         model: Tagesart_1.Tagesart,
                         as: 'tagesart'
@@ -118,28 +122,53 @@ class CalendarController {
             if (!req.body) {
                 return res.status(400).json({ message: 'Request body is required' });
             }
-            const betriebstag = parseInt(req.body['betriebstag']);
-            const betriebstag_text = req.body['betriebstag_text'] || '';
-            const tagesart_nr = parseInt(req.body['tagesart_nr']);
+            const betriebstag = parseInt(req.body['BETRIEBSTAG'] || req.body['betriebstag']);
+            const betriebstag_text = req.body['BETRIEBSTAG_TEXT'] || req.body['betriebstag_text'] || '';
+            const tagesart_nr = parseInt(req.body['TAGESART_NR'] || req.body['tagesart_nr']);
+            const basis_version = parseInt(req.body['BASIS_VERSION'] || req.body['basis_version'] || '0');
             // Validate required fields
-            if (!betriebstag) {
+            if (!betriebstag || isNaN(betriebstag)) {
                 return res.status(400).json({ message: 'BETRIEBSTAG is required' });
             }
-            if (!tagesart_nr) {
+            if (!tagesart_nr || isNaN(tagesart_nr)) {
                 return res.status(400).json({ message: 'TAGESART_NR is required' });
             }
-            // Verify that the Tagesart exists
-            const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr } });
-            if (!tagesart) {
-                return res.status(400).json({ message: 'Invalid TAGESART_NR: Tagesart does not exist' });
+            if (!basis_version || isNaN(basis_version)) {
+                return res.status(400).json({ message: 'BASIS_VERSION is required' });
             }
-            const newBetriebstag = await Betriebstag_1.Betriebstag.create({
-                BETRIEBSTAG: betriebstag,
-                BETRIEBSTAG_TEXT: betriebstag_text,
-                TAGESART_NR: tagesart_nr
+            // Verify that the Tagesart exists
+            const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr, BASIS_VERSION: basis_version } });
+            if (!tagesart) {
+                return res.status(400).json({ message: `Invalid TAGESART_NR: Tagesart ${tagesart_nr} does not exist for Basis Version ${basis_version}` });
+            }
+            // Check if Betriebstag already exists for this BasisVersion and Date
+            let existingBetriebstag = await Betriebstag_1.Betriebstag.findOne({
+                where: {
+                    BASIS_VERSION: basis_version,
+                    BETRIEBSTAG: betriebstag
+                }
             });
+            let newBetriebstag;
+            if (existingBetriebstag) {
+                // Update existing
+                existingBetriebstag.TAGESART_NR = tagesart_nr;
+                if (betriebstag_text)
+                    existingBetriebstag.BETRIEBSTAG_TEXT = betriebstag_text;
+                await existingBetriebstag.save();
+                newBetriebstag = existingBetriebstag;
+            }
+            else {
+                // Create new
+                newBetriebstag = await Betriebstag_1.Betriebstag.create({
+                    BASIS_VERSION: basis_version,
+                    BETRIEBSTAG: betriebstag,
+                    BETRIEBSTAG_TEXT: betriebstag_text,
+                    TAGESART_NR: tagesart_nr
+                });
+            }
             // Fetch with relations
-            const created = await Betriebstag_1.Betriebstag.findByPk(newBetriebstag.id, {
+            const created = await Betriebstag_1.Betriebstag.findOne({
+                where: { BASIS_VERSION: newBetriebstag.BASIS_VERSION, BETRIEBSTAG: newBetriebstag.BETRIEBSTAG },
                 include: [{
                         model: Tagesart_1.Tagesart,
                         as: 'tagesart'
@@ -154,33 +183,35 @@ class CalendarController {
     }
     async editBetriebstag(req, res) {
         try {
-            const id = req.params.id;
-            if (!id) {
-                return res.status(400).json({ message: 'ID parameter is required' });
+            // Composite key update: expecting identity in body if ID not usable
+            const basisVersion = parseInt(req.body.BASIS_VERSION || req.body.basis_version);
+            const betriebstagDate = parseInt(req.body.BETRIEBSTAG || req.body.betriebstag);
+            if (!basisVersion || !betriebstagDate) {
+                return res.status(400).json({ message: 'BASIS_VERSION and BETRIEBSTAG are required in body' });
             }
-            const betriebstag = await Betriebstag_1.Betriebstag.findByPk(id);
+            const betriebstag = await Betriebstag_1.Betriebstag.findOne({
+                where: { BASIS_VERSION: basisVersion, BETRIEBSTAG: betriebstagDate }
+            });
             if (!betriebstag) {
                 return res.status(404).json({ message: 'Betriebstag not found' });
             }
             // Update fields
-            if (req.body.betriebstag !== undefined) {
-                betriebstag.BETRIEBSTAG = parseInt(req.body.betriebstag);
+            if (req.body.BETRIEBSTAG_TEXT !== undefined || req.body.betriebstag_text !== undefined) {
+                betriebstag.BETRIEBSTAG_TEXT = req.body.BETRIEBSTAG_TEXT || req.body.betriebstag_text;
             }
-            if (req.body.betriebstag_text !== undefined) {
-                betriebstag.BETRIEBSTAG_TEXT = req.body.betriebstag_text;
-            }
-            if (req.body.tagesart_nr !== undefined) {
-                const tagesart_nr = parseInt(req.body.tagesart_nr);
+            if (req.body.TAGESART_NR !== undefined || req.body.tagesart_nr !== undefined) {
+                const tagesart_nr = parseInt(req.body.TAGESART_NR || req.body.tagesart_nr);
                 // Verify that the Tagesart exists
-                const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr } });
+                const tagesart = await Tagesart_1.Tagesart.findOne({ where: { TAGESART_NR: tagesart_nr, BASIS_VERSION: basisVersion } });
                 if (!tagesart) {
-                    return res.status(400).json({ message: 'Invalid TAGESART_NR: Tagesart does not exist' });
+                    return res.status(400).json({ message: `Invalid TAGESART_NR: Tagesart ${tagesart_nr} does not exist for Basis Version ${basisVersion}` });
                 }
                 betriebstag.TAGESART_NR = tagesart_nr;
             }
             await betriebstag.save();
             // Fetch with relations
-            const updated = await Betriebstag_1.Betriebstag.findByPk(id, {
+            const updated = await Betriebstag_1.Betriebstag.findOne({
+                where: { BASIS_VERSION: basisVersion, BETRIEBSTAG: betriebstagDate },
                 include: [{
                         model: Tagesart_1.Tagesart,
                         as: 'tagesart'
@@ -195,11 +226,21 @@ class CalendarController {
     }
     async deleteBetriebstag(req, res) {
         try {
-            const id = req.params.id;
-            if (!id) {
-                return res.status(400).json({ message: 'ID parameter is required' });
+            // Expect composite key in query or body, since URL param :id is 1D
+            const basisVersion = parseInt(req.query.basis_version || req.body.BASIS_VERSION);
+            const betriebstagDate = parseInt(req.query.betriebstag || req.body.BETRIEBSTAG);
+            if (!basisVersion || !betriebstagDate) {
+                // Fallback: try parsing ID if it looks key-like "1_20250101" (Not standard but helpful)
+                const id = req.params.id;
+                if (id && id.includes('_')) {
+                    const parts = id.split('_');
+                    // implement fallback parsing if needed, or just error
+                }
+                return res.status(400).json({ message: 'BASIS_VERSION and BETRIEBSTAG required' });
             }
-            const betriebstag = await Betriebstag_1.Betriebstag.findByPk(id);
+            const betriebstag = await Betriebstag_1.Betriebstag.findOne({
+                where: { BASIS_VERSION: basisVersion, BETRIEBSTAG: betriebstagDate }
+            });
             if (!betriebstag) {
                 return res.status(404).json({ message: 'Betriebstag not found' });
             }

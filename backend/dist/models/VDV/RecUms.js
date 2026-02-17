@@ -11,16 +11,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecUms = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const BasisVersion_1 = require("./BasisVersion");
+const Einzelanschluss_1 = require("./Einzelanschluss");
 let RecUms = class RecUms extends sequelize_typescript_1.Model {
 };
 exports.RecUms = RecUms;
 __decorate([
     sequelize_typescript_1.PrimaryKey,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    (0, sequelize_typescript_1.ForeignKey)(() => BasisVersion_1.BasisVersion),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 1
+    }),
     __metadata("design:type", Number)
 ], RecUms.prototype, "BASIS_VERSION", void 0);
 __decorate([
     sequelize_typescript_1.PrimaryKey,
+    (0, sequelize_typescript_1.ForeignKey)(() => Einzelanschluss_1.Einzelanschluss),
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], RecUms.prototype, "EINAN_NR", void 0);
@@ -44,20 +51,37 @@ __decorate([
     __metadata("design:type", Number)
 ], RecUms.prototype, "UMS_MIN", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 65532
+    }),
     __metadata("design:type", Number)
 ], RecUms.prototype, "UMS_MAX", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 65532
+    }),
     __metadata("design:type", Number)
 ], RecUms.prototype, "MAX_VERZ_MAN", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        defaultValue: 65532
+    }),
     __metadata("design:type", Number)
 ], RecUms.prototype, "MAX_VERZ_AUTO", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => Einzelanschluss_1.Einzelanschluss, {
+        foreignKey: 'EINAN_NR',
+        targetKey: 'EINAN_NR',
+        constraints: false
+    }),
+    __metadata("design:type", Einzelanschluss_1.Einzelanschluss)
+], RecUms.prototype, "einzelanschluss", void 0);
 exports.RecUms = RecUms = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: 'rec_ums',
+        tableName: 'REC_UMS',
         timestamps: false
     })
 ], RecUms);

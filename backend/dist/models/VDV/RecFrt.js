@@ -64,9 +64,13 @@ __decorate([
     (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
     __metadata("design:type", Number)
 ], RecFrt.prototype, "BEREICH_NR", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.INTEGER),
+    __metadata("design:type", Number)
+], RecFrt.prototype, "FAHRTART_NR", void 0);
 exports.RecFrt = RecFrt = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: 'rec_frt',
+        tableName: 'REC_FRT',
         timestamps: false
     })
 ], RecFrt);
