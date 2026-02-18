@@ -285,4 +285,10 @@ export class LineVariantDetailComponent implements OnInit {
             }
         });
     }
+
+    getDestinationName(znrNr: number): string {
+        const dest = this.allDestinations.find(d => d.ZNR_NR === znrNr);
+        if (!dest) return '';
+        return dest.FAHRERKURZTEXT || dest.ZNR_TEXT?.split('\n')[0] || '';
+    }
 }

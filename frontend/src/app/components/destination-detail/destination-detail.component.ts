@@ -36,6 +36,7 @@ export class DestinationDetailComponent implements OnInit {
   destination: RecZnr = {} as RecZnr;
   isNew: boolean = true;
   seitenTextBlocks: { line1: string, line2: string }[] = [{ line1: '', line2: '' }];
+  znrTextBlocks: { line1: string, line2: string }[] = [{ line1: '', line2: '' }];
 
   constructor(
     private route: ActivatedRoute,
@@ -55,10 +56,11 @@ export class DestinationDetailComponent implements OnInit {
       this.destinationService.getDestinationById(Number(id)).subscribe({
         next: (destination) => {
           this.destination = destination;
+
+          // Process Seitentext
           if (this.destination.SEITENTEXT) {
             const lines = this.destination.SEITENTEXT.split('\n');
             this.seitenTextBlocks = [];
-            // Parse lines in pairs
             for (let i = 0; i < lines.length; i += 2) {
               this.seitenTextBlocks.push({
                 line1: lines[i] || '',
@@ -67,6 +69,20 @@ export class DestinationDetailComponent implements OnInit {
             }
           } else {
             this.seitenTextBlocks = [{ line1: '', line2: '' }];
+          }
+
+          // Process Zieltext (ZNR_TEXT)
+          if (this.destination.ZNR_TEXT) {
+            const lines = this.destination.ZNR_TEXT.split('\n');
+            this.znrTextBlocks = [];
+            for (let i = 0; i < lines.length; i += 2) {
+              this.znrTextBlocks.push({
+                line1: lines[i] || '',
+                line2: lines[i + 1] || ''
+              });
+            }
+          } else {
+            this.znrTextBlocks = [{ line1: '', line2: '' }];
           }
         },
         error: (error) => {
@@ -105,15 +121,51 @@ export class DestinationDetailComponent implements OnInit {
     }
   }
 
+  addZnrTakt() {
+    this.znrTextBlocks.push({ line1: '', line2: '' });
+  }
+
+  removeZnrTakt(index: number) {
+    if (this.znrTextBlocks.length > 1) {
+      this.znrTextBlocks.splice(index, 1);
+    } else {
+      this.znrTextBlocks[0] = { line1: '', line2: '' };
+    }
+  }
+
+  moveZnrTaktUp(index: number) {
+    if (index > 0) {
+      const temp = this.znrTextBlocks[index];
+      this.znrTextBlocks[index] = this.znrTextBlocks[index - 1];
+      this.znrTextBlocks[index - 1] = temp;
+    }
+  }
+
+  moveZnrTaktDown(index: number) {
+    if (index < this.znrTextBlocks.length - 1) {
+      const temp = this.znrTextBlocks[index];
+      this.znrTextBlocks[index] = this.znrTextBlocks[index + 1];
+      this.znrTextBlocks[index + 1] = temp;
+    }
+  }
+
   saveDestination() {
     if (this.destination && this.destination.ZNR_NR) {
       // Join seitenTextBlocks into a single string with \n
-      const lines: string[] = [];
+      const seitenLines: string[] = [];
       this.seitenTextBlocks.forEach(block => {
-        lines.push(block.line1);
-        lines.push(block.line2);
+        seitenLines.push(block.line1);
+        seitenLines.push(block.line2);
       });
-      this.destination.SEITENTEXT = lines.join('\n');
+      this.destination.SEITENTEXT = seitenLines.join('\n');
+
+      // Join znrTextBlocks into a single string with \n
+      const znrLines: string[] = [];
+      this.znrTextBlocks.forEach(block => {
+        znrLines.push(block.line1);
+        znrLines.push(block.line2);
+      });
+      this.destination.ZNR_TEXT = znrLines.join('\n');
 
       if (!this.isNew) {
         // Update

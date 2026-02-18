@@ -11,7 +11,9 @@
           <h2 class="text-lg font-bold text-slate-800 tracking-tight">
             {{ destination.ZNR_NR ? 'Ziel bearbeiten' : 'Neues Ziel' }}
           </h2>
-          <p *ngIf="destination.ZNR_TEXT" class="text-xs text-slate-500 font-medium">{{ destination.ZNR_TEXT }}</p>
+          <p *ngIf="destination.FAHRERKURZTEXT || destination.ZNR_TEXT" class="text-xs text-slate-500 font-medium">
+            {{ destination.FAHRERKURZTEXT || destination.ZNR_TEXT.split('\n')[0] }}
+          </p>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -35,20 +37,63 @@
             <small class="text-slate-500">Eindeutige ID des Ziels</small>
           </div>
           <div class="flex flex-col gap-2">
-            <label class="font-bold text-slate-700">Zieltext (ZNR_TEXT)</label>
-            <input pInputText [(ngModel)]="destination.ZNR_TEXT" class="w-full" maxlength="160" />
+            <label class="font-bold text-slate-700">Fahrerkurztext (Anzeige-Name)</label>
+            <input pInputText [(ngModel)]="destination.FAHRERKURZTEXT" class="w-full" maxlength="44" />
+            <small class="text-slate-500">Wird für Listen und Auswahldialoge bevorzugt</small>
           </div>
+        </div>
+
+        <!-- Zieltext (ZNR_TEXT) dynamic blocks -->
+        <div class="flex flex-col gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100">
+          <div class="flex items-center justify-between">
+            <label class="font-bold text-slate-700 flex items-center gap-2">
+              <i class="pi pi-pencil text-slate-400"></i>
+              Zieltext (ZNR_TEXT)
+            </label>
+            <p-button label="Takt hinzufügen" icon="pi pi-plus" size="small" [text]="true"
+              (onClick)="addZnrTakt()"></p-button>
+          </div>
+
+          <div class="flex flex-col gap-6">
+            <div *ngFor="let block of znrTextBlocks; let i = index"
+              class="relative p-4 bg-white rounded-lg border border-slate-200 shadow-sm animate-fade-in">
+
+              <!-- Block Header with controls -->
+              <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-50">
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Front-Anzeige #{{ i + 1
+                  }}</span>
+                <div class="flex items-center gap-1">
+                  <p-button icon="pi pi-chevron-up" [disabled]="i === 0" severity="secondary" size="small" [text]="true"
+                    (onClick)="moveZnrTaktUp(i)" pTooltip="Nach oben"></p-button>
+                  <p-button icon="pi pi-chevron-down" [disabled]="i === znrTextBlocks.length - 1" severity="secondary"
+                    size="small" [text]="true" (onClick)="moveZnrTaktDown(i)" pTooltip="Nach unten"></p-button>
+                  <p-button icon="pi pi-trash" severity="danger" size="small" [text]="true" (onClick)="removeZnrTakt(i)"
+                    pTooltip="Entfernen"></p-button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Zeile 1</span>
+                  <input pInputText [(ngModel)]="block.line1" class="w-full" maxlength="40"
+                    placeholder="Hauptzeile..." />
+                </div>
+                <div class="flex flex-col gap-1.5">
+                  <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Zeile 2</span>
+                  <input pInputText [(ngModel)]="block.line2" class="w-full" maxlength="40"
+                    placeholder="Zusatzzeile..." />
+                </div>
+              </div>
+            </div>
+          </div>
+          <small class="text-slate-500 italic mt-1">
+            Diese Texte erscheinen auf der Front-Anzeige des Fahrzeugs.
+          </small>
         </div>
 
         <div class="flex flex-col gap-2">
           <label class="font-bold text-slate-700">Kürzel (ZNR_KUERZEL)</label>
           <input pInputText [(ngModel)]="destination.ZNR_KUERZEL" class="w-full" maxlength="10" />
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <label class="font-bold text-slate-700">Fahrerkurztext</label>
-          <input pInputText [(ngModel)]="destination.FAHRERKURZTEXT" class="w-full" maxlength="44" />
-          <small class="text-slate-500">Für das Fahrerdisplay</small>
         </div>
 
         <div class="flex flex-col gap-4 p-4 bg-slate-50 rounded-lg border border-slate-100">

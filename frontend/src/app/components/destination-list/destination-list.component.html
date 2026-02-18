@@ -25,14 +25,17 @@
 
   <!-- Table -->
   <div class="flex-1 overflow-auto bg-white p-2">
-    <p-table #dt [value]="destinations" [rows]="50" [paginator]="true" [globalFilterFields]="['ZNR_NR', 'ZNR_TEXT']"
-      styleClass="p-datatable-striped" [rowHover]="true" [loading]="loading">
+    <p-table #dt [value]="destinations" [rows]="50" [paginator]="true"
+      [globalFilterFields]="['ZNR_NR', 'FAHRERKURZTEXT', 'ZNR_TEXT']" styleClass="p-datatable-striped" [rowHover]="true"
+      [loading]="loading">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="ZNR_NR" class="font-semibold text-sm text-slate-700" style="width: 20%">Zielnr
+          <th pSortableColumn="ZNR_NR" class="font-semibold text-sm text-slate-700" style="width: 15%">Zielnr
             <p-sortIcon field="ZNR_NR"></p-sortIcon>
           </th>
-          <th pSortableColumn="ZNR_TEXT" class="font-semibold text-sm text-slate-700">Zieltext <p-sortIcon
+          <th pSortableColumn="FAHRERKURZTEXT" class="font-semibold text-sm text-slate-700">Anzeigename / Fahrerkurztext
+            <p-sortIcon field="FAHRERKURZTEXT"></p-sortIcon></th>
+          <th pSortableColumn="ZNR_TEXT" class="font-semibold text-sm text-slate-700">Abwechselnder Zieltext <p-sortIcon
               field="ZNR_TEXT"></p-sortIcon></th>
           <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
         </tr>
@@ -44,7 +47,8 @@
               {{ row.ZNR_NR }}
             </a>
           </td>
-          <td>{{ row.ZNR_TEXT }}</td>
+          <td class="font-medium text-slate-800">{{ row.FAHRERKURZTEXT || row.ZNR_TEXT?.split('\n')[0] }}</td>
+          <td class="text-slate-500 text-sm italic">{{ row.ZNR_TEXT?.split('\n').join(' | ') }}</td>
           <td>
             <div class="flex gap-1">
               <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"
@@ -57,7 +61,7 @@
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="3" class="text-center p-4">Keine Ziele gefunden.</td>
+          <td colspan="4" class="text-center p-4">Keine Ziele gefunden.</td>
         </tr>
       </ng-template>
     </p-table>

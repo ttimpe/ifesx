@@ -10,7 +10,7 @@ export class RecZnr extends Model {
     @Column(DataType.INTEGER)
     ZNR_NR!: number;
 
-    @Column(DataType.STRING(160))
+    @Column(DataType.TEXT)
     ZNR_TEXT!: string;
 
     @Column(DataType.STRING(10))

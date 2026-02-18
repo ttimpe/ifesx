@@ -25,7 +25,7 @@ __decorate([
     __metadata("design:type", Number)
 ], RecZnr.prototype, "ZNR_NR", void 0);
 __decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.STRING(160)),
+    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.TEXT),
     __metadata("design:type", String)
 ], RecZnr.prototype, "ZNR_TEXT", void 0);
 __decorate([
