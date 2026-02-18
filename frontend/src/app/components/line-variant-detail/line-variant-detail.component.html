@@ -98,10 +98,23 @@
                                 </p-dropdown>
                             </td>
                             <td>
-                                <p-dropdown [options]="allDestinations" [(ngModel)]="stop.ZNR_NR" optionLabel="ZNR_TEXT"
-                                    optionValue="ZNR_NR" [showClear]="true" placeholder="Keine"
-                                    styleClass="w-full text-xs" [filter]="true" filterBy="ZNR_TEXT,ZNR_NR"
-                                    (onChange)="updateStop(stop)" appendTo="body">
+                                <p-dropdown [options]="allDestinations" [(ngModel)]="stop.ZNR_NR" optionValue="ZNR_NR"
+                                    [showClear]="true" placeholder="Keine" styleClass="w-full text-xs" [filter]="true"
+                                    filterBy="FAHRERKURZTEXT,ZNR_TEXT,ZNR_NR" (onChange)="updateStop(stop)"
+                                    appendTo="body">
+                                    <ng-template pTemplate="selectedItem">
+                                        <div *ngIf="stop.ZNR_NR">
+                                            {{ getDestinationName(stop.ZNR_NR) }}
+                                        </div>
+                                    </ng-template>
+                                    <ng-template let-dest pTemplate="item">
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-xs">{{ dest.FAHRERKURZTEXT ||
+                                                dest.ZNR_TEXT.split('\n')[0] }}</span>
+                                            <span class="text-[10px] text-slate-400">{{ dest.ZNR_NR }} - {{
+                                                dest.ZNR_KUERZEL }}</span>
+                                        </div>
+                                    </ng-template>
                                 </p-dropdown>
                             </td>
                             <td class="text-center">
