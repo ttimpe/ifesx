@@ -69,6 +69,16 @@ export class DestinationListComponent implements OnInit {
   }
 
   deleteDestination(dest: RecZnr) {
-    // TODO Implement delete
+    if (!confirm(`Ziel "${dest.ZNR_TEXT}" (${dest.ZNR_NR}) wirklich löschen?`)) {
+      return;
+    }
+    this.destinationService.deleteDestination(dest.ZNR_NR, this.selectedBasisVersion).subscribe({
+      next: () => {
+        this.loadDestinations();
+      },
+      error: (error: any) => {
+        console.error('Error deleting destination:', error);
+      }
+    });
   }
 }

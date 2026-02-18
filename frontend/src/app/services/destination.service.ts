@@ -33,5 +33,11 @@ export class DestinationService {
     return this.http.put<RecZnr>(url, destination);
   }
 
-  // Add other CRUD methods as needed
+  deleteDestination(id: number, basisVersion?: number): Observable<void> {
+    let url = `${this.apiUrl}/${id}`;
+    if (basisVersion) {
+      url += `?basisVersion=${basisVersion}`;
+    }
+    return this.http.delete<void>(url);
+  }
 }
