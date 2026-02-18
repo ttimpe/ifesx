@@ -270,6 +270,7 @@ destinationRouter.get('/:id', destinationController.getDestinationById)
 destinationRouter.put('/:id', destinationController.updateDestination)
 destinationRouter.post('/migrate', destinationController.migrateDestinations)
 destinationRouter.post('/', destinationController.createDestination)
+destinationRouter.delete('/:id', destinationController.deleteDestination)
 apiRouter.use('/destinations', destinationRouter)
 
 const lineRouter = express.Router()

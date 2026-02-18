@@ -7,6 +7,13 @@ import { BasisVersion } from './BasisVersion';
 })
 export class RecZnr extends Model {
     @PrimaryKey
+    @Column({
+        type: DataType.INTEGER,
+        defaultValue: 1
+    })
+    BASIS_VERSION!: number;
+
+    @PrimaryKey
     @Column(DataType.INTEGER)
     ZNR_NR!: number;
 
@@ -25,17 +32,7 @@ export class RecZnr extends Model {
     @Column(DataType.STRING(68))
     ZNR_CODE?: string;
 
-    @Column({
-        type: DataType.INTEGER,
-        defaultValue: 1
-    })
-    BASIS_VERSION!: number;
-
     @BelongsTo(() => BasisVersion, { foreignKey: 'BASIS_VERSION', targetKey: 'BASIS_VERSION', constraints: false })
     basisVersion?: BasisVersion;
 
-    // Backward compatibility getters
-    // Note: 'id' getter removed to avoid conflict with Model.id. Use ZNR_NR explicitly or map in controller.
-    get number(): number { return this.ZNR_NR; }
-    get name(): string { return this.ZNR_TEXT; }
 }

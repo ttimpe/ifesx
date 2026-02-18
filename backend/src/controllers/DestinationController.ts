@@ -126,6 +126,26 @@ class DestinationController {
     }
   }
 
+  public async deleteDestination(req: Request, res: Response) {
+    try {
+      const destinationId = parseInt(req.params.id);
+      const basisVersion = parseInt(req.query.basis_version as string || req.query.basisVersion as string || '1');
+
+      const destination = await RecZnr.findOne({
+        where: { ZNR_NR: destinationId, BASIS_VERSION: basisVersion }
+      });
+      if (!destination) {
+        return res.status(404).json({ message: 'Destination not found' });
+      }
+
+      await destination.destroy();
+      return res.status(200).json({ message: 'Destination deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting destination:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
   public async migrateDestinations(req: Request, res: Response) {
     // Migration from legacy model disabled
     return res.status(501).json({ message: 'Migration not available' });
