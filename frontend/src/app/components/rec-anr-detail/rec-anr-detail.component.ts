@@ -9,18 +9,19 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { InputTextarea } from 'primeng/inputtextarea';
+import { Tooltip } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-rec-anr-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, ButtonModule, InputTextModule, CardModule, InputTextarea],
+    imports: [CommonModule, FormsModule, RouterModule, ButtonModule, InputTextModule, CardModule, InputTextarea, Tooltip],
     templateUrl: './rec-anr-detail.component.html',
     styleUrls: ['./rec-anr-detail.component.css']
 })
 export class RecAnrDetailComponent implements OnInit {
     item: RecAnr = new RecAnr();
     isNew = true;
-
+    isUploading = false;
 
     constructor(
         private service: RecAnrService,
@@ -56,5 +57,18 @@ export class RecAnrDetailComponent implements OnInit {
                 this.router.navigate(['/rec-anr']);
             });
         }
+    }
+
+    onFileSelected(event: Event): void {
+        const file = (event.target as HTMLInputElement).files?.[0];
+        if (!file) return;
+        this.isUploading = true;
+        this.service.uploadFile(file).subscribe({
+            next: (res) => {
+                this.item.ANR_DATEI = res.ANR_DATEI;
+                this.isUploading = false;
+            },
+            error: () => { this.isUploading = false; }
+        });
     }
 }
