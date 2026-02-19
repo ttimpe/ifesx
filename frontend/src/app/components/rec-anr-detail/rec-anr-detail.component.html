@@ -1,34 +1,77 @@
-<div class="max-w-3xl mx-auto p-6">
-    <div class="mb-6 flex items-center justify-between">
+<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
         <div class="flex items-center gap-4">
-            <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"
-                routerLink="/rec-anr"></p-button>
-            <h2 class="text-2xl font-bold text-slate-800">{{ isNew ? 'Neuer Anschluss-Text' : 'Anschluss-Text
-                bearbeiten' }}</h2>
+            <a routerLink="/rec-anr">
+                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
+            </a>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                    {{ isNew ? 'Neuer Ansage-Text' : 'Ansage-Text bearbeiten' }}
+                </h2>
+            </div>
+        </div>
+        <div class="flex gap-2">
+            <p-button *ngIf="!isNew" label="Löschen" icon="pi pi-trash" severity="danger" [outlined]="true"
+                (onClick)="delete()"></p-button>
+            <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="save()"></p-button>
         </div>
     </div>
 
-    <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
-        <div class="flex flex-col gap-6">
-            <div class="flex flex-col gap-2">
-                <label for="anrNr" class="text-sm font-medium text-slate-700">Nummer (ANR_NR)</label>
-                <input pInputText id="anrNr" type="number" [(ngModel)]="item.ANR_NR" [disabled]="!isNew" class="w-full"
-                    placeholder="z.B. 101" />
-                <small class="text-slate-500">Eindeutige ID für diesen Text.</small>
-            </div>
+    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+        <div class="max-w-2xl mx-auto flex flex-col gap-6">
 
-            <div class="flex flex-col gap-2">
-                <label for="anrText" class="text-sm font-medium text-slate-700">Ansage-Text / Display-Text</label>
-                <textarea pInputTextarea id="anrText" [(ngModel)]="item.ANR_TEXT" rows="3" class="w-full"
-                    maxlength="200" placeholder="z.B. Nächster Halt: Hauptbahnhof"></textarea>
-                <small class="text-slate-500">Maximal 200 Zeichen.</small>
-            </div>
+            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+                <div class="flex flex-col gap-6">
 
-            <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
-                <p-button *ngIf="!isNew" label="Löschen" icon="pi pi-trash" severity="danger" [outlined]="true"
-                    (onClick)="delete()"></p-button>
-                <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="save()"></p-button>
-            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex flex-col gap-2">
+                            <label for="anrNr" class="text-sm font-medium text-slate-700">Nummer (ANR_NR)</label>
+                            <input pInputText id="anrNr" type="number" [(ngModel)]="item.ANR_NR"
+                                class="w-full" placeholder="z.B. 101" />
+                            <small class="text-slate-500">Eindeutige ID für diesen Text.</small>
+                        </div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="anrKurzel" class="text-sm font-medium text-slate-700">Kürzel (ANR_KURZEL)</label>
+                            <input pInputText id="anrKurzel" [(ngModel)]="item.ANR_KURZEL" class="w-full"
+                                maxlength="10" placeholder="z.B. HBF" />
+                            <small class="text-slate-500">Kurzkennzeichen (max. 10 Zeichen).</small>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="anrText" class="text-sm font-medium text-slate-700">Ansage-Text / Display-Text</label>
+                        <textarea pInputTextarea id="anrText" [(ngModel)]="item.ANR_TEXT" rows="3" class="w-full"
+                            maxlength="200" placeholder="z.B. Nächster Halt: Hauptbahnhof"></textarea>
+                        <small class="text-slate-500">Maximal 200 Zeichen.</small>
+                    </div>
+
+                    <!-- Audio File -->
+                    <div class="flex flex-col gap-2 border-t border-slate-100 pt-4">
+                        <label class="text-sm font-medium text-slate-700">Audio-Datei (ANR_DATEI)</label>
+                        <div class="flex items-center gap-3">
+                            <span *ngIf="item.ANR_DATEI" class="text-sm text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                                <i class="pi pi-volume-up text-indigo-500"></i>
+                                {{ item.ANR_DATEI }}
+                            </span>
+                            <span *ngIf="!item.ANR_DATEI" class="text-sm text-slate-400">Keine Datei verknüpft</span>
+                        </div>
+                        <div class="flex items-center gap-3 mt-1">
+                            <input #fileInput type="file" accept="audio/*" class="hidden" (change)="onFileSelected($event)" />
+                            <p-button label="Datei hochladen" icon="pi pi-upload" severity="secondary"
+                                size="small" (onClick)="fileInput.click()" [loading]="isUploading"></p-button>
+                            <p-button *ngIf="item.ANR_DATEI" icon="pi pi-times" severity="danger"
+                                [text]="true" size="small" pTooltip="Verknüpfung entfernen"
+                                (onClick)="item.ANR_DATEI = undefined"></p-button>
+                        </div>
+                        <small class="text-slate-500">Audio-Datei für die Ansage (z.B. MP3, WAV).</small>
+                    </div>
+
+                </div>
+            </p-card>
+
         </div>
-    </p-card>
+    </div>
 </div>
