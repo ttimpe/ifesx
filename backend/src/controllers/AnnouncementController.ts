@@ -15,7 +15,12 @@ class AnnouncementController {
       let migratedCount = 0;
 
       for (const ans of announcements) {
-        const exists = await RecAnr.findByPk(ans.number); // Using 'number' as ANR_NR
+        const exists = await RecAnr.findOne({
+          where: {
+            ANR_NR: ans.number,
+            BASIS_VERSION: 1
+          }
+        });
         if (!exists) {
           await RecAnr.create({
             ANR_NR: ans.number,
