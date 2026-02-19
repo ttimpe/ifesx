@@ -32,8 +32,16 @@ class DestinationController {
 
   public async getDestinationById(req: Request, res: Response) {
     const destinationId = req.params.id;
+    const basisVersion = req.query.basis_version || req.query.basisVersion || 1;
+
     try {
-      const destination = await RecZnr.findByPk(destinationId);
+      const destination = await RecZnr.findOne({
+        where: {
+          ZNR_NR: destinationId,
+          BASIS_VERSION: basisVersion
+        }
+      });
+
       if (!destination) {
         return res.status(404).json({ message: 'Destination not found' });
       }
@@ -83,13 +91,19 @@ class DestinationController {
 
   public async updateDestination(req: Request, res: Response) {
     const destinationId = req.params.id;
+    const basisVersion = req.query.basis_version || req.query.basisVersion || 1;
     const {
       ZNR_NR, ZNR_TEXT, ZNR_KUERZEL, FAHRERKURZTEXT, SEITENTEXT, ZNR_CODE, BASIS_VERSION,
       number, name, short_name, sign_text
     } = req.body;
 
     try {
-      const destination = await RecZnr.findByPk(destinationId);
+      const destination = await RecZnr.findOne({
+        where: {
+          ZNR_NR: destinationId,
+          BASIS_VERSION: basisVersion
+        }
+      });
       if (!destination) {
         return res.status(404).json({ message: 'Destination not found' });
       }
