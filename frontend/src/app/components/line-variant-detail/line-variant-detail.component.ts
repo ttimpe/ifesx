@@ -11,7 +11,7 @@ import { RecOrt } from '../../models/rec-ort.model';
 import { DestinationService } from '../../services/destination.service';
 import { AnnouncementService } from '../../services/announcement.service';
 import { RecZnr } from '../../models/destination.model';
-import { Announcement } from '../../models/announcement.model';
+import { RecAnr } from '../../models/announcement.model';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -43,7 +43,7 @@ export class LineVariantDetailComponent implements OnInit {
     allStops: RecOrt[] = []; // Filtered list for dropdown
     rawAllStops: RecOrt[] = []; // Complete list from backend
     allDestinations: RecZnr[] = []; // For ZNR dropdown
-    allAnnouncements: Announcement[] = []; // For ANR dropdown
+    allAnnouncements: RecAnr[] = []; // For ANR dropdown
 
     directionOptions = [
         { value: 0, label: '0: Z' },
@@ -83,7 +83,7 @@ export class LineVariantDetailComponent implements OnInit {
 
             // Load destinations and announcements for dropdowns
             this.destinationService.getAllDestinations().subscribe(d => this.allDestinations = d);
-            this.announcementService.getAllAnnouncements().subscribe(a => this.allAnnouncements = a);
+            this.announcementService.getAll().subscribe(a => this.allAnnouncements = a);
 
             if (this.strLiVar === 'new') {
                 this.isNew = true;

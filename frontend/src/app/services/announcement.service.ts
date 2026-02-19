@@ -1,4 +1,4 @@
-import { Announcement } from './../models/announcement.model';
+import { RecAnr } from './../models/announcement.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -8,44 +8,38 @@ import { Observable } from 'rxjs';
 })
 export class AnnouncementService {
 
-  private apiUrl = '/api/announcements';
+  private apiUrl = '/api/vdv/rec-anr';
 
   constructor(private http: HttpClient) { }
+
   getAllAnnouncementFiles(): Observable<string[]> {
-    const url = `${this.apiUrl}/files`;
-    return this.http.get<string[]>(url);
+    return this.http.get<string[]>(`${this.apiUrl}/files`);
   }
 
-  getAllAnnouncements(basisVersion?: number): Observable<Announcement[]> {
-    let url = this.apiUrl;
-    if (basisVersion) {
-      url += `?basisVersion=${basisVersion}`;
-    }
-    return this.http.get<Announcement[]>(url);
-  }
-  getAnnouncementById(id: number, basisVersion: number = 1): Observable<Announcement> {
-    const url = `${this.apiUrl}/${id}?basisVersion=${basisVersion}`;
-    return this.http.get<Announcement>(url);
+  getAll(basisVersion?: number): Observable<RecAnr[]> {
+    const url = basisVersion ? `${this.apiUrl}?basisVersion=${basisVersion}` : this.apiUrl;
+    return this.http.get<RecAnr[]>(url);
   }
 
-  createAnnouncement(announcement: Announcement): Observable<Announcement> {
-    return this.http.post<Announcement>(this.apiUrl, announcement);
+  getById(id: number): Observable<RecAnr> {
+    return this.http.get<RecAnr>(`${this.apiUrl}/${id}`);
   }
 
-  updateAnnouncement(announcement: Announcement): Observable<Announcement> {
-    const url = `${this.apiUrl}/${announcement.id}`;
-    return this.http.put<Announcement>(url, announcement);
-  }
-  deleteAnnouncement(announcement: Announcement): Observable<Announcement> {
-    const url = `${this.apiUrl}/${announcement.id}?basisVersion=${announcement.basisVersion}`;
-    return this.http.delete<Announcement>(url);
+  create(anr: RecAnr): Observable<RecAnr> {
+    return this.http.post<RecAnr>(this.apiUrl, anr);
   }
 
-  uploadAudio(file: File): Observable<any> {
+  update(anr: RecAnr): Observable<RecAnr> {
+    return this.http.put<RecAnr>(`${this.apiUrl}/${anr.ANR_NR}`, anr);
+  }
+
+  delete(anr: RecAnr): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${anr.ANR_NR}`);
+  }
+
+  uploadAudio(file: File): Observable<{ ANR_DATEI: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.apiUrl}/upload`, formData);
+    return this.http.post<{ ANR_DATEI: string }>(`${this.apiUrl}/upload`, formData);
   }
 }
-
-

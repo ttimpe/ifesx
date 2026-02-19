@@ -3,15 +3,13 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnnouncementService } from '../../services/announcement.service';
-import { Announcement } from '../../models/announcement.model';
+import { RecAnr } from '../../models/announcement.model';
 import { CalendarService } from '../../services/calendar.service';
 
 // PrimeNG
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
-import { IconField } from 'primeng/iconfield';
-import { InputIcon } from 'primeng/inputicon';
 import { Tooltip } from 'primeng/tooltip';
 
 @Component({
@@ -30,7 +28,7 @@ import { Tooltip } from 'primeng/tooltip';
   ]
 })
 export class AnnouncementListComponent implements OnInit {
-  announcements: Announcement[] = [];
+  announcements: RecAnr[] = [];
   selectedVersion: number | null = null;
   loading: boolean = false;
 
@@ -43,30 +41,24 @@ export class AnnouncementListComponent implements OnInit {
   ngOnInit(): void {
     this.calendarService.selectedVersion$.subscribe(version => {
       this.selectedVersion = version;
-      this.loadAnnouncements();
+      this.load();
     });
   }
 
-  private loadAnnouncements(): void {
-    const version = this.selectedVersion || undefined;
+  private load(): void {
     this.loading = true;
-    this.announcementService.getAllAnnouncements(version).subscribe({
-      next: (announcements) => {
-        this.announcements = announcements;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching announcements:', error);
-        this.loading = false;
-      }
+    this.announcementService.getAll(this.selectedVersion || undefined).subscribe({
+      next: (list) => { this.announcements = list; this.loading = false; },
+      error: () => { this.loading = false; }
     });
   }
 
-  deleteAnnouncement(announcement: Announcement) {
-    // Confirmation usually handled by confirm service, strict delete for now
-    this.announcementService.deleteAnnouncement(announcement).subscribe({
-      next: () => this.loadAnnouncements(),
-      error: (err) => console.error('Could not delete announcement', err)
-    });
+  delete(anr: RecAnr) {
+    if (confirm('Wirklich löschen?')) {
+      this.announcementService.delete(anr).subscribe({
+        next: () => this.load(),
+        error: (err) => console.error('Löschen fehlgeschlagen', err)
+      });
+    }
   }
 }
