@@ -49,6 +49,7 @@ import { Einzelanschluss } from './models/VDV/Einzelanschluss';
 import { ConnectionController } from './controllers/ConnectionController';
 import { BhofController } from './controllers/BhofController';
 import { VdvImportController } from './controllers/VdvImportController';
+import { announcementUpload } from './controllers/RecAnrController';
 import multer from 'multer';
 
 
@@ -103,6 +104,8 @@ const mengeBereichController = new MengeBereichController();
 const bhofController = new BhofController();
 
 // RecAnr Routes (Ansagetexte)
+vdvRouter.get('/rec-anr/files', recAnrController.getFiles);
+vdvRouter.post('/rec-anr/upload', announcementUpload.single('file'), recAnrController.uploadFile);
 vdvRouter.get('/rec-anr', recAnrController.getAll);
 vdvRouter.get('/rec-anr/:id', recAnrController.getById);
 vdvRouter.post('/rec-anr', recAnrController.create);
@@ -272,6 +275,8 @@ destinationRouter.post('/migrate', destinationController.migrateDestinations)
 destinationRouter.post('/', destinationController.createDestination)
 destinationRouter.delete('/:id', destinationController.deleteDestination)
 apiRouter.use('/destinations', destinationRouter)
+
+
 
 const lineRouter = express.Router()
 const lineController = new LineController()

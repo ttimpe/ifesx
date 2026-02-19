@@ -1,42 +1,21 @@
-import { RouteStop } from '../models/RouteStop';
-import { Stop } from '../models/Stop';
-import { StopInformation } from '../models/StopInformation';
-import { Announcement } from './../models/Announcement';
 import { RecAnr } from '../models/VDV/RecAnr';
 import { Request, Response } from 'express';
+import multer from 'multer';
+import path from 'path';
 const { promises: fs } = require('fs')
+
+const announcementStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, './announcements/');
+  },
+  filename: (_req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+export const announcementUpload = multer({ storage: announcementStorage });
 
 class AnnouncementController {
 
-  // Migration Endpoint
-  public async migrateAnnouncements(req: Request, res: Response) {
-    try {
-      const announcements = await Announcement.findAll();
-      let migratedCount = 0;
-
-      for (const ans of announcements) {
-        const exists = await RecAnr.findOne({
-          where: {
-            ANR_NR: ans.number,
-            BASIS_VERSION: 1
-          }
-        });
-        if (!exists) {
-          await RecAnr.create({
-            ANR_NR: ans.number,
-            ANR_TEXT: ans.name,
-            ANR_DATEI: ans.fileName, // Using 'fileName' for ANR_DATEI
-            BASIS_VERSION: 1
-          });
-          migratedCount++;
-        }
-      }
-      return res.status(200).json({ success: true, message: `Migrated ${migratedCount} announcements.` });
-    } catch (error) {
-      console.error('Migration error:', error);
-      return res.status(500).json({ message: 'Migration failed', error });
-    }
-  }
 
   // Get all announcements
   public async getAllAnnoucements(req: Request, res: Response) {
@@ -64,14 +43,25 @@ class AnnouncementController {
 
   public async getAllAnnouncementFiles(req: Request, res: Response) {
     try {
-      // Use absolute path or relative to project root? 
-      // Assuming ./announcements/ exists in project root.
-      // Ideally should use path.join
-      let fileNames = await fs.readdir('./announcements/')
-      return res.status(200).json(fileNames)
+      const dir = path.resolve('./announcements/');
+      await fs.mkdir(dir, { recursive: true });
+      let fileNames = await fs.readdir(dir);
+      return res.status(200).json(fileNames);
     } catch (error) {
-      console.error('Error fetching files')
-      return res.status(500).json({ message: 'Server error' })
+      console.error('Error fetching files', error);
+      return res.status(500).json({ message: 'Server error' });
+    }
+  }
+
+  public async uploadAnnouncementFile(req: Request, res: Response) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'Keine Datei hochgeladen' });
+      }
+      return res.status(200).json({ fileName: req.file.originalname });
+    } catch (error) {
+      console.error('Error uploading file', error);
+      return res.status(500).json({ message: 'Upload fehlgeschlagen' });
     }
   }
 

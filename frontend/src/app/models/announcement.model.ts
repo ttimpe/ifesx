@@ -1,12 +1,7 @@
-import { StopInformation } from "./stop-information.model"
-import { Stop } from "./stop.model"
-
-export class Announcement {
-    id!: number
-    number!: number
-    name!: string
-    fullText!: string
-    fileName?: string
-    basisVersion!: number;
-    stops: Stop[] = []
+export class RecAnr {
+    ANR_NR!: number;
+    ANR_TEXT!: string;
+    ANR_KURZEL?: string;
+    ANR_DATEI?: string;
+    BASIS_VERSION!: number;
 }

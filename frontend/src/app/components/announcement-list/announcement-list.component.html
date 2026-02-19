@@ -26,43 +26,56 @@
   <!-- Table -->
   <div class="flex-1 overflow-auto bg-white p-2">
     <p-table #dt [value]="announcements" [rows]="50" [paginator]="true"
-      [globalFilterFields]="['number', 'name', 'fileName']" styleClass="p-datatable-striped" [rowHover]="true"
-      [loading]="loading">
+      [globalFilterFields]="['ANR_NR', 'ANR_KURZEL', 'ANR_TEXT', 'ANR_DATEI']" styleClass="p-datatable-striped"
+      [rowHover]="true" [loading]="loading">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="number" class="font-semibold text-sm text-slate-700" style="width: 15%">Nummer
-            <p-sortIcon field="number"></p-sortIcon></th>
-          <th pSortableColumn="name" class="font-semibold text-sm text-slate-700">Name <p-sortIcon
-              field="name"></p-sortIcon></th>
-          <th pSortableColumn="fileName" class="font-semibold text-sm text-slate-700">Datei <p-sortIcon
-              field="fileName"></p-sortIcon></th>
-          <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
+          <th pSortableColumn="ANR_NR" class="font-semibold text-sm text-slate-700" style="width: 10%">ANR_NR
+            <p-sortIcon field="ANR_NR"></p-sortIcon>
+          </th>
+          <th pSortableColumn="ANR_KURZEL" class="font-semibold text-sm text-slate-700" style="width: 12%">ANR_KURZEL
+            <p-sortIcon field="ANR_KURZEL"></p-sortIcon>
+          </th>
+          <th pSortableColumn="ANR_TEXT" class="font-semibold text-sm text-slate-700">ANR_TEXT
+            <p-sortIcon field="ANR_TEXT"></p-sortIcon>
+          </th>
+          <th pSortableColumn="ANR_DATEI" class="font-semibold text-sm text-slate-700">ANR_DATEI
+            <p-sortIcon field="ANR_DATEI"></p-sortIcon>
+          </th>
+          <th pSortableColumn="BASIS_VERSION" class="font-semibold text-sm text-slate-700" style="width: 12%">Version
+            <p-sortIcon field="BASIS_VERSION"></p-sortIcon>
+          </th>
+          <th class="font-semibold text-sm text-slate-700" style="width: 10%">Aktionen</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-row>
         <tr>
           <td class="font-mono font-bold text-blue-600">
-            <a [routerLink]="['/announcements', row.number]" class="hover:underline">
-              {{ row.number }}
-            </a>
+            <a [routerLink]="['/announcements', row.ANR_NR]" class="hover:underline">{{ row.ANR_NR }}</a>
           </td>
-          <td>{{ row.name }}</td>
-          <td class="font-mono text-sm">{{ row.fileName }}</td>
+          <td class="font-mono text-sm">{{ row.ANR_KURZEL || '–' }}</td>
+          <td>{{ row.ANR_TEXT }}</td>
+          <td class="font-mono text-sm text-slate-600">
+            <span *ngIf="row.ANR_DATEI"><i class="pi pi-file-audio mr-1 text-pink-400"></i>{{ row.ANR_DATEI }}</span>
+            <span *ngIf="!row.ANR_DATEI" class="text-slate-300">–</span>
+          </td>
+          <td class="text-center text-slate-500 text-sm">{{ row.BASIS_VERSION }}</td>
           <td>
             <div class="flex gap-1">
               <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small"
-                [routerLink]="['/announcements', row.number]" pTooltip="Bearbeiten"></p-button>
-              <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
-                (onClick)="deleteAnnouncement(row)" pTooltip="Löschen"></p-button>
+                [routerLink]="['/announcements', row.ANR_NR]" pTooltip="Bearbeiten"></p-button>
+              <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small" (onClick)="delete(row)"
+                pTooltip="Löschen"></p-button>
             </div>
           </td>
         </tr>
       </ng-template>
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="4" class="text-center p-4">Keine Ansagen gefunden.</td>
+          <td colspan="6" class="text-center p-4">Keine Ansagen gefunden.</td>
         </tr>
       </ng-template>
     </p-table>
   </div>
+
 </div>

@@ -13,6 +13,9 @@ export class RecAnr extends Model {
     @Column(DataType.STRING(200))
     ANR_TEXT!: string;
 
+    @Column(DataType.STRING(10))
+    ANR_KURZEL?: string;
+
     @Column(DataType.STRING(255))
     ANR_DATEI?: string;
 

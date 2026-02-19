@@ -1,5 +1,18 @@
 import { Request, Response } from 'express';
 import { RecAnr } from '../models/VDV/RecAnr';
+import multer from 'multer';
+import path from 'path';
+import { promises as fs } from 'fs';
+
+const announcementStorage = multer.diskStorage({
+    destination: (_req, _file, cb) => {
+        cb(null, './announcements/');
+    },
+    filename: (_req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+export const announcementUpload = multer({ storage: announcementStorage });
 
 /**
  * @swagger
@@ -128,6 +141,28 @@ export class RecAnrController {
             const deleted = await RecAnr.destroy({ where: { ANR_NR: req.params.id } });
             if (deleted) res.status(204).send();
             else res.status(404).json({ error: 'Not found' });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    public getFiles = async (_req: Request, res: Response) => {
+        try {
+            const dir = path.resolve('./announcements/');
+            await fs.mkdir(dir, { recursive: true });
+            const fileNames = await fs.readdir(dir);
+            return res.status(200).json(fileNames);
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    public uploadFile = async (req: Request, res: Response) => {
+        try {
+            if (!req.file) {
+                return res.status(400).json({ error: 'Keine Datei hochgeladen' });
+            }
+            return res.status(200).json({ ANR_DATEI: req.file.originalname });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
