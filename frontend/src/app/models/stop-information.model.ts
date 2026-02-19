@@ -1,4 +1,4 @@
-import { Announcement } from "./announcement.model"
+import { RecAnr } from "./announcement.model"
 import { Stop } from "./stop.model"
 
 export class StopInformation {
@@ -6,5 +6,5 @@ export class StopInformation {
   number!: number
   shortName!: string
   stop?: Stop
-  announcement?: Announcement
+  announcement?: RecAnr
 }
