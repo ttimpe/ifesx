@@ -1,3 +1,5 @@
+import { faTableList } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +34,7 @@ interface FztRow extends RecSelFztFeld {
   selector: 'app-rec-fzt-matrix',
   standalone: true,
   imports: [
+        FontAwesomeModule,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -40,11 +43,13 @@ interface FztRow extends RecSelFztFeld {
     InputNumber,
     DialogModule,
     ButtonModule
-  ],
+  
+    ],
   templateUrl: './rec-fzt-matrix.component.html',
   styleUrl: './rec-fzt-matrix.component.css'
 })
 export class RecFztMatrixComponent implements OnInit {
+    faTableList = faTableList;
   rows: FztRow[] = [];
   loading = false;
 

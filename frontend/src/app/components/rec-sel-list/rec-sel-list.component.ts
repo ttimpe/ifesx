@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RecSel } from '../../models/rec-sel.model';
@@ -20,6 +22,7 @@ import { Tooltip } from 'primeng/tooltip';
     styleUrls: ['./rec-sel-list.component.css'],
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         RouterModule,
         FormsModule,
@@ -27,9 +30,11 @@ import { Tooltip } from 'primeng/tooltip';
         Button,
         InputText,
         Tooltip
+
     ]
 })
 export class RecSelListComponent implements OnInit {
+    faRoute = faRoute;
     rows: RecSel[] = [];
     selectedBasisVersion: number | undefined;
     loading: boolean = false;

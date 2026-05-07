@@ -106,6 +106,7 @@ const bhofController = new BhofController();
 // RecAnr Routes (Ansagetexte)
 vdvRouter.get('/rec-anr/files', recAnrController.getFiles);
 vdvRouter.post('/rec-anr/upload', announcementUpload.single('file'), recAnrController.uploadFile);
+vdvRouter.delete('/rec-anr/files/:filename', recAnrController.deleteFile);
 vdvRouter.get('/rec-anr', recAnrController.getAll);
 vdvRouter.get('/rec-anr/:id', recAnrController.getById);
 vdvRouter.post('/rec-anr', recAnrController.create);

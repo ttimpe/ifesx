@@ -65,7 +65,7 @@
     </div>
     <div class="p-5 space-y-4">
       <div class="space-y-1">
-        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Startpunkt</label>
+        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Startpunkt</label>
         <div class="text-sm text-white font-medium truncate">{{ selectedOriginStop.ORT_NAME }}</div>
         <div class="text-[10px] text-slate-400 flex justify-between gap-2">
           <span>Ort NR: {{ selectedOriginStop.ORT_NR }}</span>
@@ -76,16 +76,16 @@
       <div class="relative py-2 pl-3 border-l-2 border-slate-700 ml-1">
         <div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-slate-700"></div>
         <div class="absolute -left-[5px] bottom-0 w-2 h-2 rounded-full bg-slate-700"></div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500 my-1" fill="none" viewBox="0 0 24 24"
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-500 dark:text-slate-400 my-1" fill="none" viewBox="0 0 24 24"
           stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>
 
       <div class="space-y-1">
-        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Zielpunkt</label>
+        <label class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Zielpunkt</label>
         <div class="text-sm font-medium" [class.text-white]="selectedDestinationStop"
-          [class.text-slate-500]="!selectedDestinationStop">
+          [class.]="" [class.]="">
           {{ selectedDestinationStop?.ORT_NAME || 'Ziel auf Karte wählen...' }}
         </div>
         <div class="text-[10px] text-slate-400 flex justify-between gap-2" *ngIf="selectedDestinationStop">
@@ -95,7 +95,7 @@
       </div>
 
       <div class="pt-2">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Distance
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Distance
           (Meter)</label>
         <div class="flex gap-2">
           <input type="number"
@@ -114,7 +114,7 @@
       </div>
 
       <button
-        class="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98]"
+        class="w-full bg-blue-600 hover:bg-blue-50 dark:bg-blue-900/30 dark:bg-blue-900/300 disabled:bg-slate-800 disabled:text-slate-600 dark:text-slate-300 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-[0.98]"
         [disabled]="!selectedDestinationStop" (click)="saveDistance()">
         Relation Speichern
       </button>
@@ -138,12 +138,12 @@
       </button>
     </div>
     <div class="p-5 space-y-4">
-      <div class="text-[10px] text-slate-500 font-mono tracking-tighter bg-slate-950/50 p-2 rounded-md">
+      <div class="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-tighter bg-slate-950/50 p-2 rounded-md">
         COORDS: {{ newOrtsmarkePosition.lat.toFixed(6) }}, {{ newOrtsmarkePosition.lng.toFixed(6) }}
       </div>
 
       <div class="space-y-1">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Referenz-Ort</label>
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Referenz-Ort</label>
         <select
           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors text-sm"
           [(ngModel)]="newOrtsmarke.ORT_NR" [ngModelOptions]="{standalone: true}">
@@ -153,28 +153,28 @@
       </div>
 
       <div class="space-y-1">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Anzeigename</label>
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Anzeigename</label>
         <input type="text" placeholder="z.B. Haupteingang"
           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors text-sm"
           [(ngModel)]="newOrtsmarke.ORM_TEXT" [ngModelOptions]="{standalone: true}" maxlength="40">
       </div>
 
       <div class="space-y-1">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Kürzel</label>
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Kürzel</label>
         <input type="text" placeholder="HE"
           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors text-sm"
           [(ngModel)]="newOrtsmarke.ORM_KUERZEL" [ngModelOptions]="{standalone: true}" maxlength="6">
       </div>
 
       <div class="space-y-1">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Typ</label>
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Typ</label>
         <input type="number" placeholder="1"
           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500 transition-colors text-sm"
           [(ngModel)]="newOrtsmarke.ONR_TYP_NR" [ngModelOptions]="{standalone: true}">
       </div>
 
       <button
-        class="w-full bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-amber-600/20 active:scale-[0.98]"
+        class="w-full bg-amber-600 hover:bg-amber-500 disabled:bg-slate-800 disabled:text-slate-600 dark:text-slate-300 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-amber-600/20 active:scale-[0.98]"
         [disabled]="!newOrtsmarke.ORT_NR" (click)="saveOrtsmarke()">
         Ortsmarke speichern
       </button>
@@ -205,7 +205,7 @@
       <!-- Start/End Relation Selection -->
       <div class="grid grid-cols-2 gap-2">
         <div class="space-y-1">
-          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Start-Ort</label>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Start-Ort</label>
           <select
             class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-red-500 transition-colors text-sm"
             [(ngModel)]="newLsa.ORT_NR" [ngModelOptions]="{standalone: true}">
@@ -214,7 +214,7 @@
           </select>
         </div>
         <div class="space-y-1">
-          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Ziel-Ort</label>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Ziel-Ort</label>
           <select
             class="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white focus:outline-none focus:border-red-500 transition-colors text-sm"
             [(ngModel)]="newLsa.SEL_ZIEL" [ngModelOptions]="{standalone: true}">
@@ -226,13 +226,13 @@
 
       <div class="grid grid-cols-2 gap-2">
         <div class="space-y-1">
-          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">LFD Nr</label>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">LFD Nr</label>
           <input type="number"
             class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 transition-colors text-sm"
             [(ngModel)]="newLsa.ZP_LFD_NR" [ngModelOptions]="{standalone: true}" placeholder="1">
         </div>
         <div class="space-y-1">
-          <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Typ</label>
+          <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Typ</label>
           <select
             class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 transition-colors text-sm"
             [(ngModel)]="newLsa.ZP_TYP" [ngModelOptions]="{standalone: true}">
@@ -244,14 +244,14 @@
       </div>
 
       <div class="space-y-1">
-        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Distanz (m)</label>
+        <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Distanz (m)</label>
         <input type="number"
           class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-red-500 transition-colors text-sm"
           [(ngModel)]="newLsa.SEL_ZP_LAENGE" [ngModelOptions]="{standalone: true}">
       </div>
 
       <button
-        class="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-800 disabled:text-slate-600 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-red-600/20 active:scale-[0.98]"
+        class="w-full bg-red-600 hover:bg-red-500 disabled:bg-slate-800 disabled:text-slate-600 dark:text-slate-300 text-white font-semibold py-2.5 rounded-xl transition-all shadow-lg shadow-red-600/20 active:scale-[0.98]"
         [disabled]="!newLsa.ZP_ONR || !newLsa.ORT_NR || !newLsa.SEL_ZIEL" (click)="saveLsa()">
         LSA Speichern
       </button>

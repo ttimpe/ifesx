@@ -1,3 +1,5 @@
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,11 +16,14 @@ import { Tooltip } from 'primeng/tooltip';
 @Component({
     selector: 'app-rec-anr-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule, ButtonModule, InputTextModule, CardModule, InputTextarea, Tooltip],
+    imports: [
+        FontAwesomeModule, CommonModule, FormsModule, RouterModule, ButtonModule, InputTextModule, CardModule, InputTextarea, Tooltip
+    ],
     templateUrl: './rec-anr-detail.component.html',
     styleUrls: ['./rec-anr-detail.component.css']
 })
 export class RecAnrDetailComponent implements OnInit {
+    faVolumeHigh = faVolumeHigh;
     item: RecAnr = new RecAnr();
     isNew = true;
     isUploading = false;
@@ -69,6 +74,21 @@ export class RecAnrDetailComponent implements OnInit {
                 this.isUploading = false;
             },
             error: () => { this.isUploading = false; }
+        });
+    }
+
+    removeFile(): void {
+        if (!this.item.ANR_DATEI) return;
+        this.service.deleteFile(this.item.ANR_DATEI).subscribe({
+            next: () => {
+                this.item.ANR_DATEI = null as any;
+                this.service.update(this.item.ANR_NR, this.item).subscribe();
+            },
+            error: () => {
+                // File may not exist on disk, but still clear the DB reference
+                this.item.ANR_DATEI = null as any;
+                this.service.update(this.item.ANR_NR, this.item).subscribe();
+            }
         });
     }
 }

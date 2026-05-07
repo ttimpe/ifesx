@@ -1,18 +1,18 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
-                <i class="pi pi-table text-xl"></i>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faTableList" class="text-xl"></fa-icon>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrzeiten-Matrix</h2>
-                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Fahrzeiten gefunden</p>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Fahrzeiten-Matrix</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{rows.length}} Fahrzeiten gefunden</p>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <label class="font-semibold text-sm text-slate-700">Bereich:</label>
+            <label class="font-semibold text-sm text-slate-700 dark:text-slate-200">Bereich:</label>
             <p-select [options]="bereiche" [(ngModel)]="selectedBereichNr" (onChange)="onBereichChange()"
                 optionLabel="STR_BEREICH" optionValue="BEREICH_NR" [style]="{'width':'300px'}"
                 placeholder="Bereich wählen" [showClear]="false">
@@ -29,7 +29,7 @@
                 </ng-template>
             </p-select>
 
-            <label class="font-semibold text-sm text-slate-700">FGR:</label>
+            <label class="font-semibold text-sm text-slate-700 dark:text-slate-200">FGR:</label>
             <p-select [options]="fgrs" [(ngModel)]="selectedFgrNr" (onChange)="onFgrChange()" optionLabel="FGR_TEXT"
                 optionValue="FGR_NR" [style]="{'width':'200px'}" placeholder="Alle FGR" [showClear]="true">
                 <ng-template pTemplate="selectedItem" let-selectedOption>
@@ -39,7 +39,7 @@
                 </ng-template>
                 <ng-template let-fgr pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{fgr.STR_FGR}} <small class="text-xs text-slate-500">({{fgr.FGR_TEXT}})</small></div>
+                        <div>{{fgr.STR_FGR}} <small class="text-xs text-slate-500 dark:text-slate-400">({{fgr.FGR_TEXT}})</small></div>
                     </div>
                 </ng-template>
             </p-select>
@@ -50,26 +50,26 @@
     </div>
 
     <!-- Table -->
-    <div class="flex-1 overflow-auto bg-white p-2">
+    <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
         <p-table [value]="rows" [loading]="loading" [paginator]="true" [rows]="25"
             [rowsPerPageOptions]="[25, 50, 100, 500]" styleClass="p-datatable-striped"
             [tableStyle]="{ 'min-width': '50rem' }">
 
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="ORT_NAME" class="font-semibold text-sm text-slate-700">Von Ort <p-sortIcon
+                    <th pSortableColumn="ORT_NAME" class="font-semibold text-sm text-slate-700 dark:text-slate-200">Von Ort <p-sortIcon
                             field="ORT_NAME"></p-sortIcon></th>
-                    <th pSortableColumn="SEL_ZIEL_NAME" class="font-semibold text-sm text-slate-700">Nach Ort
+                    <th pSortableColumn="SEL_ZIEL_NAME" class="font-semibold text-sm text-slate-700 dark:text-slate-200">Nach Ort
                         <p-sortIcon field="SEL_ZIEL_NAME"></p-sortIcon></th>
-                    <th pSortableColumn="SEL_FZT" class="font-semibold text-sm text-slate-700">Fahrzeit (Sek)
+                    <th pSortableColumn="SEL_FZT" class="font-semibold text-sm text-slate-700 dark:text-slate-200">Fahrzeit (Sek)
                         <p-sortIcon field="SEL_FZT"></p-sortIcon></th>
                 </tr>
             </ng-template>
 
             <ng-template pTemplate="body" let-row>
                 <tr>
-                    <td>{{row.ORT_NAME}} <small class="text-slate-500">({{row.ORT_NR}})</small></td>
-                    <td>{{row.SEL_ZIEL_NAME}} <small class="text-slate-500">({{row.SEL_ZIEL}})</small></td>
+                    <td>{{row.ORT_NAME}} <small class="text-slate-500 dark:text-slate-400">({{row.ORT_NR}})</small></td>
+                    <td>{{row.SEL_ZIEL_NAME}} <small class="text-slate-500 dark:text-slate-400">({{row.SEL_ZIEL}})</small></td>
                     <td>
                         <p-inputNumber [(ngModel)]="row.SEL_FZT" (onInput)="updateTime(row, $event.value)" [min]="0"
                             [showButtons]="true" buttonLayout="horizontal" inputId="minmax-buttons" mode="decimal"
@@ -94,14 +94,14 @@
 <p-dialog [(visible)]="showAddDialog" header="Fahrzeit hinzufügen" [modal]="true" [style]="{width: '500px'}">
     <div class="flex flex-col gap-4 py-4">
         <div class="flex flex-col gap-2">
-            <label class="font-bold text-sm text-slate-600">Von Ort</label>
+            <label class="font-bold text-sm text-slate-600 dark:text-slate-300">Von Ort</label>
             <p-select [options]="stops" [(ngModel)]="newFzt.ORT_NR" optionValue="ORT_NR" optionLabel="ORT_NAME"
                 [filter]="true" filterBy="ORT_NAME,ORT_NR" appendTo="body" placeholder="Start auswählen"
                 styleClass="w-full"></p-select>
         </div>
 
         <div class="flex flex-col gap-2">
-            <label class="font-bold text-sm text-slate-600">Nach Ort</label>
+            <label class="font-bold text-sm text-slate-600 dark:text-slate-300">Nach Ort</label>
             <p-select [options]="stops" [(ngModel)]="newFzt.SEL_ZIEL" optionValue="ORT_NR" optionLabel="ORT_NAME"
                 [filter]="true" filterBy="ORT_NAME,ORT_NR" appendTo="body" placeholder="Ziel auswählen"
                 styleClass="w-full"></p-select>
@@ -109,7 +109,7 @@
 
         <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-2">
-                <label class="font-bold text-sm text-slate-600">Fahrzeitgruppe (FGR)</label>
+                <label class="font-bold text-sm text-slate-600 dark:text-slate-300">Fahrzeitgruppe (FGR)</label>
                 <p-select [options]="fgrs" [(ngModel)]="newFzt.FGR_NR" optionValue="FGR_NR" optionLabel="STR_FGR"
                     appendTo="body" placeholder="FGR auswählen" styleClass="w-full">
                     <ng-template let-fgr pTemplate="item">
@@ -118,7 +118,7 @@
                 </p-select>
             </div>
             <div class="flex flex-col gap-2">
-                <label class="font-bold text-sm text-slate-600">Fahrzeit (Sekunden)</label>
+                <label class="font-bold text-sm text-slate-600 dark:text-slate-300">Fahrzeit (Sekunden)</label>
                 <p-inputNumber [(ngModel)]="newFzt.SEL_FZT" styleClass="w-full"></p-inputNumber>
             </div>
         </div>

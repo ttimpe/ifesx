@@ -1,3 +1,5 @@
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +15,7 @@ import { TooltipModule } from 'primeng/tooltip';
     selector: 'app-rec-fgr-detail',
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         FormsModule,
         RouterModule,
@@ -20,10 +23,12 @@ import { TooltipModule } from 'primeng/tooltip';
         InputTextModule,
         InputNumberModule,
         TooltipModule
+    
     ],
     templateUrl: './rec-fgr-detail.component.html'
 })
 export class RecFgrDetailComponent implements OnInit {
+    faClock = faClock;
     model: MengeFgr = {
         BASIS_VERSION: 1,
         FGR_NR: 0,

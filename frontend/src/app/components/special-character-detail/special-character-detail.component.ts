@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFont } from '@fortawesome/free-solid-svg-icons';
 import { SpecialCharacter } from 'src/app/models/special-character.model';
 import { SpecialCharacterService } from '../../services/special-character.service';
 
@@ -20,6 +22,7 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./special-character-detail.component.css'],
   standalone: true,
   imports: [
+    FontAwesomeModule,
     CommonModule,
     FormsModule,
 
@@ -29,9 +32,11 @@ import { MessageService } from 'primeng/api';
     InputNumber, // Standalone
     CardModule, // Module
     ToastModule
+
   ]
 })
 export class SpecialCharacterDetailComponent {
+  faFont = faFont;
   specialCharacter: SpecialCharacter = new SpecialCharacter()
 
   constructor(private route: ActivatedRoute,

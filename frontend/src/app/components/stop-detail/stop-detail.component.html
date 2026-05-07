@@ -1,19 +1,19 @@
 <!-- stop-detail.component.html -->
 
 <div *ngIf="recOrt" class="container mx-auto p-4 max-w-7xl animate-fade-in">
-  <div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-slate-100 text-slate-600 rounded-lg flex items-center justify-center">
-          <i class="pi pi-map-marker text-xl" [class.text-blue-600]="isGroup"></i>
-        </div>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faCircleH" class="text-xl"></fa-icon>
+            </div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+          <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
             {{ isGroup ? 'Ortsgruppe bearbeiten (Parent)' : (recOrt.ORT_NR ? 'Haltestelle bearbeiten' : 'Neue
             Haltestelle') }}
           </h2>
-          <p *ngIf="recOrt.ORT_NAME" class="text-xs text-slate-500 font-medium">
+          <p *ngIf="recOrt.ORT_NAME" class="text-xs text-slate-500 dark:text-slate-400 font-medium">
             {{ isGroup ? 'Gruppen-ID: ' + recOrt.ORT_NR : recOrt.ORT_NAME }}
           </p>
         </div>
@@ -33,19 +33,19 @@
         <div class="lg:col-span-2 flex flex-col gap-6">
 
           <!-- Basic Information Card -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                <i class="pi pi-id-card text-blue-500"></i> Stammdaten
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <i class="pi pi-id-card text-blue-500 dark:text-blue-400 dark:text-blue-400"></i> Stammdaten
               </h3>
-              <span class="text-xs font-mono bg-slate-200 text-slate-600 px-2 py-1 rounded">
+              <span class="text-xs font-mono bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-2 py-1 rounded">
                 {{ isGroup ? 'GROUP' : 'REC_ORT' }}
               </span>
             </div>
             <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                   {{ isGroup ? 'Interne Ref-ID' : 'Nummer (ORT_NR)' }}
                 </label>
                 <p-inputNumber [(ngModel)]="recOrt.ORT_NR" [useGrouping]="false" styleClass="w-full" class="w-full"
@@ -53,7 +53,7 @@
               </div>
 
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">
                   {{ isGroup ? 'Gruppen-Badge (LangNr)' : 'Typ (ONR_TYP_NR)' }}
                 </label>
                 <div *ngIf="!isGroup">
@@ -67,25 +67,25 @@
               </div>
 
               <div class="md:col-span-2 flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">Bezeichnung</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Bezeichnung</label>
                 <input pInputText [(ngModel)]="recOrt.ORT_NAME" class="w-full font-bold text-lg"
                   placeholder="Haltestellen Name" />
               </div>
 
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">Kürzel</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Kürzel</label>
                 <input pInputText [(ngModel)]="recOrt.ORT_REF_ORT_KUERZEL" class="w-full" />
               </div>
 
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">Übergeordnete Gruppe (ORT_REF_ORT)</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Übergeordnete Gruppe (ORT_REF_ORT)</label>
                 <p-inputNumber [(ngModel)]="recOrt.ORT_REF_ORT" styleClass="w-full" class="w-full" [useGrouping]="false"
                   placeholder="z.B. 1000"></p-inputNumber>
-                <small class="text-slate-500">Leer lassen für keine Gruppenzuordnung</small>
+                <small class="text-slate-500 dark:text-slate-400">Leer lassen für keine Gruppenzuordnung</small>
               </div>
 
               <div class="flex flex-col gap-2" *ngIf="!isGroup">
-                <label class="text-xs font-semibold text-slate-500 uppercase">Wabennummer (Tarifzone)</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Wabennummer (Tarifzone)</label>
                 <p-inputNumber [(ngModel)]="recOrt.ZONE_WABE_NR" styleClass="w-full" class="w-full"
                   [useGrouping]="false"></p-inputNumber>
               </div>
@@ -93,22 +93,22 @@
           </div>
 
           <!-- Coordinates & Map -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <i class="pi pi-map text-red-500"></i> Position
               </h3>
             </div>
-            <div class="p-4 grid grid-cols-2 gap-4 bg-slate-50 border-b border-slate-100"
+            <div class="p-4 grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-700"
               *ngIf="!isGroup || (recOrt && recOrt.ORT_POS_LAENGE)">
               <div class="flex flex-col gap-1">
-                <label class="text-xs text-slate-500">Latitude</label>
+                <label class="text-xs text-slate-500 dark:text-slate-400">Latitude</label>
                 <p-inputNumber [(ngModel)]="latDecimal" [minFractionDigits]="6" [maxFractionDigits]="8" mode="decimal"
                   (onInput)="onCoordinateChange()" styleClass="w-full" class="w-full"
                   [disabled]="isGroup"></p-inputNumber>
               </div>
               <div class="flex flex-col gap-1">
-                <label class="text-xs text-slate-500">Longitude</label>
+                <label class="text-xs text-slate-500 dark:text-slate-400">Longitude</label>
                 <p-inputNumber [(ngModel)]="lonDecimal" [minFractionDigits]="6" [maxFractionDigits]="8" mode="decimal"
                   (onInput)="onCoordinateChange()" styleClass="w-full" class="w-full"
                   [disabled]="isGroup"></p-inputNumber>
@@ -121,14 +121,14 @@
           </div>
 
           <!-- HAST/HST NR (Hide for Group) -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngIf="!isGroup">
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden" *ngIf="!isGroup">
             <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">HAST_NR (Lokal)</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">HAST_NR (Lokal)</label>
                 <p-inputNumber [(ngModel)]="recOrt.HAST_NR_LOKAL" styleClass="w-full" class="w-full"></p-inputNumber>
               </div>
               <div class="flex flex-col gap-2">
-                <label class="text-xs font-semibold text-slate-500 uppercase">HST_NR (Int)</label>
+                <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">HST_NR (Int)</label>
                 <input pInputText [(ngModel)]="recOrt.HST_NR_INTERNATIONAL" class="w-full" />
               </div>
             </div>
@@ -140,19 +140,19 @@
         <div class="flex flex-col gap-6">
 
           <!-- GROUP CHILDREN (Only for Group) -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col flex-1"
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col flex-1"
             *ngIf="isGroup">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <i class="pi pi-sitemap text-amber-600"></i> Enthaltene Haltestellen
               </h3>
             </div>
             <div class="flex-1 overflow-auto">
               <ul class="divide-y divide-slate-100">
                 <li *ngFor="let child of groupChildren"
-                  class="p-3 hover:bg-slate-50 flex items-center justify-between group">
+                  class="p-3 hover:bg-slate-50 dark:bg-slate-900 flex items-center justify-between group">
                   <div class="flex-1 cursor-pointer" [routerLink]="['/stops', child.ORT_NR]">
-                    <p class="font-semibold text-sm text-slate-700">{{ child.ORT_NAME }}</p>
+                    <p class="font-semibold text-sm text-slate-700 dark:text-slate-200">{{ child.ORT_NAME }}</p>
                     <div class="flex gap-2 text-xs text-slate-400">
                       <span>Nr: {{ child.ORT_NR }}</span>
                       <span>LangNr: {{ child.ORT_REF_ORT_LangNr }}</span>
@@ -169,11 +169,11 @@
 
 
           <!-- Linked Haltepunkte (REC_HP) (Only if Not Group) -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col flex-1"
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col flex-1"
             *ngIf="!isGroup">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 flex items-center gap-2">
-                <i class="pi pi-map-marker text-green-600"></i> Haltepunkte
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <fa-icon [icon]="faCircleH" class=" text-green-600"></fa-icon> Haltepunkte
               </h3>
               <p-button icon="pi pi-plus" [text]="true" size="small" (onClick)="addHp()"
                 pTooltip="HP hinzufügen"></p-button>
@@ -192,11 +192,11 @@
                   <tr>
                     <td class="p-1">
                       <input pInputText type="number" [(ngModel)]="hp.HALTEPUNKT_NR"
-                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white focus:ring-1" />
+                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white dark:bg-slate-800 focus:ring-1" />
                     </td>
                     <td class="p-1">
                       <input pInputText type="text" [(ngModel)]="hp.DHID"
-                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white focus:ring-1"
+                        class="w-full text-sm p-1 border-none bg-transparent focus:bg-white dark:bg-slate-800 focus:ring-1"
                         placeholder="de:..." />
                     </td>
                     <td class="p-1 text-right">
@@ -219,10 +219,10 @@
           </div>
 
           <!-- Sub Orts (Platforms/Tracks) (Only if Not Group) -->
-          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col"
+          <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col"
             *ngIf="!isGroup">
-            <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-              <h3 class="font-bold text-slate-800 flex items-center gap-2">
+            <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+              <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                 <i class="pi pi-sitemap text-amber-600"></i> Unterorte
               </h3>
               <p-button icon="pi pi-plus" [text]="true" size="small" (onClick)="addSubOrt()"
@@ -232,9 +232,9 @@
             <div class="flex-1 overflow-auto" *ngIf="recOrt.subOrts && recOrt.subOrts.length > 0">
               <ul class="divide-y divide-slate-100">
                 <li *ngFor="let sub of recOrt.subOrts"
-                  class="p-3 hover:bg-slate-50 flex items-center justify-between group">
+                  class="p-3 hover:bg-slate-50 dark:bg-slate-900 flex items-center justify-between group">
                   <div class="flex-1 cursor-pointer" [routerLink]="['/stops', sub.ORT_NR]">
-                    <p class="font-semibold text-sm text-slate-700">{{ sub.ORT_NAME }}</p>
+                    <p class="font-semibold text-sm text-slate-700 dark:text-slate-200">{{ sub.ORT_NAME }}</p>
                     <p class="text-xs text-slate-400">Nr: {{ sub.ORT_NR }}</p>
                   </div>
                   <div class="flex gap-1">

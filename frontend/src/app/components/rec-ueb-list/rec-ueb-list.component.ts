@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faEdit, faTrash, faRoute } from '@fortawesome/free-solid-svg-icons';
 import { RecUeb } from '../../models/rec-ueb.model';
 import { RecUebService } from '../../services/rec-ueb.service';
 
@@ -18,6 +18,7 @@ import { InputText } from 'primeng/inputtext';
     styleUrls: ['./rec-ueb-list.component.css']
 })
 export class RecUebListComponent implements OnInit {
+    faRoute = faRoute;
     rows: RecUeb[] = [];
     faPlus = faPlus;
 

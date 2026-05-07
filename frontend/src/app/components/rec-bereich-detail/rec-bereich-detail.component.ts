@@ -1,3 +1,5 @@
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +15,7 @@ import { CardModule } from 'primeng/card';
   selector: 'app-rec-bereich-detail',
   standalone: true,
   imports: [
+        FontAwesomeModule,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -20,11 +23,13 @@ import { CardModule } from 'primeng/card';
     InputTextModule,
     InputNumberModule,
     CardModule
-  ],
+  
+    ],
   templateUrl: './rec-bereich-detail.component.html',
   styleUrl: './rec-bereich-detail.component.css'
 })
 export class RecBereichDetailComponent implements OnInit {
+    faLayerGroup = faLayerGroup;
   model: MengeBereich = {
     BASIS_VERSION: 1,
     BEREICH_NR: 0,

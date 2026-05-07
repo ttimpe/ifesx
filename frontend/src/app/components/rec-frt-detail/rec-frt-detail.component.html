@@ -1,15 +1,15 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
 
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <a routerLink="/rec-frt">
-                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
-            </a>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faBus" class="text-xl"></fa-icon>
+            </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">{{ isNew ? 'Neue Fahrt' : 'Fahrt bearbeiten'
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">{{ isNew ? 'Neue Fahrt' : 'Fahrt bearbeiten'
                     }}</h2>
-                <p class="text-xs text-slate-500 font-medium" *ngIf="!isNew">FID: {{item.FRT_FID}}</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" *ngIf="!isNew">FID: {{item.FRT_FID}}</p>
             </div>
         </div>
         <div class="flex gap-2">
@@ -17,21 +17,21 @@
         </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+    <div class="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900 p-4">
         <div class="max-w-4xl mx-auto">
-            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+            <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- FRT_FID -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">FRT_FID</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">FRT_FID</label>
                         <p-inputNumber [(ngModel)]="item.FRT_FID" [disabled]="!isNew" [useGrouping]="false"
                             styleClass="w-full" class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Start Time -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Abfahrt (HH:MM)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Abfahrt (HH:MM)</label>
                         <div class="flex gap-1 items-center">
                             <input pInputText type="number" [(ngModel)]="startHours" min="0" max="30" placeholder="HH"
                                 class="w-16 !text-center" (change)="updateTime()">
@@ -43,7 +43,7 @@
 
                     <!-- Line -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Linie</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Linie</label>
                         <p-dropdown [options]="lines" [(ngModel)]="item.LI_NR" optionLabel="label" optionValue="value"
                             (onChange)="onLineChange()" placeholder="Linie wählen" styleClass="w-full"
                             appendTo="body"></p-dropdown>
@@ -51,7 +51,7 @@
 
                     <!-- Variant -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Variante</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Variante</label>
                         <p-dropdown [options]="variants" [(ngModel)]="item.STR_LI_VAR" optionLabel="label"
                             optionValue="value" [disabled]="!item.LI_NR" placeholder="Variante wählen"
                             styleClass="w-full" appendTo="body"></p-dropdown>
@@ -59,7 +59,7 @@
 
                     <!-- Fahrtart -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Fahrtart</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Fahrtart</label>
                         <p-dropdown [options]="fahrtarten" [(ngModel)]="item.FAHRTART_NR" optionLabel="label"
                             optionValue="value" placeholder="Fahrtart wählen" styleClass="w-full"
                             appendTo="body"></p-dropdown>
@@ -67,28 +67,28 @@
 
                     <!-- Direction -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Richtung</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Richtung</label>
                         <p-inputNumber [(ngModel)]="item.FGR_NR" [min]="1" [max]="2" styleClass="w-full"
                             class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Umlauf UID -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Umlauf (UM_UID)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Umlauf (UM_UID)</label>
                         <p-inputNumber [(ngModel)]="item.UM_UID" [useGrouping]="false" styleClass="w-full"
                             class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Kurs -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Kurs</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Kurs</label>
                         <p-inputNumber [(ngModel)]="item.LI_KU_NR" [useGrouping]="false" styleClass="w-full"
                             class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Bereich (FZ-Gruppe) -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">FZ-Gruppe (Bereich)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">FZ-Gruppe (Bereich)</label>
                         <p-inputNumber [(ngModel)]="item.BEREICH_NR" [min]="1" styleClass="w-full"
                             class="w-full block"></p-inputNumber>
                     </div>

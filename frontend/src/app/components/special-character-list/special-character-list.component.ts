@@ -3,6 +3,8 @@ import { SpecialCharacter } from './../../models/special-character.model';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faFont } from '@fortawesome/free-solid-svg-icons';
 import { SpecialCharacterService } from 'src/app/services/special-character.service';
 
 // PrimeNG
@@ -20,6 +22,7 @@ import { CalendarService } from '../../services/calendar.service';
   styleUrls: ['./special-character-list.component.css'],
   standalone: true,
   imports: [
+    FontAwesomeModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -27,9 +30,11 @@ import { CalendarService } from '../../services/calendar.service';
     Button,
     InputText,
     Tooltip
+
   ]
 })
 export class SpecialCharacterListComponent implements OnInit {
+  faFont = faFont;
   specialCharacters: SpecialCharacter[] = [];
   selectedVersion: number | null = null;
   loading: boolean = false;

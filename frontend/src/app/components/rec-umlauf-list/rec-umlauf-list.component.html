@@ -1,13 +1,15 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div
+    class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-cyan-100 text-cyan-600 rounded-lg flex items-center justify-center">
-                <i class="pi pi-replay text-xl"></i>
+    <div
+        class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faBus" class="text-xl"></fa-icon>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Umläufe</h2>
-                <p class="text-xs text-slate-500 font-medium">{{rows.length}} Einträge gefunden</p>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Umläufe</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{rows.length}} Einträge gefunden</p>
             </div>
         </div>
 
@@ -16,7 +18,7 @@
                 <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
                 <input type="text" pInputText placeholder="Suchen..."
                     (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+                    class="!pl-10 !pr-4 !py-2 !border !border-slate-300 dark:border-slate-600 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white dark:!bg-slate-800 transition-all shadow-sm" />
             </div>
             <p-button label="Neuer Umlauf" icon="pi pi-plus" [routerLink]="['/rec-umlauf/new']" severity="success"
                 size="small"></p-button>
@@ -24,27 +26,29 @@
     </div>
 
     <!-- Table -->
-    <div class="flex-1 overflow-auto bg-white p-2">
+    <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
         <p-table #dt [value]="rows" [rows]="50" [paginator]="true"
             [globalFilterFields]="['UM_UID', 'TAGESART_NR', 'FZG_TYP_NR']" styleClass="p-datatable-striped"
             [rowHover]="true" [loading]="loading">
             <ng-template pTemplate="header">
                 <tr>
-                    <th pSortableColumn="UM_UID" class="font-semibold text-sm text-slate-700">Umlauf UID <p-sortIcon
-                            field="UM_UID"></p-sortIcon></th>
-                    <th pSortableColumn="TAGESART_NR" class="font-semibold text-sm text-slate-700">Tagesart <p-sortIcon
-                            field="TAGESART_NR"></p-sortIcon></th>
-                    <th pSortableColumn="FZG_TYP_NR" class="font-semibold text-sm text-slate-700">Fahrzeugtyp
+                    <th pSortableColumn="UM_UID" class="font-semibold text-sm text-slate-700 dark:text-slate-200">Umlauf
+                        UID <p-sortIcon field="UM_UID"></p-sortIcon></th>
+                    <th pSortableColumn="TAGESART_NR" class="font-semibold text-sm text-slate-700 dark:text-slate-200">
+                        Tagesart <p-sortIcon field="TAGESART_NR"></p-sortIcon></th>
+                    <th pSortableColumn="FZG_TYP_NR" class="font-semibold text-sm text-slate-700 dark:text-slate-200">
+                        Fahrzeugtyp
                         <p-sortIcon field="FZG_TYP_NR"></p-sortIcon>
                     </th>
-                    <th class="font-semibold text-sm text-slate-700">Ausfahrt um</th>
-                    <th class="font-semibold text-sm text-slate-700">Ausfahrt als</th>
-                    <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200">Ausfahrt um</th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200">Ausfahrt als</th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 15%">Aktionen
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-row>
                 <tr>
-                    <td class="font-mono font-bold text-blue-600">
+                    <td class="font-mono font-bold text-blue-600 dark:text-blue-400 dark:text-blue-400">
                         <a [routerLink]="['/rec-umlauf', row.UM_UID]" [queryParams]="{tagesart: row.TAGESART_NR}"
                             class="hover:underline">
                             {{ row.UM_UID }}
@@ -58,7 +62,7 @@
                     <td>
                         <div *ngIf="row.ausfahrt" class="flex flex-col text-xs">
                             <span class="font-bold">L {{ row.ausfahrt.linie }}</span>
-                            <span class="text-slate-500">K {{ row.ausfahrt.kurs || '-' }}</span>
+                            <span class="text-slate-500 dark:text-slate-400">K {{ row.ausfahrt.kurs || '-' }}</span>
                         </div>
                         <span *ngIf="!row.ausfahrt" class="text-slate-400">-</span>
                     </td>

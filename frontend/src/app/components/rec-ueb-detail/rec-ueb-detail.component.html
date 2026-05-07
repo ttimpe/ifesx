@@ -1,13 +1,13 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
 
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <a routerLink="/rec-ueb">
-                <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
-            </a>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faRoute" class="text-xl"></fa-icon>
+            </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">{{ isNew ? 'Neuer Übergang' : 'Übergang
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">{{ isNew ? 'Neuer Übergang' : 'Übergang
                     bearbeiten' }}</h2>
             </div>
         </div>
@@ -16,30 +16,30 @@
         </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+    <div class="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900 p-4">
         <div class="max-w-4xl mx-auto flex flex-col gap-6">
 
             <!-- Meta Card -->
-            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+            <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <!-- Basis Version -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Basis Version</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Basis Version</label>
                         <p-inputNumber [(ngModel)]="item.BASIS_VERSION" [disabled]="!isNew" [useGrouping]="false"
                             styleClass="w-full" class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Bereich Nr -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Bereich Nr</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Bereich Nr</label>
                         <p-inputNumber [(ngModel)]="item.BEREICH_NR" [disabled]="!isNew" [useGrouping]="false"
                             styleClass="w-full" class="w-full block"></p-inputNumber>
                     </div>
 
                     <!-- Von Ort -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Von Ort (Nr)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Von Ort (Nr)</label>
                         <p-dropdown [options]="stops" [(ngModel)]="item.ORT_NR" optionLabel="ORT_NAME"
                             optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR" [virtualScroll]="true"
                             [itemSize]="30" placeholder="Wähle Ort" styleClass="w-full"
@@ -48,7 +48,7 @@
 
                     <!-- Nach Ort -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Nach Ort (Nr)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Nach Ort (Nr)</label>
                         <p-dropdown [options]="stops" [(ngModel)]="item.UEB_ZIEL" optionLabel="ORT_NAME"
                             optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR" [virtualScroll]="true"
                             [itemSize]="30" placeholder="Wähle Zielort" styleClass="w-full"
@@ -57,7 +57,7 @@
 
                     <!-- Length -->
                     <div class="flex flex-col gap-2 md:col-span-2">
-                        <label class="text-sm font-medium text-slate-700">Länge (Meter)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Länge (Meter)</label>
                         <p-inputNumber [(ngModel)]="item.UEB_LAENGE" suffix=" m" styleClass="w-full"
                             class="w-full block"></p-inputNumber>
                     </div>
@@ -70,27 +70,27 @@
             </p-card>
 
             <!-- Fahrzeiten (UEB_FZT) Section -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-4">
-                <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-                    <h3 class="text-lg font-bold text-slate-800">Fahrzeiten (UEB_FAHRZEIT)</h3>
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden mt-4">
+                <div class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Fahrzeiten (UEB_FAHRZEIT)</h3>
                 </div>
 
-                <div class="p-6 border-b border-slate-100 bg-slate-50/20">
-                    <h4 class="text-sm font-bold text-slate-700 mb-4">Neue Fahrzeit hinzufügen</h4>
+                <div class="p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/20">
+                    <h4 class="text-sm font-bold text-slate-700 dark:text-slate-200 mb-4">Neue Fahrzeit hinzufügen</h4>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                         <div class="flex flex-col gap-2">
-                            <label class="text-xs font-medium text-slate-500 uppercase">Tagesart</label>
+                            <label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Tagesart</label>
                             <p-dropdown [options]="tagesarten" [(ngModel)]="newFzt.TAGESART_NR"
                                 optionLabel="TAGESART_TEXT" optionValue="TAGESART_NR" placeholder="Tagesart"
                                 styleClass="w-full" appendTo="body"></p-dropdown>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-xs font-medium text-slate-500 uppercase">Fahrzeitgruppe (FGR)</label>
+                            <label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Fahrzeitgruppe (FGR)</label>
                             <p-inputNumber [(ngModel)]="newFzt.FGR_NR" [useGrouping]="false" styleClass="w-full"
                                 class="w-full block"></p-inputNumber>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-xs font-medium text-slate-500 uppercase">Zeit (Sekunden)</label>
+                            <label class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase">Zeit (Sekunden)</label>
                             <p-inputNumber [(ngModel)]="newFzt.UEB_FAHRZEIT" suffix=" s" styleClass="w-full"
                                 class="w-full block"></p-inputNumber>
                         </div>

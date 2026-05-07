@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faBus } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RecUmlauf } from '../../models/rec-umlauf.model';
@@ -30,12 +32,15 @@ import { CheckboxModule } from 'primeng/checkbox';
 @Component({
     selector: 'app-rec-umlauf-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule,
-        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule, DialogModule, CheckboxModule],
+    imports: [
+        FontAwesomeModule, CommonModule, FormsModule, RouterModule,
+        TableModule, ButtonModule, InputTextModule, DropdownModule, CardModule, InputNumberModule, DialogModule, CheckboxModule
+    ],
     templateUrl: './rec-umlauf-detail.component.html',
     styleUrls: ['./rec-umlauf-detail.component.css']
 })
 export class RecUmlaufDetailComponent implements OnInit {
+    faBus = faBus;
     item: RecUmlauf = new RecUmlauf();
     isNew = true;
     trips: RecFrt[] = [];

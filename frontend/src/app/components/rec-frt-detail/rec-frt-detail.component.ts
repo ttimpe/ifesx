@@ -1,3 +1,5 @@
+import { faBus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -19,6 +21,7 @@ import { InputText } from 'primeng/inputtext';
     selector: 'app-rec-frt-detail',
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         FormsModule,
         RouterModule,
@@ -27,11 +30,13 @@ import { InputText } from 'primeng/inputtext';
         InputNumberModule,
         DropdownModule,
         InputText
+    
     ],
     templateUrl: './rec-frt-detail.component.html',
     styleUrls: ['./rec-frt-detail.component.css']
 })
 export class RecFrtDetailComponent implements OnInit {
+    faBus = faBus;
     item: RecFrt = new RecFrt();
     isNew: boolean = true;
     selectedBasisVersion: number = 1;

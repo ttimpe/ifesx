@@ -1,16 +1,16 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden" *ngIf="variant">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden" *ngIf="variant">
 
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50">
         <div class="flex items-center gap-4">
             <a [routerLink]="['/lines', lineId]">
                 <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
             </a>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
                     {{ isNew ? 'Neuen Linienverlauf erstellen' : 'Linienverlauf: ' + variant.STR_LI_VAR }}
                 </h2>
-                <p class="text-xs text-slate-500 font-medium" *ngIf="line">Linie: {{ line.STR_LID }} - {{ line.LIN_NAME
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium" *ngIf="line">Linie: {{ line.STR_LID }} - {{ line.LIN_NAME
                     }}</p>
             </div>
         </div>
@@ -21,33 +21,33 @@
         </div>
     </div>
 
-    <div class="flex-1 overflow-auto bg-slate-50 p-4">
+    <div class="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900 p-4">
         <div class="max-w-5xl mx-auto flex flex-col gap-6">
 
             <!-- Header Data -->
-            <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+            <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Linienverlauf Code (STR_LI_VAR)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Linienverlauf Code (STR_LI_VAR)</label>
                         <input pInputText [(ngModel)]="variant.STR_LI_VAR" placeholder="z.B. V1, STD" class="w-full" />
                         <small class="text-slate-400">Eindeutige Kennung (max 6 Zeichen)</small>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Bezeichnung (LIDNAME)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Bezeichnung (LIDNAME)</label>
                         <input pInputText [(ngModel)]="variant.LIDNAME" class="w-full" />
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Routennummer (RBL)</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Routennummer (RBL)</label>
                         <p-inputNumber [(ngModel)]="variant.ROUTEN_NR" [useGrouping]="false" placeholder="z.B. 101"
                             styleClass="w-full" class="w-full block"></p-inputNumber>
                         <small class="text-slate-400">Für Bordrechner</small>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-slate-700">Richtung</label>
+                        <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Richtung</label>
                         <p-dropdown [options]="directionOptions" [(ngModel)]="variant.LI_RI_NR" optionLabel="label"
                             optionValue="value" placeholder="Richtung wählen" styleClass="w-full"
                             appendTo="body"></p-dropdown>
@@ -58,13 +58,13 @@
             <!-- Stops List -->
             <div class="flex flex-col gap-4">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-slate-800">Verlauf (Haltestellen)</h3>
+                    <h3 class="text-lg font-bold text-slate-800 dark:text-slate-100">Verlauf (Haltestellen)</h3>
                     <p-button label="Halt hinzufügen" icon="pi pi-plus" severity="success" size="small"
                         [outlined]="true" (onClick)="openAddStop()" [disabled]="!variant.STR_LI_VAR"></p-button>
                 </div>
 
                 <p-table [value]="stops" [rowHover]="true"
-                    styleClass="p-datatable-striped shadow-sm border border-slate-200 rounded-xl">
+                    styleClass="p-datatable-striped shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl">
                     <ng-template pTemplate="header">
                         <tr>
                             <th style="width: 5%">Lfd Nr</th>
@@ -81,11 +81,11 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-stop let-i="rowIndex">
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="font-mono text-slate-500">{{ stop.LI_LFD_NR }}</td>
+                        <tr class="hover:bg-slate-50 dark:bg-slate-900 transition-colors">
+                            <td class="font-mono text-slate-500 dark:text-slate-400">{{ stop.LI_LFD_NR }}</td>
                             <td>
-                                <div class="font-medium text-slate-800">{{ stop.ort?.ORT_NAME || stop.ORT_NR }}</div>
-                                <div class="text-xs text-slate-500" *ngIf="stop.ort?.ORT_REF_ORT_NAME">
+                                <div class="font-medium text-slate-800 dark:text-slate-100">{{ stop.ort?.ORT_NAME || stop.ORT_NR }}</div>
+                                <div class="text-xs text-slate-500 dark:text-slate-400" *ngIf="stop.ort?.ORT_REF_ORT_NAME">
                                     {{ stop.ort.ORT_REF_ORT_NAME }}
                                 </div>
                             </td>
@@ -144,7 +144,7 @@
                                     <p-button icon="pi pi-arrow-down" [text]="true" severity="secondary" size="small"
                                         [disabled]="i === stops.length - 1"
                                         (onClick)="moveStop(stop, 'down')"></p-button>
-                                    <div class="w-px bg-slate-200 mx-1"></div>
+                                    <div class="w-px bg-slate-200 dark:bg-slate-700 mx-1"></div>
                                     <p-button icon="pi pi-trash" [text]="true" severity="danger" size="small"
                                         (onClick)="removeStop(stop)"></p-button>
                                 </div>
@@ -177,7 +177,7 @@
                 <div class="flex items-center gap-2">
                     <p-checkbox [(ngModel)]="showAllStops" [binary]="true" inputId="showAllParams"
                         (onChange)="updateStopFilter()"></p-checkbox>
-                    <label for="showAllParams" class="text-xs text-slate-500 cursor-pointer">Alle Orte anzeigen (inkl.
+                    <label for="showAllParams" class="text-xs text-slate-500 dark:text-slate-400 cursor-pointer">Alle Orte anzeigen (inkl.
                         Betriebshof)</label>
                 </div>
             </div>
@@ -187,7 +187,7 @@
                 <ng-template let-ort pTemplate="item">
                     <div class="flex flex-col">
                         <span class="font-medium">{{ ort.ORT_NAME }}</span>
-                        <span class="text-xs text-slate-500" *ngIf="ort.ORT_REF_ORT_NAME">Gleis von: {{
+                        <span class="text-xs text-slate-500 dark:text-slate-400" *ngIf="ort.ORT_REF_ORT_NAME">Gleis von: {{
                             ort.ORT_REF_ORT_NAME }}</span>
                     </div>
                 </ng-template>

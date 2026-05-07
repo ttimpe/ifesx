@@ -40,4 +40,8 @@ export class RecAnrService {
         formData.append('file', file);
         return this.http.post<{ ANR_DATEI: string }>(`${this.apiUrl}/upload`, formData);
     }
+
+    deleteFile(filename: string): Observable<{ message: string }> {
+        return this.http.delete<{ message: string }>(`${this.apiUrl}/files/${encodeURIComponent(filename)}`);
+    }
 }

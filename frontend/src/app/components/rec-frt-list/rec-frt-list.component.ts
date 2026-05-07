@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { faBus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RecFrt } from '../../models/rec-frt.model';
 import { RecFrtService } from '../../services/rec-frt.service';
 import { CalendarService } from '../../services/calendar.service';
@@ -25,13 +27,15 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
         Button,
         InputText,
         Tooltip,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        FontAwesomeModule
     ],
     providers: [ConfirmationService],
     templateUrl: './rec-frt-list.component.html',
     styleUrls: ['./rec-frt-list.component.css']
 })
 export class RecFrtListComponent implements OnInit {
+    faBus = faBus;
     trips: RecFrt[] = [];
     selectedBasisVersion: number | undefined;
     loading: boolean = false;

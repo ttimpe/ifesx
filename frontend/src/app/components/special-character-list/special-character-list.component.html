@@ -1,13 +1,13 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
   <!-- Header Toolbar -->
-  <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-    <div class="flex items-center gap-4">
-      <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">
-        <i class="pi pi-font text-xl"></i>
-      </div>
+  <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faFont" class="text-xl"></fa-icon>
+            </div>
       <div>
-        <h2 class="text-lg font-bold text-slate-800 tracking-tight">Sonderzeichen</h2>
-        <p class="text-xs text-slate-500 font-medium">{{specialCharacters.length}} Einträge gefunden</p>
+        <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Sonderzeichen</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{specialCharacters.length}} Einträge gefunden</p>
       </div>
     </div>
 
@@ -16,7 +16,7 @@
         <i class="pi pi-search absolute left-3 text-slate-400 z-10 pointer-events-none"></i>
         <input type="text" pInputText placeholder="Suchen..."
           (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-          class="!pl-10 !pr-4 !py-2 !border !border-slate-300 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white transition-all shadow-sm" />
+          class="!pl-10 !pr-4 !py-2 !border !border-slate-300 dark:border-slate-600 !rounded-lg !text-sm !w-64 focus:!border-indigo-500 focus:!ring-2 focus:!ring-indigo-100 !bg-white dark:!bg-slate-800 transition-all shadow-sm" />
       </div>
       <p-button label="Neues Zeichen" icon="pi pi-plus" [routerLink]="['/specialCharacters/add']" severity="success"
         size="small"></p-button>
@@ -24,22 +24,22 @@
   </div>
 
   <!-- Table -->
-  <div class="flex-1 overflow-auto bg-white p-2">
+  <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
     <p-table #dt [value]="specialCharacters" [rows]="50" [paginator]="true"
       [globalFilterFields]="['number', 'stringValue']" styleClass="p-datatable-striped" [rowHover]="true"
       [loading]="loading">
       <ng-template pTemplate="header">
         <tr>
-          <th pSortableColumn="number" class="font-semibold text-sm text-slate-700" style="width: 20%">Nummer
+          <th pSortableColumn="number" class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 20%">Nummer
             <p-sortIcon field="number"></p-sortIcon></th>
-          <th pSortableColumn="stringValue" class="font-semibold text-sm text-slate-700">Text <p-sortIcon
+          <th pSortableColumn="stringValue" class="font-semibold text-sm text-slate-700 dark:text-slate-200">Text <p-sortIcon
               field="stringValue"></p-sortIcon></th>
-          <th class="font-semibold text-sm text-slate-700" style="width: 15%">Aktionen</th>
+          <th class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 15%">Aktionen</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-row>
         <tr>
-          <td class="font-mono font-bold text-blue-600">
+          <td class="font-mono font-bold text-blue-600 dark:text-blue-400 dark:text-blue-400">
             <a [routerLink]="['/specialCharacters', row.number]" class="hover:underline">
               {{ row.number }}
             </a>

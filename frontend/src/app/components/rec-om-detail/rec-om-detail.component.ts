@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
@@ -43,6 +45,7 @@ L.Marker.prototype.options.icon = iconDefault;
     standalone: true,
     providers: [MessageService],
     imports: [
+        FontAwesomeModule,
         CommonModule,
         FormsModule,
         RouterModule,
@@ -52,9 +55,11 @@ L.Marker.prototype.options.icon = iconDefault;
         InputText,
         ToastModule,
         InputNumberModule // Re-added as it was removed by the instruction but is a module and likely still needed
+
     ]
 })
 export class RecOmDetailComponent implements OnInit, AfterViewInit {
+    faMapMarkerAlt = faMapMarkerAlt;
     om: RecOm = new RecOm();
     isNew = true;
     private map?: L.Map;

@@ -7,9 +7,11 @@ import {
   faCircleH, faTableList, faRoute, faLocationCrosshairs,
   faVolumeHigh, faMap, faCalendar, faMapMarkerAlt,
   faExchangeAlt, faWalking, faLayerGroup, faBus, faQuestionCircle,
-  faClock, faBuilding, faPuzzlePiece, faUserClock
+  faClock, faBuilding, faPuzzlePiece, faUserClock,
+  faSun, faMoon
 } from '@fortawesome/free-solid-svg-icons';
 import { CalendarService } from '../../../services/calendar.service';
+import { ThemeService } from '../../../services/theme.service';
 import { BasisVersion } from '../../../models/basis-version.model';
 import { BasisVersionGueltigkeit } from '../../../models/basis-version-gueltigkeit.model';
 import { Select } from 'primeng/select';
@@ -55,6 +57,8 @@ export class SidebarComponent implements OnInit {
   faBuilding = faBuilding;
   faPuzzlePiece = faPuzzlePiece;
   faUserClock = faUserClock;
+  faSun = faSun;
+  faMoon = faMoon;
 
   selectedDVID: string | null = localStorage.getItem('selectedDV');
   versionen: BasisVersion[] = [];
@@ -64,7 +68,8 @@ export class SidebarComponent implements OnInit {
   constructor(
     private calendarService: CalendarService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public themeService: ThemeService
   ) { }
 
   ngOnInit(): void {

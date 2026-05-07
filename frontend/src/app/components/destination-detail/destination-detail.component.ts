@@ -1,8 +1,10 @@
+import { faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DestinationService } from '../../services/destination.service';
 import { RecZnr } from '../../models/destination.model';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 
 
@@ -21,6 +23,7 @@ import { MessageService } from 'primeng/api';
   standalone: true,
   providers: [MessageService],
   imports: [
+    FontAwesomeModule,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -32,7 +35,8 @@ import { MessageService } from 'primeng/api';
     ToastModule
   ]
 })
-export class DestinationDetailComponent implements OnInit {
+export class DestinationDetailComponent implements OnInit { 
+  faLocationCrosshairs = faLocationCrosshairs;
   destination: RecZnr = {} as RecZnr;
   isNew: boolean = true;
   seitenTextBlocks: { line1: string, line2: string }[] = [{ line1: '', line2: '' }];

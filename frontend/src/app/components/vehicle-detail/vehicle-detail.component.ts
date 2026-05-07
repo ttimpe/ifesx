@@ -1,5 +1,7 @@
+import { faBus } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { VehicleService } from '../../services/vehicle.service';
@@ -19,12 +21,15 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-vehicle-detail',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, Button, InputText, SelectModule, CardModule, InputNumberModule, ConfirmDialogModule],
+  imports: [
+    FontAwesomeModule,
+    CommonModule, FormsModule, RouterModule, Button, InputText, SelectModule, CardModule, InputNumberModule, ConfirmDialogModule],
   providers: [ConfirmationService],
   templateUrl: './vehicle-detail.component.html',
   styleUrl: './vehicle-detail.component.css'
 })
-export class VehicleDetailComponent implements OnInit {
+export class VehicleDetailComponent implements OnInit { 
+  faBus = faBus;
   vehicle: Fahrzeug | null = null;
   types: MengeFzgTyp[] = [];
   selectedBasisVersion: number | undefined;

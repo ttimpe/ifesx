@@ -1,3 +1,5 @@
+import { faCircleH } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -9,9 +11,12 @@ import { StopService } from 'src/app/services/stop.service';
   templateUrl: './stop-search-field.component.html',
   styleUrls: ['./stop-search-field.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [
+        FontAwesomeModule,CommonModule, FormsModule
+    ]
 })
 export class StopSearchFieldComponent {
+    faCircleH = faCircleH;
   stopSearchTerm: string = ''; // Search term for stops
   availableStops: Stop[] = []
   selectedStop?: Stop

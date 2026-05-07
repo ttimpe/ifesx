@@ -1,7 +1,9 @@
+import { faCircleH } from '@fortawesome/free-solid-svg-icons';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { StopService } from '../../services/stop.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
@@ -41,6 +43,7 @@ L.Marker.prototype.options.icon = iconDefault;
   styleUrls: ['./stop-detail.component.css'],
   standalone: true,
   imports: [
+    FontAwesomeModule,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -53,7 +56,8 @@ L.Marker.prototype.options.icon = iconDefault;
     DropdownModule
   ]
 })
-export class StopDetailComponent implements OnInit, AfterViewInit {
+export class StopDetailComponent implements OnInit, AfterViewInit { 
+  faCircleH = faCircleH;
   recOrt?: RecOrt
   private map?: L.Map;
   private ortMarker?: L.Marker;

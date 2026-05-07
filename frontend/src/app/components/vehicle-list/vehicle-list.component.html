@@ -1,13 +1,16 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div
+    class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-teal-100 text-teal-600 rounded-lg flex items-center justify-center">
+    <div
+        class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
                 <fa-icon [icon]="faBus" class="text-xl"></fa-icon>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrzeuge</h2>
-                <p class="text-xs text-slate-500 font-medium">Fahrzeugtypen und Fahrzeuge verwalten</p>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Fahrzeuge</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Fahrzeugtypen und Fahrzeuge verwalten
+                </p>
             </div>
         </div>
 
@@ -22,21 +25,23 @@
     </div>
 
     <!-- Table -->
-    <div class="flex-1 overflow-auto bg-white p-2">
+    <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
         <p-treeTable [value]="treeData" styleClass="p-treetable-sm">
             <ng-template pTemplate="header">
                 <tr>
-                    <th class="font-semibold text-sm text-slate-700" style="width: 50%">Fahrzeugtyp / Fahrzeug</th>
-                    <th class="font-semibold text-sm text-slate-700" style="width: 25%">Kennzeichen</th>
-                    <th class="font-semibold text-sm text-slate-700" style="width: 25%">Aktionen</th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 50%">Fahrzeugtyp
+                        / Fahrzeug</th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 25%">Kennzeichen
+                    </th>
+                    <th class="font-semibold text-sm text-slate-700 dark:text-slate-200" style="width: 25%">Aktionen
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                 <tr [ttRow]="rowNode">
                     <td>
                         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                        <span [class.font-bold]="rowData.isType" [class.text-blue-600]="rowData.isType"
-                            [class.ml-2]="!rowData.isType">
+                        <span [class.font-bold]="rowData.isType" [class.]="" [class.]="" [class.ml-2]="!rowData.isType">
                             <i [class]="rowData.isType ? 'pi pi-folder mr-2' : 'pi pi-car mr-2'"></i>
                             {{ rowData.name }}
                         </span>
@@ -110,34 +115,36 @@
                 <label class="font-bold text-sm">Startnummer</label>
                 <p-inputNumber [(ngModel)]="batchParams.startNumber" [useGrouping]="false"
                     placeholder="z.B. 5001"></p-inputNumber>
-                <small class="text-slate-500">Erste Fahrzeugnummer</small>
+                <small class="text-slate-500 dark:text-slate-400">Erste Fahrzeugnummer</small>
             </div>
             <div class="flex flex-col gap-2">
                 <label class="font-bold text-sm">Anzahl</label>
                 <p-inputNumber [(ngModel)]="batchParams.count" [useGrouping]="false" [min]="1" [max]="100"
                     placeholder="z.B. 10"></p-inputNumber>
-                <small class="text-slate-500">Wie viele Fahrzeuge erstellen?</small>
+                <small class="text-slate-500 dark:text-slate-400">Wie viele Fahrzeuge erstellen?</small>
             </div>
         </div>
         <div class="flex flex-col gap-2">
             <label class="font-bold text-sm">Kennzeichen-Präfix (POLKENN)</label>
             <input pInputText [(ngModel)]="batchParams.polkennPrefix" placeholder="z.B. 'BI-NV-' oder 'DE-ABC-'" />
-            <small class="text-slate-500">Wird vor die Nummer gesetzt: "BI-NV-5001", "BI-NV-5002", ...</small>
+            <small class="text-slate-500 dark:text-slate-400">Wird vor die Nummer gesetzt: "BI-NV-5001", "BI-NV-5002",
+                ...</small>
         </div>
         <div class="flex flex-col gap-2">
             <label class="font-bold text-sm">Fahrzeugtyp</label>
             <p-select [options]="types" [(ngModel)]="batchParams.fzgTypNr" optionLabel="FZG_TYP_TEXT"
                 optionValue="FZG_TYP_NR" placeholder="Typ wählen..." appendTo="body"></p-select>
         </div>
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+        <div class="bg-blue-50 dark:bg-blue-900/30 dark:bg-blue-900/30 border border-blue-200 rounded-lg p-4"
             *ngIf="batchParams.startNumber && batchParams.count && batchParams.polkennPrefix">
             <p class="text-sm font-semibold text-blue-900 mb-2">Vorschau:</p>
             <div class="flex flex-wrap gap-2">
                 <span *ngFor="let i of [0,1,2]"
-                    class="px-2 py-1 bg-white rounded text-xs font-mono border border-blue-300">
+                    class="px-2 py-1 bg-white dark:bg-slate-800 rounded text-xs font-mono border border-blue-300">
                     {{ batchParams.polkennPrefix }}{{ batchParams.startNumber + i }}
                 </span>
-                <span class="px-2 py-1 text-xs text-blue-600" *ngIf="batchParams.count > 3">... +{{ batchParams.count -
+                <span class="px-2 py-1 text-xs text-blue-600 dark:text-blue-400 dark:text-blue-400"
+                    *ngIf="batchParams.count > 3">... +{{ batchParams.count -
                     3 }} weitere</span>
             </div>
         </div>

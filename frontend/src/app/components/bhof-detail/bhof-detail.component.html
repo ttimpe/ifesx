@@ -4,40 +4,40 @@
             <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary" routerLink="/betriebshoefe"></p-button>
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
-                    <i class="pi pi-building text-xl"></i>
+                    <fa-icon [icon]="faBuilding" class=" text-xl"></fa-icon>
                 </div>
-                <h2 class="text-2xl font-bold text-slate-800">{{ isNew ? 'Neuer Betriebshof' : 'Betriebshof bearbeiten'
+                <h2 class="text-2xl font-bold text-slate-800 dark:text-slate-100">{{ isNew ? 'Neuer Betriebshof' : 'Betriebshof bearbeiten'
                     }}</h2>
             </div>
         </div>
     </div>
 
-    <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+    <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
         <div class="flex flex-col gap-6">
             <div class="flex flex-col gap-2">
-                <label for="bhofNr" class="text-sm font-medium text-slate-700">Nummer (BHOF_NR)</label>
+                <label for="bhofNr" class="text-sm font-medium text-slate-700 dark:text-slate-200">Nummer (BHOF_NR)</label>
                 <p-inputNumber id="bhofNr" [(ngModel)]="item.BHOF_NR" [disabled]="!isNew" [useGrouping]="false"
                     styleClass="w-full" placeholder="z.B. 1">
                 </p-inputNumber>
-                <small class="text-slate-500">Eindeutige Nummer für diesen Betriebshof (wird automatisch vergeben, wenn
+                <small class="text-slate-500 dark:text-slate-400">Eindeutige Nummer für diesen Betriebshof (wird automatisch vergeben, wenn
                     leer).</small>
             </div>
 
             <div class="flex flex-col gap-2">
-                <label for="strBhof" class="text-sm font-medium text-slate-700">Kürzel (STR_BHOF)</label>
+                <label for="strBhof" class="text-sm font-medium text-slate-700 dark:text-slate-200">Kürzel (STR_BHOF)</label>
                 <input pInputText id="strBhof" [(ngModel)]="item.STR_BHOF" class="w-full" maxlength="10"
                     placeholder="z.B. BF1" />
-                <small class="text-slate-500">Kurzbeschreibung, maximal 10 Zeichen.</small>
+                <small class="text-slate-500 dark:text-slate-400">Kurzbeschreibung, maximal 10 Zeichen.</small>
             </div>
 
             <div class="flex flex-col gap-2">
-                <label for="bhofText" class="text-sm font-medium text-slate-700">Beschreibung (BHOF_TEXT)</label>
+                <label for="bhofText" class="text-sm font-medium text-slate-700 dark:text-slate-200">Beschreibung (BHOF_TEXT)</label>
                 <input pInputText id="bhofText" [(ngModel)]="item.BHOF_TEXT" class="w-full" maxlength="32"
                     placeholder="z.B. Hauptbetriebshof Nord" />
-                <small class="text-slate-500">Vollständiger Name, maximal 32 Zeichen.</small>
+                <small class="text-slate-500 dark:text-slate-400">Vollständiger Name, maximal 32 Zeichen.</small>
             </div>
 
-            <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100">
+            <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-700">
                 <p-button label="Abbrechen" icon="pi pi-times" severity="secondary" [outlined]="true"
                     (onClick)="cancel()"></p-button>
                 <p-button label="Speichern" icon="pi pi-check" severity="success" (onClick)="save()"></p-button>
