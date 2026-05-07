@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { faBus } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RecUmlauf } from '../../models/rec-umlauf.model';
 import { RecUmlaufService } from '../../services/rec-umlauf.service';
 import { CalendarService } from '../../services/calendar.service';
@@ -24,12 +26,14 @@ import { Tooltip } from 'primeng/tooltip';
         TableModule,
         Button,
         InputText,
-        Tooltip
+        Tooltip,
+        FontAwesomeModule
     ],
     templateUrl: './rec-umlauf-list.component.html',
     styleUrls: ['./rec-umlauf-list.component.css']
 })
 export class RecUmlaufListComponent implements OnInit {
+    faBus = faBus;
     rows: RecUmlauf[] = [];
     selectedBasisVersion: number | undefined;
     loading: boolean = false;

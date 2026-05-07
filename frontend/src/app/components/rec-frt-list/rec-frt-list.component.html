@@ -1,9 +1,16 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div
+    class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div>
-            <h2 class="text-lg font-bold text-slate-800 tracking-tight">Fahrten (REC_FRT)</h2>
-            <p class="text-xs text-slate-500 font-medium">{{ trips.length }} Einträge</p>
+    <div
+        class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faBus" class="text-xl"></fa-icon>
+            </div>
+            <div>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Fahrten (REC_FRT)</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{ trips.length }} Einträge</p>
+            </div>
         </div>
         <div class="flex gap-2 items-center">
             <input pInputText type="text" [(ngModel)]="globalFilter" placeholder="Suche..." class="w-64" />
@@ -34,9 +41,9 @@
             </ng-template>
             <ng-template pTemplate="body" let-trip>
                 <tr>
-                    <td class="text-slate-500 text-xs">{{ trip.FRT_FID }}</td>
+                    <td class="text-slate-500 dark:text-slate-400 text-xs">{{ trip.FRT_FID }}</td>
                     <td class="font-bold font-mono text-indigo-600">{{ formatTime(trip.FRT_START) }}</td>
-                    <td class="font-mono text-slate-600">{{ formatTime(trip.FRT_ANKUNFT) }}</td>
+                    <td class="font-mono text-slate-600 dark:text-slate-300">{{ formatTime(trip.FRT_ANKUNFT) }}</td>
                     <td>
                         <span class="font-medium">{{ trip.LI_NR }}</span>
                         <span class="text-xs text-slate-400 ml-1">{{ trip.STR_LI_VAR }}</span>
@@ -64,7 +71,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
                 <tr>
-                    <td colspan="9" class="text-center p-8 text-slate-500">
+                    <td colspan="9" class="text-center p-8 text-slate-500 dark:text-slate-400">
                         <div class="flex flex-col items-center justify-center">
                             <i class="pi pi-car text-4xl mb-3 text-slate-300"></i>
                             <p>Keine Fahrten vorhanden.</p>

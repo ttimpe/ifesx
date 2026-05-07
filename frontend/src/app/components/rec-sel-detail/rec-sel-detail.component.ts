@@ -1,5 +1,7 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -32,6 +34,7 @@ import { MessageService } from 'primeng/api';
     standalone: true,
     providers: [MessageService],
     imports: [
+        FontAwesomeModule,
         CommonModule,
         FormsModule,
         RouterModule,
@@ -40,12 +43,12 @@ import { MessageService } from 'primeng/api';
         Button,
         InputNumber,
         AutoComplete,
-        AutoComplete,
         ToastModule,
-        DialogModule,
+        DialogModule
     ]
 })
 export class RecSelDetailComponent implements OnInit, AfterViewInit {
+    faRoute = faRoute;
     sel: RecSel = new RecSel();
     isNew = true;
     orte: RecOrt[] = [];

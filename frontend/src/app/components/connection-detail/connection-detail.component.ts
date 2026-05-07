@@ -1,3 +1,5 @@
+import { faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -21,12 +23,15 @@ import { TableModule } from 'primeng/table';
 @Component({
     selector: 'app-connection-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule,
-        InputTextModule, InputNumberModule, ButtonModule, DropdownModule, CardModule, TableModule],
+    imports: [
+        FontAwesomeModule,CommonModule, FormsModule, RouterModule,
+        InputTextModule, InputNumberModule, ButtonModule, DropdownModule, CardModule, TableModule
+    ],
     templateUrl: './connection-detail.component.html',
     styleUrls: ['./connection-detail.component.css']
 })
 export class ConnectionDetailComponent implements OnInit {
+    faExchangeAlt = faExchangeAlt;
     item: Einzelanschluss = this.getEmptyConnection();
     isNew = true;
 

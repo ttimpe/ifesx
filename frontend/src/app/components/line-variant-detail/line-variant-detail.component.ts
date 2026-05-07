@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LineService } from '../../services/line.service';
@@ -26,13 +28,16 @@ import { CheckboxModule } from 'primeng/checkbox';
     selector: 'app-line-variant-detail',
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule, FormsModule, RouterModule,
         TableModule, ButtonModule, InputTextModule, InputNumberModule, DropdownModule, CardModule, DialogModule, CheckboxModule
+
     ],
     templateUrl: './line-variant-detail.component.html',
     styleUrls: ['./line-variant-detail.component.css']
 })
 export class LineVariantDetailComponent implements OnInit {
+    faRoute = faRoute;
     lineId!: number;
     strLiVar!: string;
 

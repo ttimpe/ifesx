@@ -1,0 +1,24 @@
+/* Force white icons and text on active navigation links, but not when clicking down */
+.active-nav-link:not(:active),
+.active-nav-link:not(:active) span,
+.active-nav-link:not(:active) fa-icon,
+.active-nav-link:not(:active) fa-icon svg {
+  color: white !important;
+}
+
+/* Force active link background */
+.active-nav-link {
+  background-color: #2563eb !important;
+  /* blue-600 */
+}
+
+/* Hover state: Darker blue in light mode, keep blue-600 in dark mode for subtler feel */
+.active-nav-link:hover {
+  background-color: #1d4ed8 !important;
+  /* blue-700 */
+}
+
+:host-context(.dark) .active-nav-link:hover {
+  background-color: #2563eb !important;
+  /* blue-600 */
+}

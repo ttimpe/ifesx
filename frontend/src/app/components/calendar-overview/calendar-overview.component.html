@@ -2,14 +2,14 @@
 <div class="container mx-auto p-4 max-w-7xl animate-fade-in">
 
   <!-- Integrated Header -->
-  <div class="bg-white border border-slate-200 px-6 py-4 rounded-xl shadow-sm mb-6 flex items-center justify-between">
+  <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 py-4 rounded-xl shadow-sm mb-6 flex items-center justify-between">
     <div class="flex items-center gap-4">
       <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
         <i class="pi pi-calendar text-xl"></i>
       </div>
       <div>
-        <h1 class="text-lg font-bold text-slate-800 tracking-tight">Firmenkalender</h1>
-        <p class="text-xs text-slate-500 font-medium">Verwaltung von Betriebstagen und Tagesarten</p>
+        <h1 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Firmenkalender</h1>
+        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Verwaltung von Betriebstagen und Tagesarten</p>
       </div>
     </div>
   </div>
@@ -30,20 +30,23 @@
   <div class="flex flex-col gap-6">
 
     <!-- Fahrplan Date Range Card -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-        <h3 class="font-bold text-slate-800 flex items-center gap-2">
-          <i class="pi pi-calendar text-blue-500"></i> Fahrplanperiode
+    <div
+      class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div
+        class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+          <i class="pi pi-calendar text-blue-500 dark:text-blue-400 dark:text-blue-400"></i> Fahrplanperiode
         </h3>
       </div>
 
       <div class="p-6">
         <!-- Version Display -->
         <div *ngIf="selectedBasisVersion && !isEditingVersion"
-          class="flex items-center gap-3 mb-6 p-3 bg-blue-50/50 rounded-lg border border-blue-100">
+          class="flex items-center gap-3 mb-6 p-3 bg-blue-50/50 dark:bg-blue-900/50 dark:bg-blue-900/50 rounded-lg border border-blue-100 dark:border-blue-800 dark:border-blue-800">
           <div class="flex flex-col">
-            <span class="text-xs font-bold uppercase text-blue-500 tracking-wider">Aktive Basis-Version</span>
-            <span class="font-mono text-lg font-bold text-slate-800">{{ selectedBasisVersion.BASIS_VERSION }} - {{
+            <span class="text-xs font-bold uppercase text-blue-500 dark:text-blue-400 dark:text-blue-400 tracking-wider">Aktive Basis-Version</span>
+            <span class="font-mono text-lg font-bold text-slate-800 dark:text-slate-100">{{
+              selectedBasisVersion.BASIS_VERSION }} - {{
               selectedBasisVersion.BASIS_VERSION_TEXT }}</span>
           </div>
           <p-button icon="pi pi-pencil" [text]="true" severity="warn" size="small" (onClick)="startEditVersion()"
@@ -51,9 +54,9 @@
         </div>
         <!-- Edit Version -->
         <div *ngIf="isEditingVersion"
-          class="flex items-end gap-2 mb-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+          class="flex items-end gap-2 mb-6 p-4 bg-slate-50 dark:bg-slate-900 border-slate-100 dark:border-slate-700 rounded-lg border border-slate-200 dark:border-slate-700">
           <div class="flex flex-col gap-1 flex-1">
-            <label class="text-xs font-bold uppercase text-slate-500">Bezeichnung</label>
+            <label class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Bezeichnung</label>
             <input pInputText [(ngModel)]="editVersionText" class="w-full" />
           </div>
           <div class="flex gap-2">
@@ -66,12 +69,12 @@
         <!-- Date Range Picker -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
           <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-slate-600">Fahrplan ab</label>
+            <label class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300">Fahrplan ab</label>
             <p-datePicker [(ngModel)]="beginDate" dateFormat="yy-mm-dd" [showIcon]="true" styleClass="w-full"
               inputStyleClass="w-full"></p-datePicker>
           </div>
           <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium text-slate-600">Fahrplan bis</label>
+            <label class="text-sm font-medium text-slate-600 dark:text-slate-300 dark:text-slate-300">Fahrplan bis</label>
             <p-datePicker [(ngModel)]="endDate" dateFormat="yy-mm-dd" [showIcon]="true" styleClass="w-full"
               inputStyleClass="w-full"></p-datePicker>
           </div>
@@ -80,15 +83,16 @@
               styleClass="w-full"></p-button>
           </div>
         </div>
-        <small class="block mt-2 text-slate-400 text-xs">Definiert den globalen Zeitraum für diesen Fahrplan.</small>
+        <small class="block mt-2 text-slate-400 dark:text-slate-500 text-xs">Definiert den globalen Zeitraum für diesen
+          Fahrplan.</small>
 
         <!-- Delete Version Button -->
-        <div class="mt-6 pt-6 border-t border-slate-200">
+        <div class="mt-6 pt-6 border-t bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700">
           <p-button label="Basis-Version löschen" icon="pi pi-trash" severity="danger" size="small"
             (onClick)="deleteCurrentVersion()" [disabled]="!selectedBasisVersion"
             pTooltip="Löscht die aktuelle Version und alle zugehörigen Daten">
           </p-button>
-          <small class="block mt-2 text-slate-400 text-xs">
+          <small class="block mt-2 text-slate-400 dark:text-slate-500 text-xs">
             Achtung: Löscht alle Daten dieser Version unwiderruflich!
           </small>
         </div>
@@ -99,9 +103,11 @@
 
       <!-- Tagesarten (Day Types) -->
       <div class="flex flex-col gap-4">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
-          <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Tagesarten</h3>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden h-full flex flex-col">
+          <div
+            class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 dark:text-slate-100">Tagesarten</h3>
             <div class="flex gap-2">
               <p-button [label]="selectedDayTypes.length === 2 ? 'Merge (' + selectedDayTypes.length + ')' : 'Merge'"
                 icon="pi pi-arrow-right-arrow-left" [severity]="selectedDayTypes.length === 2 ? 'info' : 'secondary'"
@@ -112,7 +118,7 @@
                 (onClick)="openTagesartModal()"></p-button>
             </div>
           </div>
-          <div class="flex-1 overflow-auto bg-white p-2">
+          <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
             <p-table [value]="daytypes" [rows]="10" [paginator]="true" styleClass="p-datatable-striped"
               [rowHover]="true" [(selection)]="selectedDayTypes" dataKey="TAGESART_NR">
               <ng-template pTemplate="header">
@@ -146,13 +152,15 @@
 
       <!-- Betriebstage (Working Days) List -->
       <div class="flex flex-col gap-4">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
-          <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-            <h3 class="font-bold text-slate-800">Spezielle Betriebstage</h3>
+        <div
+          class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden h-full flex flex-col">
+          <div
+            class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+            <h3 class="font-bold text-slate-800 dark:text-slate-100">Spezielle Betriebstage</h3>
             <p-button label="Neu" icon="pi pi-plus" severity="success" size="small"
               (onClick)="openBetriebstagModal()"></p-button>
           </div>
-          <div class="flex-1 overflow-auto bg-white p-2">
+          <div class="flex-1 overflow-auto bg-white dark:bg-slate-800 p-2">
             <p-table [value]="betriebstage" [rows]="10" [paginator]="true" styleClass="p-datatable-striped"
               [rowHover]="true">
               <ng-template pTemplate="header">
@@ -170,7 +178,8 @@
                 <tr>
                   <td class="font-mono">{{ day.BETRIEBSTAG }}</td>
                   <td>{{ day.BETRIEBSTAG_TEXT }}</td>
-                  <td><span class="px-2 py-1 bg-slate-100 rounded text-xs font-bold">{{ day.tagesart?.TAGESART_TEXT ||
+                  <td><span class="px-2 py-1 bg-slate-100 dark:bg-slate-800 dark:bg-slate-700 rounded text-xs font-bold">{{
+                      day.tagesart?.TAGESART_TEXT ||
                       day.TAGESART_NR }}</span></td>
                   <td>
                     <div class="flex gap-1">
@@ -189,15 +198,17 @@
     </div>
 
     <!-- Year Calendar & Batch Assignment -->
-    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-        <h3 class="font-bold text-slate-800">Kalender Übersicht & Zuweisung</h3>
+    <div
+      class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div
+        class="p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 dark:text-slate-100">Kalender Übersicht & Zuweisung</h3>
         <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">{{ selectedDates.length }} Tage
           markiert</span>
       </div>
-      <div class="p-4 bg-slate-50 border-b border-slate-100 flex flex-wrap items-end gap-4">
+      <div class="p-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-700 flex flex-wrap items-end gap-4">
         <div class="flex flex-col gap-2 flex-1 min-w-[200px]">
-          <label class="text-xs font-bold uppercase text-slate-500">Tagesart zuweisen</label>
+          <label class="text-xs font-bold uppercase text-slate-500 dark:text-slate-400">Tagesart zuweisen</label>
           <p-select [options]="daytypes" [(ngModel)]="selectedTagesartForBatch" optionLabel="TAGESART_TEXT"
             placeholder="Tagesart wählen..." [style]="{'width':'100%'}" appendTo="body"></p-select>
         </div>
@@ -245,7 +256,7 @@
       <label for="bdatum" class="font-bold">Datum (YYYYMMDD)</label>
       <p-inputNumber id="bdatum" [(ngModel)]="selectedBetriebstag.BETRIEBSTAG" [useGrouping]="false"
         placeholder="20241225"></p-inputNumber>
-      <small class="text-slate-500">Format: YYYYMMDD</small>
+      <small class="text-slate-500 dark:text-slate-400">Format: YYYYMMDD</small>
     </div>
     <div class="flex flex-col gap-2">
       <label for="btext" class="font-bold">Beschreibung</label>
@@ -269,7 +280,7 @@
 <p-dialog header="Tagesarten zusammenführen" [(visible)]="displayMergeModal" [modal]="true" [style]="{width: '500px'}"
   styleClass="p-fluid">
   <div class="flex flex-col gap-4">
-    <p class="text-sm text-slate-600">Alle Fahrten der Quell-Tagesart werden in die Ziel-Tagesart verschoben. Duplikate
+    <p class="text-sm text-slate-600 dark:text-slate-300">Alle Fahrten der Quell-Tagesart werden in die Ziel-Tagesart verschoben. Duplikate
       werden intelligent bereinigt.</p>
 
     <div class="flex flex-col gap-2">

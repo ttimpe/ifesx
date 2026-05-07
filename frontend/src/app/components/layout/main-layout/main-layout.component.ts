@@ -9,7 +9,7 @@ import { CalendarService } from '../../../services/calendar.service';
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent],
   template: `
-<div class="flex h-screen overflow-hidden bg-slate-50">
+<div class="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors duration-200">
   <!-- Sidebar -->
   <app-sidebar></app-sidebar>
 
@@ -18,7 +18,7 @@ import { CalendarService } from '../../../services/calendar.service';
     <!-- Top Header (Optional) -->
     
     <!-- Router Outlet (Scrollable Content) -->
-    <main class="flex-1 overflow-auto bg-slate-50" [class.p-6]="!isMap" [class.p-0]="isMap">
+    <main class="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900 transition-colors duration-200" [class.p-6]="!isMap" [class.p-0]="isMap">
       <div [class.max-w-7xl]="!isMap" [class.mx-auto]="!isMap" [class.h-full]="isMap" [class.w-full]="isMap">
         <router-outlet></router-outlet>
       </div>

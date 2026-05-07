@@ -1,3 +1,5 @@
+import { faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { Component, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +25,7 @@ import { MessageService } from 'primeng/api';
   standalone: true,
   providers: [MessageService],
   imports: [
+        FontAwesomeModule,
     CommonModule,
     FormsModule,
     Button,
@@ -32,9 +35,11 @@ import { MessageService } from 'primeng/api';
     ToastModule,
     FileUploadModule,
     SelectModule
-  ]
+  
+    ]
 })
 export class AnnouncementDetailComponent implements AfterViewInit {
+    faBullhorn = faBullhorn;
   anr: RecAnr = new RecAnr();
   fileNames: string[] = [];
   isNew: boolean = true;

@@ -6,7 +6,7 @@ import { promises as fs } from 'fs';
 
 const announcementStorage = multer.diskStorage({
     destination: (_req, _file, cb) => {
-        cb(null, './announcements/');
+        cb(null, './data/announcements/');
     },
     filename: (_req, file, cb) => {
         cb(null, file.originalname);
@@ -148,7 +148,7 @@ export class RecAnrController {
 
     public getFiles = async (_req: Request, res: Response) => {
         try {
-            const dir = path.resolve('./announcements/');
+            const dir = path.resolve('./data/announcements/');
             await fs.mkdir(dir, { recursive: true });
             const fileNames = await fs.readdir(dir);
             return res.status(200).json(fileNames);
@@ -163,6 +163,27 @@ export class RecAnrController {
                 return res.status(400).json({ error: 'Keine Datei hochgeladen' });
             }
             return res.status(200).json({ ANR_DATEI: req.file.originalname });
+        } catch (error: any) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+
+    public deleteFile = async (req: Request, res: Response) => {
+        try {
+            const filename = req.params.filename;
+            if (!filename) {
+                return res.status(400).json({ error: 'Kein Dateiname angegeben' });
+            }
+            // Prevent path traversal
+            const safeName = path.basename(filename);
+            const filePath = path.resolve('./data/announcements/', safeName);
+            try {
+                await fs.access(filePath);
+                await fs.unlink(filePath);
+                return res.status(200).json({ message: 'Datei gelöscht', filename: safeName });
+            } catch {
+                return res.status(404).json({ error: 'Datei nicht gefunden' });
+            }
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }

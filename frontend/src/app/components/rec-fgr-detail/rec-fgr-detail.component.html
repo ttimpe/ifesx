@@ -1,15 +1,15 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
-                <i class="pi pi-clock text-xl"></i>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faClock" class="text-xl"></fa-icon>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
                     {{ isNew ? 'Neue Fahrzeitgruppe' : 'Fahrzeitgruppe bearbeiten' }}
                 </h2>
-                <p *ngIf="!isNew && model" class="text-xs text-slate-500 font-medium">
+                <p *ngIf="!isNew && model" class="text-xs text-slate-500 dark:text-slate-400 font-medium">
                     {{ model.STR_FGR }} - {{ model.FGR_TEXT }}
                 </p>
             </div>
@@ -26,16 +26,16 @@
     <!-- Content -->
     <div class="flex-1 overflow-auto p-6">
         <div class="max-w-4xl mx-auto">
-            <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 overflow-hidden">
+            <div class="bg-white dark:bg-slate-800/70 backdrop-blur-md rounded-2xl shadow-xl border border-white/20 overflow-hidden">
                 <!-- Card Header with Icon -->
-                <div class="p-6 border-b border-slate-100 bg-slate-50/50 flex items-center gap-4">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 dark:bg-slate-900/50 flex items-center gap-4">
                     <div
-                        class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center shadow-inner">
+                        class="w-12 h-12 bg-blue-100 text-blue-600 dark:text-blue-400 dark:text-blue-400 rounded-xl flex items-center justify-center shadow-inner">
                         <i class="pi pi-clock text-2xl"></i>
                     </div>
                     <div>
-                        <h3 class="text-xl font-bold text-slate-800 tracking-tight">Fahrzeitgruppe</h3>
-                        <p class="text-xs text-slate-500 font-medium uppercase tracking-wider">Definition der
+                        <h3 class="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">Fahrzeitgruppe</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wider">Definition der
                             zeitabhängigen Fahrzeit-Slots</p>
                     </div>
                 </div>
@@ -45,7 +45,7 @@
 
                         <!-- ID Selection -->
                         <div class="flex flex-col gap-2 group">
-                            <label class="font-bold text-slate-700 flex items-center gap-2">
+                            <label class="font-bold text-slate-700 dark:text-slate-200 flex items-center gap-2">
                                 <span>Fahrzeitgruppe Nr (ID)</span>
                                 <i class="pi pi-info-circle text-slate-400 text-xs"
                                     pTooltip="Eindeutige ID der Fahrzeitgruppe"></i>
@@ -59,14 +59,14 @@
 
                         <!-- Basis Version -->
                         <div class="flex flex-col gap-2 opacity-70">
-                            <label class="font-bold text-slate-700">Basis Version</label>
+                            <label class="font-bold text-slate-700 dark:text-slate-200">Basis Version</label>
                             <p-inputNumber [(ngModel)]="model.BASIS_VERSION" name="basisVersion" [disabled]="true"
                                 [useGrouping]="false" class="w-full" styleClass="w-full"></p-inputNumber>
                         </div>
 
                         <!-- Kürzel -->
                         <div class="flex flex-col gap-2 col-span-1">
-                            <label class="font-bold text-slate-700">Kürzel (STR_FGR)</label>
+                            <label class="font-bold text-slate-700 dark:text-slate-200">Kürzel (STR_FGR)</label>
                             <input type="text" pInputText [(ngModel)]="model.STR_FGR" name="strFgr" maxlength="4"
                                 placeholder="Bsp: T10" class="w-full" />
                             <small class="text-slate-400">Maximal 4 Zeichen.</small>
@@ -74,7 +74,7 @@
 
                         <!-- Text / Name -->
                         <div class="flex flex-col gap-2 col-span-1 md:col-span-2">
-                            <label class="font-bold text-slate-700">Beschreibung (FGR_TEXT)</label>
+                            <label class="font-bold text-slate-700 dark:text-slate-200">Beschreibung (FGR_TEXT)</label>
                             <input type="text" pInputText [(ngModel)]="model.FGR_TEXT" name="fgrText" maxlength="40"
                                 placeholder="Aussagekräftiger Name (z.B. HVZ 10 Min Takt)" class="w-full" />
                         </div>

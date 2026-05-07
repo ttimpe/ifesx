@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { LineService } from '../../services/line.service';
 import { RecLid } from '../../models/line.model';
@@ -6,6 +7,7 @@ import { RecLid } from '../../models/line.model';
 import { Route } from '../../models/route.model';
 import { RouteService } from '../../services/route.service';
 import { CommonModule } from '@angular/common'; // PrimeNG
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { InputNumber } from 'primeng/inputnumber';
@@ -25,6 +27,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [
     CommonModule,
+    FontAwesomeModule,
     FormsModule,
     RouterModule,
 
@@ -39,6 +42,7 @@ import { FormsModule } from '@angular/forms';
   ]
 })
 export class LineDetailComponent implements OnInit {
+  faRoute = faRoute;
   line?: RecLid
   variants: RecLid[] = []
   originalLineId?: number

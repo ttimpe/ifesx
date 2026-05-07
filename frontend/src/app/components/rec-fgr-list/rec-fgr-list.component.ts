@@ -1,3 +1,5 @@
+import { faClock } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,6 +15,7 @@ import { MengeFgr } from '../../models/menge-fgr.model';
     selector: 'app-rec-fgr-list',
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         FormsModule,
         RouterModule,
@@ -20,10 +23,12 @@ import { MengeFgr } from '../../models/menge-fgr.model';
         ButtonModule,
         InputTextModule,
         TooltipModule
+    
     ],
     templateUrl: './rec-fgr-list.component.html'
 })
 export class RecFgrListComponent implements OnInit {
+    faClock = faClock;
     rows: MengeFgr[] = [];
     loadingIndicator = false;
 

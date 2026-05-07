@@ -1,13 +1,13 @@
-<div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center">
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
                 <fa-icon [icon]="faExchangeAlt" class="text-xl"></fa-icon>
             </div>
             <div>
-                <h2 class="text-lg font-bold text-slate-800 tracking-tight">Anschlüsse</h2>
-                <p class="text-xs text-slate-500 font-medium">{{connections.length}} Einträge gefunden</p>
+                <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">Anschlüsse</h2>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{connections.length}} Einträge gefunden</p>
             </div>
         </div>
         <div class="flex gap-2">
@@ -36,9 +36,9 @@
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-item>
-                <tr class="cursor-pointer hover:bg-slate-50 transition-colors" (click)="edit(item)">
-                    <td class="font-mono text-slate-500">{{ item.EINAN_NR }}</td>
-                    <td class="font-medium text-slate-800">{{ item.ANSCHLUSS_NAME || '-' }}</td>
+                <tr class="cursor-pointer hover:bg-slate-50 dark:bg-slate-900 transition-colors" (click)="edit(item)">
+                    <td class="font-mono text-slate-500 dark:text-slate-400">{{ item.EINAN_NR }}</td>
+                    <td class="font-medium text-slate-800 dark:text-slate-100">{{ item.ANSCHLUSS_NAME || '-' }}</td>
                     <td>
                         <div class="font-medium text-xs">{{ item.ZUB_LI_NR }} (Ref: {{ item.ZUB_ORT_REF_ORT }})</div>
                     </td>
@@ -46,7 +46,7 @@
                         <div class="font-medium text-xs">{{ item.ABB_LI_NR }} (Ref: {{ item.ABB_ORT_REF_ORT }})</div>
                     </td>
                     <td>
-                        <div class="text-xs text-slate-500">{{ item.recUms?.length || 0 }} Regeln</div>
+                        <div class="text-xs text-slate-500 dark:text-slate-400">{{ item.recUms?.length || 0 }} Regeln</div>
                     </td>
                     <td class="text-center">
                         <p-button icon="pi pi-pencil" [text]="true" severity="secondary" size="small"></p-button>

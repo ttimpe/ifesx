@@ -1,16 +1,16 @@
 <div class="container mx-auto p-4 max-w-2xl animate-fade-in">
-  <div class="flex flex-col h-full bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+  <div class="flex flex-col h-full bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
     <!-- Header Toolbar -->
-    <div class="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
-      <div class="flex items-center gap-4">
-        <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center">
-          <i class="pi pi-star text-xl"></i>
-        </div>
+    <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <fa-icon [icon]="faFont" class="text-xl"></fa-icon>
+            </div>
         <div>
-          <h2 class="text-lg font-bold text-slate-800 tracking-tight">
+          <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight">
             {{ specialCharacter.number ? 'Sonderzeichen bearbeiten' : 'Neues Sonderzeichen' }}
           </h2>
-          <p *ngIf="specialCharacter.stringValue" class="text-xs text-slate-500 font-medium">{{
+          <p *ngIf="specialCharacter.stringValue" class="text-xs text-slate-500 dark:text-slate-400 font-medium">{{
             specialCharacter.stringValue }}</p>
         </div>
       </div>
@@ -26,16 +26,16 @@
     <div class="flex-1 overflow-auto p-6">
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-2">
-          <label for="number" class="font-bold text-slate-700">Nummer</label>
+          <label for="number" class="font-bold text-slate-700 dark:text-slate-200">Nummer</label>
           <p-inputNumber id="number" [(ngModel)]="specialCharacter.number" [useGrouping]="false" class="w-full"
             styleClass="w-full"></p-inputNumber>
-          <small class="text-slate-500">Eindeutige ID für das Sonderzeichen.</small>
+          <small class="text-slate-500 dark:text-slate-400">Eindeutige ID für das Sonderzeichen.</small>
         </div>
 
         <div class="flex flex-col gap-2">
-          <label for="stringValue" class="font-bold text-slate-700">Text / Wert</label>
+          <label for="stringValue" class="font-bold text-slate-700 dark:text-slate-200">Text / Wert</label>
           <input pInputText id="stringValue" [(ngModel)]="specialCharacter.stringValue" class="w-full" />
-          <small class="text-slate-500">Der anzuzeigende Text.</small>
+          <small class="text-slate-500 dark:text-slate-400">Der anzuzeigende Text.</small>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { faBullhorn } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -18,6 +20,7 @@ import { Tooltip } from 'primeng/tooltip';
   styleUrls: ['./announcement-list.component.css'],
   standalone: true,
   imports: [
+        FontAwesomeModule,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -25,9 +28,11 @@ import { Tooltip } from 'primeng/tooltip';
     Button,
     InputText,
     Tooltip
-  ]
+  
+    ]
 })
 export class AnnouncementListComponent implements OnInit {
+    faBullhorn = faBullhorn;
   announcements: RecAnr[] = [];
   selectedVersion: number | null = null;
   loading: boolean = false;

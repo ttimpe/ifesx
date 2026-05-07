@@ -8,7 +8,11 @@ import { CalendarService } from '../../services/calendar.service';
 
 import { Table, TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
+import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
 import { faRoute, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -17,12 +21,14 @@ import { faRoute, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./line-list.component.css'],
   standalone: true,
   imports: [CommonModule, RouterModule, FontAwesomeModule, TableModule,
-    Button,
-    InputText],
+    Button, InputTextModule, InputNumberModule, DialogModule, FormsModule, TooltipModule],
 })
 export class LineListComponent implements OnInit {
   lines: RecLid[] = [];
   selectedBasisVersion: number | undefined;
+
+  showAddLineDialog = false;
+  newLineData: Partial<RecLid> = {};
 
   faTrash = faTrash
   faPlus = faPlus
@@ -53,7 +59,27 @@ export class LineListComponent implements OnInit {
   }
 
   addLine() {
-    this.router.navigate(['/lines/new']);
+    const maxLine = this.lines.length > 0 ? Math.max(...this.lines.map(l => Number(l.LI_NR) || 0)) : 0;
+    this.newLineData = {
+      LI_NR: maxLine + 1,
+      LI_KUERZEL: '',
+      STR_LI_VAR: 'V01',
+      LIDNAME: ''
+    };
+    this.showAddLineDialog = true;
+  }
+
+  saveNewLine() {
+    if (!this.newLineData.LI_NR || !this.newLineData.STR_LI_VAR) return;
+    this.lineService.createVariant(this.newLineData as RecLid).subscribe(() => {
+      this.showAddLineDialog = false;
+      this.loadLines();
+      this.router.navigate(['/lines', this.newLineData.LI_NR, 'variants', this.newLineData.STR_LI_VAR]);
+    });
+  }
+
+  addVariantToExisting(line: RecLid) {
+    this.router.navigate(['/lines', line.LI_NR, 'variants', 'new']);
   }
 
   editLine(line: RecLid) {

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -12,25 +14,31 @@ import { CardModule } from 'primeng/card';
 import { InputNumber } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     selector: 'app-bhof-detail',
     standalone: true,
     imports: [
         CommonModule,
+        FontAwesomeModule,
         FormsModule,
         RouterModule,
         ButtonModule,
         InputTextModule,
         CardModule,
         InputNumber,
-        ToastModule
+        ToastModule,
+        TableModule,
+        DialogModule
     ],
     providers: [MessageService],
     templateUrl: './bhof-detail.component.html',
     styleUrls: ['./bhof-detail.component.css']
 })
 export class BhofDetailComponent implements OnInit {
+    faBuilding = faBuilding;
     item: MengeBhof = new MengeBhof();
     isNew = true;
     basisVersion: number = 1;

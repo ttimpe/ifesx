@@ -6,58 +6,59 @@ import { GtfsWizardComponent } from '../gtfs-wizard/gtfs-wizard.component';
 import { VdvImportComponent } from '../vdv-import/vdv-import.component';
 import { CalendarService } from '../../services/calendar.service';
 import { BasisVersion } from '../../models/basis-version.model';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUpload, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-gtfs-import-page',
     standalone: true,
     imports: [
         CommonModule,
+        FontAwesomeModule,
         GtfsWizardComponent,
         VdvImportComponent
     ],
     template: `
-    <div class="h-full flex flex-col bg-slate-50">
+    <div class="h-full flex flex-col bg-slate-50 dark:bg-slate-950">
         <!-- Integrated Header -->
-        <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shadow-sm sticky top-0 z-10">
+        <div class="flex items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 sticky top-0 z-10">
             <div class="flex items-center gap-4">
-               <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-slate-100 text-slate-500 transition-colors">
-                   <i class="pi pi-arrow-left text-lg"></i>
+               <button (click)="goBack()" class="p-2 -ml-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition-colors">
+                   <fa-icon [icon]="faArrowLeft" class="text-lg"></fa-icon>
                </button>
-               <div>
-                  <h1 class="text-xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
-                    <span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
-                        <i class="pi pi-upload text-sm"></i>
-                    </span>
-                    Import Assistent
-                  </h1>
+               <div class="flex items-center gap-3">
+                    <div class="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                        <fa-icon [icon]="faUpload" class="text-xl"></fa-icon>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
+                            Import Assistent
+                        </h1>
+                    </div>
                </div>
             </div>
             
             <!-- Tab Buttons -->
             <div class="flex gap-2">
               <button (click)="activeTab = 'gtfs'" 
-                      [class.bg-blue-100]="activeTab === 'gtfs'"
-                      [class.text-blue-700]="activeTab === 'gtfs'"
-                      [class.text-slate-500]="activeTab !== 'gtfs'"
-                      class="px-4 py-2 rounded-lg font-medium text-sm transition-colors hover:bg-slate-100">
+                      [class]="activeTab === 'gtfs' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                      class="px-4 py-2 rounded-lg font-medium text-sm transition-colors">
                 GTFS
               </button>
               <button (click)="activeTab = 'vdv'" 
-                      [class.bg-purple-100]="activeTab === 'vdv'"
-                      [class.text-purple-700]="activeTab === 'vdv'"
-                      [class.text-slate-500]="activeTab !== 'vdv'"
-                      class="px-4 py-2 rounded-lg font-medium text-sm transition-colors hover:bg-slate-100">
+                      [class]="activeTab === 'vdv' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300' : 'text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'"
+                      class="px-4 py-2 rounded-lg font-medium text-sm transition-colors">
                 VDV 452
               </button>
             </div>
         </div>
         
         <div class="p-6 max-w-5xl mx-auto w-full flex flex-col gap-6">
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <div class="mb-4 bg-blue-50 p-4 rounded-lg border border-blue-100 flex items-center gap-3">
-                     <i class="pi pi-info-circle text-blue-500 text-xl"></i>
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800">
+                <div class="mb-4 bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800/50 flex items-center gap-3">
+                     <i class="pi pi-info-circle text-blue-500 dark:text-blue-400 text-xl"></i>
                      <div>
-                        <h3 class="font-bold text-blue-800">Import in Version: {{ version?.BASIS_VERSION_TEXT || 'Laden...' }} ({{ version?.BASIS_VERSION }})</h3>
-                        <p class="text-sm text-blue-600">{{ activeTab === 'gtfs' ? 'GTFS-Daten importieren' : 'VDV 452 Tabellen importieren/exportieren' }}</p>
+                        <h3 class="font-bold text-blue-800 dark:text-blue-200">Import in Version: {{ version?.BASIS_VERSION_TEXT || 'Laden...' }} ({{ version?.BASIS_VERSION }})</h3>
+                        <p class="text-sm text-blue-600 dark:text-blue-400">{{ activeTab === 'gtfs' ? 'GTFS-Daten importieren' : 'VDV 452 Tabellen importieren/exportieren' }}</p>
                      </div>
                 </div>
 
@@ -81,6 +82,8 @@ import { BasisVersion } from '../../models/basis-version.model';
   `
 })
 export class GtfsImportPageComponent implements OnInit {
+    faUpload = faUpload;
+    faArrowLeft = faArrowLeft;
     version: BasisVersion | undefined;
     activeTab: 'gtfs' | 'vdv' = 'gtfs';
 

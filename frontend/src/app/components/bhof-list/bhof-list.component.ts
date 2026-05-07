@@ -1,3 +1,5 @@
+import { faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -16,6 +18,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
     selector: 'app-bhof-list',
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         RouterModule,
         TableModule,
@@ -23,12 +26,14 @@ import { ConfirmationService, MessageService } from 'primeng/api';
         InputText,
         ConfirmDialogModule,
         ToastModule
+    
     ],
     providers: [ConfirmationService, MessageService],
     templateUrl: './bhof-list.component.html',
     styleUrls: ['./bhof-list.component.css']
 })
 export class BhofListComponent implements OnInit {
+    faBuilding = faBuilding;
     rows: MengeBhof[] = [];
     basisVersion: number = 1;
 

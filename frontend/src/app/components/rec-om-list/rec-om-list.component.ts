@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import { RouterModule } from '@angular/router';
 import { RecOm } from '../../models/rec-om.model';
 import { RecOmService } from '../../services/rec-om.service';
@@ -20,6 +22,7 @@ import { CalendarService } from '../../services/calendar.service';
     styleUrls: ['./rec-om-list.component.css'],
     standalone: true,
     imports: [
+        FontAwesomeModule,
         CommonModule,
         RouterModule,
         FormsModule,
@@ -30,6 +33,7 @@ import { CalendarService } from '../../services/calendar.service';
     ]
 })
 export class RecOmListComponent implements OnInit {
+    faMapMarkerAlt = faMapMarkerAlt;
     rows: RecOm[] = [];
     selectedVersion: number | null = null;
     loading: boolean = false;

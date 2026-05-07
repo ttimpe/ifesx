@@ -1,3 +1,5 @@
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,11 +13,14 @@ import { InputText } from 'primeng/inputtext';
 @Component({
   selector: 'app-rec-bereich-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, TableModule, Button, InputText],
+  imports: [
+        FontAwesomeModule,CommonModule, RouterModule, TableModule, Button, InputText
+    ],
   templateUrl: './rec-bereich-list.component.html',
   styleUrl: './rec-bereich-list.component.css'
 })
 export class RecBereichListComponent implements OnInit {
+    faLayerGroup = faLayerGroup;
   rows: MengeBereich[] = [];
   loadingIndicator = true;
 

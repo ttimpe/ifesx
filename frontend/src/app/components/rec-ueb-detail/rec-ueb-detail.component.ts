@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRoute } from '@fortawesome/free-solid-svg-icons';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { RecUeb } from '../../models/rec-ueb.model';
@@ -20,12 +22,15 @@ import { Tagesart } from '../../models/tagesart.model';
 @Component({
     selector: 'app-rec-ueb-detail',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterModule,
-        InputTextModule, InputNumberModule, ButtonModule, DropdownModule, CardModule, TableModule],
+    imports: [
+        FontAwesomeModule, CommonModule, FormsModule, RouterModule,
+        InputTextModule, InputNumberModule, ButtonModule, DropdownModule, CardModule, TableModule
+    ],
     templateUrl: './rec-ueb-detail.component.html',
     styleUrls: ['./rec-ueb-detail.component.css']
 })
 export class RecUebDetailComponent implements OnInit {
+    faRoute = faRoute;
     item: RecUeb = new RecUeb();
     isNew = true;
 
