@@ -18,14 +18,14 @@ import { RecTagesart } from '../../../models/rec-tagesart.model';
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, InputNumberModule, CardModule, RouterModule, DropdownModule],
     template: `
-    <div class="flex flex-col h-full bg-slate-50">
+    <div class="flex flex-col h-full bg-slate-50 dark:bg-slate-900">
         <!-- Toolbar -->
-        <div class="flex items-center justify-between p-4 bg-white border-b border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
             <div class="flex items-center gap-4">
                 <a routerLink="/planning/duties">
                     <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
                 </a>
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+                <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
                     {{ isNew ? 'Neuer Dienst' : 'Dienst Bearbeiten' }}
                 </h1>
             </div>
@@ -37,70 +37,70 @@ import { RecTagesart } from '../../../models/rec-tagesart.model';
         <!-- Content -->
         <div class="flex-1 overflow-auto p-4">
             <div class="max-w-5xl mx-auto">
-                <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+                <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                         <!-- Primary Keys -->
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">EBD Version</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">EBD Version</label>
                             <input pInputText [(ngModel)]="duty.EDB_VERSION" [disabled]="!isNew" class="w-full" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Tagesart</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Tagesart</label>
                             <p-dropdown [options]="tagesarts" [(ngModel)]="duty.TAGESART_AUSWAHL" optionLabel="TAGESART_TEXT" optionValue="TAGESART_NR" placeholder="Wähle Tagesart" styleClass="w-full"></p-dropdown>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Dienst Nr (ED_NR)</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Dienst Nr (ED_NR)</label>
                             <p-inputNumber [(ngModel)]="duty.ED_NR" [disabled]="!isNew" class="w-full" styleClass="w-full"></p-inputNumber>
                         </div>
 
                         <!-- Main Attributes -->
-                        <div class="border-t border-slate-100 col-span-full my-2"></div>
+                        <div class="border-t border-slate-100 dark:border-slate-700 col-span-full my-2"></div>
 
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Start Ort</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Start Ort</label>
                             <p-dropdown [options]="stops" [(ngModel)]="duty.ANF_ORT" optionLabel="ORT_NAME" optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR" placeholder="Wähle Start Ort" styleClass="w-full" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-dropdown>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Startzeit</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Startzeit</label>
                             <input pInputText [ngModel]="formatTime(duty.ED_ANF_ZEIT)" (blur)="parseTime($event, 'ED_ANF_ZEIT')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                          <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Dauer</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Dauer</label>
                              <input pInputText [ngModel]="formatDuration(duty.ED_DAUER)" (blur)="parseTime($event, 'ED_DAUER')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">End Ort</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">End Ort</label>
                             <p-dropdown [options]="stops" [(ngModel)]="duty.END_ORT" optionLabel="ORT_NAME" optionValue="ORT_NR" [filter]="true" filterBy="ORT_NAME,ORT_NR" placeholder="Wähle End Ort" styleClass="w-full" [virtualScroll]="true" [virtualScrollItemSize]="38"></p-dropdown>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Endzeit</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Endzeit</label>
                             <input pInputText [ngModel]="formatTime(duty.ED_END_ZEIT)" (blur)="parseTime($event, 'ED_END_ZEIT')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                         <div class="flex flex-col gap-2">
-                             <label class="text-sm font-medium text-slate-700">Dienstart</label>
+                             <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Dienstart</label>
                             <p-dropdown [options]="dienstarts" [(ngModel)]="duty.DIENSTART_NR" optionLabel="DIENSTART_TEXT" optionValue="DIENSTART_NR" placeholder="Wähle Dienstart" styleClass="w-full"></p-dropdown>
                         </div>
 
                         <!-- Statistics / Times -->
-                         <div class="border-t border-slate-100 col-span-full my-2">
-                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Zeiten & Statistik</span>
+                         <div class="border-t border-slate-100 dark:border-slate-700 col-span-full my-2">
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Zeiten & Statistik</span>
                          </div>
                         
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Lenkzeit</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Lenkzeit</label>
                             <input pInputText [ngModel]="formatDuration(duty.ED_LENK)" (blur)="parseTime($event, 'ED_LENK')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                          <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Pause</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Pause</label>
                              <input pInputText [ngModel]="formatDuration(duty.ED_PAUSE)" (blur)="parseTime($event, 'ED_PAUSE')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Vorbereitungszeit</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Vorbereitungszeit</label>
                              <input pInputText [ngModel]="formatDuration(duty.ED_VORB)" (blur)="parseTime($event, 'ED_VORB')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Nachbereitungszeit</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Nachbereitungszeit</label>
                              <input pInputText [ngModel]="formatDuration(duty.ED_NACHB)" (blur)="parseTime($event, 'ED_NACHB')" placeholder="HH:MM:SS" class="w-full p-inputtext p-component" />
                         </div>
                         

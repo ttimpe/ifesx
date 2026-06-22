@@ -13,14 +13,14 @@ import { CalendarService } from '../../../services/calendar.service';
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, CardModule, RouterModule],
     template: `
-    <div class="flex flex-col h-full bg-slate-50">
+    <div class="flex flex-col h-full bg-slate-50 dark:bg-slate-900">
         <!-- Toolbar -->
-        <div class="flex items-center justify-between p-4 bg-white border-b border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between p-4 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
             <div class="flex items-center gap-4">
                 <a routerLink="/planning/piece-types">
                     <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary"></p-button>
                 </a>
-                <h1 class="text-2xl font-bold text-slate-800 tracking-tight">
+                <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 tracking-tight">
                     {{ isNew ? 'Neue Dienststückart' : 'Dienststückart: ' + type.DIENSTSTUECKART }}
                 </h1>
             </div>
@@ -33,17 +33,17 @@ import { CalendarService } from '../../../services/calendar.service';
         <!-- Content -->
         <div class="flex-1 overflow-auto p-4">
             <div class="max-w-3xl mx-auto">
-                <p-card styleClass="shadow-sm border border-slate-200 rounded-xl overflow-hidden">
+                <p-card styleClass="shadow-sm border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden">
                     <div class="flex flex-col gap-6">
                         
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Art (Code) *</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Art (Code) *</label>
                             <input pInputText [(ngModel)]="type.DIENSTSTUECKART" [disabled]="!isNew" placeholder="z.B. FAHRT" class="w-full" />
-                            <small class="text-slate-400">Eindeutige Kennung (max 10 Zeichen)</small>
+                            <small class="text-slate-400 dark:text-slate-500">Eindeutige Kennung (max 10 Zeichen)</small>
                         </div>
 
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-slate-700">Bezeichnung</label>
+                            <label class="text-sm font-medium text-slate-700 dark:text-slate-200">Bezeichnung</label>
                             <input pInputText [(ngModel)]="type.DIENSTSTUECKART_TEXT" placeholder="Beschreibung..." class="w-full" />
                         </div>
 
