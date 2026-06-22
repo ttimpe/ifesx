@@ -29,10 +29,12 @@ export class LineService {
 
   updateLine(line: RecLid): Observable<RecLid> {
     const payload = {
-      STR_LID: line.STR_LID,
-      LIN_NAME: line.LIN_NAME,
+      // VDV field names used by the detail form and backend model
+      LI_KUERZEL: line.LI_KUERZEL ?? line.STR_LID,
+      LIDNAME: line.LIDNAME ?? line.LIN_NAME,
       LIN_FARBE: line.LIN_FARBE,
-      LIN_TEXT_FARBE: line.LIN_TEXT_FARBE
+      LIN_TEXT_FARBE: line.LIN_TEXT_FARBE,
+      BASIS_VERSION: line.BASIS_VERSION
     }
     const url = `${this.apiUrl}/${line.LI_NR}`;
     return this.http.put<RecLid>(url, payload);

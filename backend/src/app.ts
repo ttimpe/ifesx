@@ -294,6 +294,7 @@ lineRouter.delete('/variants', lineController.deleteVariant)
 lineRouter.get('/:id', lineController.getLineById)
 lineRouter.put('/:oldId/change-id', lineController.updateLineIdCascade)
 lineRouter.put('/:id', lineController.updateLine)
+lineRouter.delete('/:id', lineController.deleteLine)
 
 apiRouter.use('/lines', lineRouter)
 
