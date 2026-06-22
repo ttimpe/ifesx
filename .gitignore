@@ -61,6 +61,10 @@ public/
 uploads/
 data/
 
+# Copyrighted announcement audio — stored locally only, never commit
+backend/announcements/*
+!backend/announcements/.gitkeep
+
 # Test coverage
 coverage/
 *.lcov
