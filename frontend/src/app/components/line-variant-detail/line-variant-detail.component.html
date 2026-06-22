@@ -92,8 +92,8 @@
                             <td class="font-mono text-xs">{{ stop.HALTEPUNKT_NR || '-' }}</td>
                             <td>
                                 <p-dropdown [options]="allAnnouncements" [(ngModel)]="stop.ANR_NR"
-                                    optionLabel="ANR_NAME" optionValue="ANR_NR" [showClear]="true" placeholder="Keine"
-                                    styleClass="w-full text-xs" [filter]="true" filterBy="ANR_NAME,ANR_NR"
+                                    optionLabel="ANR_TEXT" optionValue="ANR_NR" [showClear]="true" placeholder="Keine"
+                                    styleClass="w-full text-xs" [filter]="true" filterBy="ANR_TEXT,ANR_NR"
                                     (onChange)="updateStop(stop)" appendTo="body">
                                 </p-dropdown>
                             </td>
