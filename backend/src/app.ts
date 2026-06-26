@@ -340,6 +340,9 @@ apiRouter.use('/basis', versionRouter)
 import gtfsRouter from './controllers/GTFSController';
 apiRouter.use('/gtfs', gtfsRouter);
 
+import lioRouter from './controllers/LioImportController';
+apiRouter.use('/lio', lioRouter);
+
 import { KursblattController } from './controllers/KursblattController';
 const kursblattController = new KursblattController();
 // Prefix with /kursblatt inside apiRouter? No, user path was /kursblatt/:id/pdf.
