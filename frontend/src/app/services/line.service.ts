@@ -29,10 +29,14 @@ export class LineService {
 
   updateLine(line: RecLid): Observable<RecLid> {
     const payload = {
-      STR_LID: line.STR_LID,
-      LIN_NAME: line.LIN_NAME,
+      // VDV field names used by the detail form and backend model
+      LI_KUERZEL: line.LI_KUERZEL ?? line.STR_LID,
+      LIDNAME: line.LIDNAME ?? line.LIN_NAME,
+      // LIDNAME belongs to a single Fahrweg - tell the backend which one, or it cannot store it
+      STR_LI_VAR: line.STR_LI_VAR,
       LIN_FARBE: line.LIN_FARBE,
-      LIN_TEXT_FARBE: line.LIN_TEXT_FARBE
+      LIN_TEXT_FARBE: line.LIN_TEXT_FARBE,
+      BASIS_VERSION: line.BASIS_VERSION
     }
     const url = `${this.apiUrl}/${line.LI_NR}`;
     return this.http.put<RecLid>(url, payload);
@@ -88,6 +92,16 @@ export class LineService {
       url += `?oldStrLiVar=${oldStrLiVar}`;
     }
     return this.http.put(url, variant);
+  }
+
+  /** Copies a Fahrweg including its complete stop sequence. Backend assigns the new STR_LI_VAR. */
+  duplicateVariant(liNr: number, strLiVar: string, basisVersion?: number): Observable<RecLid> {
+    const payload = {
+      LI_NR: liNr,
+      STR_LI_VAR: strLiVar,
+      BASIS_VERSION: basisVersion
+    };
+    return this.http.post<RecLid>(`${this.apiUrl}/variants/duplicate`, payload);
   }
 
   deleteVariant(liNr: number, strLiVar: string): Observable<void> {

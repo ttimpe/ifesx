@@ -17,6 +17,7 @@ import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { Select } from 'primeng/select';
 import { ColorPickerModule } from 'primeng/colorpicker';
+import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 
 
@@ -38,6 +39,7 @@ import { FormsModule } from '@angular/forms';
     DialogModule,
     CardModule,
     ColorPickerModule,
+    TooltipModule,
     ToastModule
   ]
 })
@@ -150,6 +152,22 @@ export class LineDetailComponent implements OnInit {
 
   addVariant(): void {
     this.router.navigate(['/lines', this.line?.LI_NR, 'variants', 'new']);
+  }
+
+  duplicateVariant(variant: RecLid): void {
+    this.lineService.duplicateVariant(variant.LI_NR, variant.STR_LI_VAR, variant.BASIS_VERSION).subscribe(
+      (copy: RecLid) => {
+        // Reload from the backend, which assigned the new STR_LI_VAR
+        this.lineService.getLineVariants(variant.LI_NR).subscribe(vars => {
+          this.variants = vars;
+          this.editVariant(copy);
+        });
+      },
+      (error: any) => {
+        console.error('Error duplicating variant:', error);
+        alert(`❌ Fehler beim Duplizieren: ${error.error?.error || error.message}`);
+      }
+    );
   }
 
   deleteVariant(variant: RecLid): void { // Fixed type

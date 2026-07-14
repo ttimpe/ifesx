@@ -289,11 +289,13 @@ lineRouter.put('/variant-stops', lineController.updateVariantStop)
 lineRouter.delete('/variant-stops', lineController.removeVariantStop)
 lineRouter.post('/variant-stops/swap', lineController.swapVariantStops)
 lineRouter.post('/variants', lineController.createVariant)
+lineRouter.post('/variants/duplicate', lineController.duplicateVariant)
 lineRouter.put('/variants', lineController.updateVariant)
 lineRouter.delete('/variants', lineController.deleteVariant)
 lineRouter.get('/:id', lineController.getLineById)
 lineRouter.put('/:oldId/change-id', lineController.updateLineIdCascade)
 lineRouter.put('/:id', lineController.updateLine)
+lineRouter.delete('/:id', lineController.deleteLine)
 
 apiRouter.use('/lines', lineRouter)
 
@@ -338,6 +340,9 @@ apiRouter.use('/basis', versionRouter)
 
 import gtfsRouter from './controllers/GTFSController';
 apiRouter.use('/gtfs', gtfsRouter);
+
+import lioRouter from './controllers/LioImportController';
+apiRouter.use('/lio', lioRouter);
 
 import { KursblattController } from './controllers/KursblattController';
 const kursblattController = new KursblattController();

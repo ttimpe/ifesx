@@ -760,13 +760,16 @@ const runImport = async () => {
                     });
                 }
 
-                // RecLid (Upsert to fix stale names)
+                // RecLid - keep a name the user has already given this Fahrweg; only name new/unnamed ones
+                const existingLid = await RecLid.findOne({
+                    where: { BASIS_VERSION, LI_NR: uniqueLiNr, STR_LI_VAR: variantId }
+                });
                 await RecLid.upsert({
                     BASIS_VERSION,
                     LI_NR: uniqueLiNr,
                     STR_LI_VAR: variantId,
                     LI_KUERZEL: group.routes[0].route_short_name.substring(0, 6),
-                    LIDNAME: lidName.substring(0, 100),
+                    LIDNAME: existingLid?.LIDNAME || lidName.substring(0, 100),
                     ROUTEN_ART: 1,
                     ROUTEN_NR: variantIdx,
                     BEREICH_NR: bereichNr
