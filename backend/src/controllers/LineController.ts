@@ -96,11 +96,11 @@ export class LineController {
       const basisVersion = req.query.basisVersion ? parseInt(req.query.basisVersion as string) : 1;
       const allRecs = await RecLid.findAll({
         where: { BASIS_VERSION: basisVersion },
-        order: [['LI_NR', 'ASC']]
+        order: [['LI_NR', 'ASC'], ['STR_LI_VAR', 'ASC']]
       });
 
       // Deduplicate to logical lines by LI_NR
-      // Using a Map to keep first occurrence as representative
+      // Sorted by STR_LI_VAR, so the first occurrence is always the same variant
       const logicalLinesMap = new Map<number, any>();
       for (const rec of allRecs) {
         if (!logicalLinesMap.has(rec.LI_NR)) {
@@ -122,11 +122,13 @@ export class LineController {
       const id = parseInt(req.params.id);
       const basisVersion = req.query.basisVersion ? parseInt(req.query.basisVersion as string) : 1;
 
+      // Representative variant = lowest STR_LI_VAR, so the line form always shows the same one
       const line = await RecLid.findOne({
         where: {
           LI_NR: id,
           BASIS_VERSION: basisVersion
-        }
+        },
+        order: [['STR_LI_VAR', 'ASC']]
       });
 
       if (line) {
@@ -168,31 +170,52 @@ export class LineController {
 
   // PUT /lines/:id
   public async updateLine(req: Request, res: Response) {
+    const t = await sequelize.transaction();
     try {
       const id = parseInt(req.params.id);
       const basisVersion = req.body.BASIS_VERSION || 1;
 
-      // Map updates
-      const updates: any = {};
-      if (req.body.STR_LI_VAR) updates.STR_LI_VAR = req.body.STR_LI_VAR;
-      if (req.body.LI_KUERZEL || req.body.STR_LID) updates.LI_KUERZEL = req.body.LI_KUERZEL || req.body.STR_LID;
-      if (req.body.LIDNAME || req.body.LIN_NAME) updates.LIDNAME = req.body.LIDNAME || req.body.LIN_NAME;
+      // STR_LI_VAR identifies WHICH Fahrweg is being edited - it is a filter, never an update value.
+      // Writing it would collapse all variants of the line onto the same primary key.
+      const strLiVar: string | undefined = req.body.STR_LI_VAR;
+      const kuerzel = req.body.LI_KUERZEL ?? req.body.STR_LID;
+      const lidName = req.body.LIDNAME ?? req.body.LIN_NAME;
       // Colors ignored as they are not in VDV
 
-      const [updated] = await RecLid.update(updates, {
-        where: {
-          LI_NR: id,
-          BASIS_VERSION: basisVersion
-        }
+      const exists = await RecLid.findOne({
+        where: { LI_NR: id, BASIS_VERSION: basisVersion },
+        transaction: t
       });
-
-      if (updated) {
-        const updatedLine = await RecLid.findOne({ where: { LI_NR: id, BASIS_VERSION: basisVersion } });
-        res.json(updatedLine);
-      } else {
-        res.status(404).json({ error: 'Line not found' });
+      if (!exists) {
+        await t.rollback();
+        return res.status(404).json({ error: 'Line not found' });
       }
+
+      // LI_KUERZEL (line number) is a line-level attribute -> applies to every Fahrweg of the line
+      if (kuerzel !== undefined && kuerzel !== null) {
+        await RecLid.update(
+          { LI_KUERZEL: kuerzel },
+          { where: { LI_NR: id, BASIS_VERSION: basisVersion }, transaction: t }
+        );
+      }
+
+      // LIDNAME is per-Fahrweg -> only ever touch the one row the form is editing
+      if (lidName !== undefined && lidName !== null && strLiVar) {
+        await RecLid.update(
+          { LIDNAME: lidName },
+          { where: { LI_NR: id, BASIS_VERSION: basisVersion, STR_LI_VAR: strLiVar }, transaction: t }
+        );
+      }
+
+      await t.commit();
+
+      const updatedLine = await RecLid.findOne({
+        where: { LI_NR: id, BASIS_VERSION: basisVersion },
+        order: [['STR_LI_VAR', 'ASC']]
+      });
+      res.json(updatedLine);
     } catch (error) {
+      await t.rollback();
       console.error('Error updating line:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -283,14 +306,25 @@ export class LineController {
   public async createVariant(req: Request, res: Response) {
     try {
       const basisVersion = req.body.BASIS_VERSION || 1;
+
+      // LI_KUERZEL is line-level: inherit it from the existing line instead of inventing 'VAR'
+      let kuerzel = req.body.LI_KUERZEL;
+      if (!kuerzel) {
+        const sibling = await RecLid.findOne({
+          where: { BASIS_VERSION: basisVersion, LI_NR: req.body.LI_NR },
+          order: [['STR_LI_VAR', 'ASC']]
+        });
+        kuerzel = sibling?.LI_KUERZEL || 'VAR';
+      }
+
       // Map incoming fields to REC_LID
       const variant = await RecLid.create({
         BASIS_VERSION: basisVersion,
         LI_NR: req.body.LI_NR,
         STR_LI_VAR: req.body.STR_LI_VAR, // e.g. "V01"
-        STR_LID: req.body.STR_LID || 'VID', // Short ID
-        LI_KUERZEL: req.body.LI_KUERZEL || 'VAR',
+        LI_KUERZEL: kuerzel,
         LIDNAME: req.body.LIDNAME || req.body.VERLAUF_NAME, // Map VERLAUF_NAME to LIDNAME
+        LI_RI_NR: req.body.LI_RI_NR,
         ROUTEN_NR: req.body.ROUTEN_NR
       });
       res.status(201).json(variant);
@@ -298,6 +332,93 @@ export class LineController {
       console.error('Error creating variant:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
+  }
+
+  // POST /lines/variants/duplicate
+  // Copies a Fahrweg (REC_LID) including its complete stop sequence (LID_VERLAUF)
+  public async duplicateVariant(req: Request, res: Response) {
+    const t = await sequelize.transaction();
+    try {
+      const basisVersion = req.body.BASIS_VERSION || 1;
+      const liNr = parseInt(req.body.LI_NR);
+      const strLiVar = req.body.STR_LI_VAR as string;
+
+      if (!liNr || !strLiVar) {
+        await t.rollback();
+        return res.status(400).json({ error: 'Missing LI_NR or STR_LI_VAR' });
+      }
+
+      const source = await RecLid.findOne({
+        where: { BASIS_VERSION: basisVersion, LI_NR: liNr, STR_LI_VAR: strLiVar },
+        transaction: t
+      });
+      if (!source) {
+        await t.rollback();
+        return res.status(404).json({ error: 'Variant not found' });
+      }
+
+      const siblings = await RecLid.findAll({
+        where: { BASIS_VERSION: basisVersion, LI_NR: liNr },
+        attributes: ['STR_LI_VAR'],
+        transaction: t
+      });
+      const taken = new Set(siblings.map(s => s.STR_LI_VAR));
+
+      const newStrLiVar = LineController.nextFreeStrLiVar(strLiVar, taken);
+      if (!newStrLiVar) {
+        await t.rollback();
+        return res.status(409).json({ error: `Kein freier Fahrweg-Code auf Basis von ${strLiVar} gefunden.` });
+      }
+
+      const copyData = source.toJSON();
+      copyData.STR_LI_VAR = newStrLiVar;
+      copyData.LIDNAME = `${source.LIDNAME || strLiVar} (Kopie)`.substring(0, 100);
+      const copy = await RecLid.create(copyData, { transaction: t });
+
+      // Copy the stop sequence - without it the duplicate would be an empty Fahrweg
+      const stops = await LidVerlauf.findAll({
+        where: { BASIS_VERSION: basisVersion, LI_NR: liNr, STR_LI_VAR: strLiVar },
+        order: [['LI_LFD_NR', 'ASC']],
+        transaction: t
+      });
+      if (stops.length > 0) {
+        await LidVerlauf.bulkCreate(
+          stops.map(s => ({ ...s.toJSON(), STR_LI_VAR: newStrLiVar })),
+          { transaction: t }
+        );
+      }
+
+      await t.commit();
+      res.status(201).json(copy);
+    } catch (error) {
+      await t.rollback();
+      console.error('Error duplicating variant:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
+  /**
+   * Derives a free STR_LI_VAR for a copy of `source` by incrementing its numeric suffix
+   * ("V01" -> "V02", "V03", ...). Column is STRING(6), so candidates must stay within 6 chars.
+   */
+  private static nextFreeStrLiVar(source: string, taken: Set<string>): string | undefined {
+    const match = source.match(/^(.*?)(\d+)$/);
+    const prefix = match ? match[1] : source;
+    const width = match ? match[2].length : 1;
+    const start = match ? parseInt(match[2], 10) + 1 : 2;
+
+    for (let n = start; n < start + 1000; n++) {
+      const padded = String(n).padStart(width, '0');
+      let candidate = prefix + padded;
+      if (candidate.length > 6) {
+        // Trim the prefix so the counter still fits into the column
+        candidate = prefix.substring(0, Math.max(0, 6 - padded.length)) + padded;
+      }
+      if (candidate.length <= 6 && candidate.length > 0 && !taken.has(candidate)) {
+        return candidate;
+      }
+    }
+    return undefined;
   }
 
   // PUT /lines/variants
